@@ -14,6 +14,8 @@
 /* ----------------------- Wazuh component stylesheet ----------------------- */
 /* -------------------------------------------------------------------------- */
 
+@import './variables';
+
 /* Custom nav bar styles */
 
 .wz-nav-bar .md-nav-bar{
@@ -120,6 +122,23 @@ kbn-dis doc-table .kbnDocViewer__warning {
     flex-grow: 0;
 }
 
-.euiCard .euiCard__top .euiIcon--app .euiIcon__fillSecondary{
-    fill: #256BD1
-}
+.wz-menu-wrapper{
+    .euiIcon{
+      fill: $brand_primary_color;
+      
+      .euiIcon__fillSecondary{
+        fill: $brand_primary_color;
+      }
+  
+    }
+  } 
+  
+  .wz-welcome-page .euiCard{
+    .euiIcon{
+      fill: $brand_primary_color;
+      
+      .euiIcon__fillSecondary{
+        fill: $brand_secondary_color_light;
+      }
+    }
+  }

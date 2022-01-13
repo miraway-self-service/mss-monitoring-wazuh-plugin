@@ -226,7 +226,9 @@ export const WAZUH_DEFAULT_APP_CONFIG = {
   'customization.logo.app':'logotype.svg',
   'customization.logo.sidebar':'icon_blue.png',
   'customization.logo.healthcheck':'icon_blue.svg',
-  'customization.logo.reports':'logo.png'
+  'customization.logo.reports':'logo.png',
+  'customization.logo.minWhite': 'iso-white.svg',
+  'customization.logo.maxWhite': 'logo-white.svg',
 };
 
 // Wazuh errors

@@ -72,7 +72,9 @@ export async function getWzConfig($q, genericReq, wazuhConfig) {
     'customization.logo.app':'logotype.svg',
     'customization.logo.sidebar':'icon_blue.png',
     'customization.logo.healthcheck':'logo.png',
-    'customization.logo.reports':'logo.png'
+    'customization.logo.reports':'logo.png',
+    'customization.logo.minWhite': 'iso-white.svg',
+    'customization.logo.maxWhite': 'logo-white.svg',
   };
 
   try {

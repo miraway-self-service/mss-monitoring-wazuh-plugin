@@ -320,7 +320,7 @@ export class FileDetails extends Component {
               description={
                 <span>
                   {item.icon !== 'users' ? (
-                    <EuiIcon size="l" type={item.icon} color="primary" className="detail-icon" />
+                    <EuiIcon size="l" type={item.icon} className="detail-icon" />
                   ) : (
                     this.userSvg
                   )}

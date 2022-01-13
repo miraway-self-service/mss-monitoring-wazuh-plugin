@@ -11,7 +11,7 @@
  * Find more information about this on the LICENSE file.
  *
  */
-
+import { getUiSettings } from '../../../kibana-services';
 import {
   EuiButton,
   EuiCallOut,
@@ -167,9 +167,9 @@ function HealthCheckComponent() {
   const handleCheckReady = (checkID, isReady) => {    
     setChecksReady(prev =>  ({...prev, [checkID]: isReady}));
   }
-
-
-  const logoUrl = getHttp().basePath.prepend(`/plugins/wazuh/assets/${appConfig.data['customization.logo.healthcheck']}`);
+  
+  const darkMode = getUiSettings().get('theme:darkMode')
+  const logoUrl = getHttp().basePath.prepend(`/plugins/wazuh/assets/${appConfig.data[darkMode ? 'customization.logo.maxWhite' : 'customization.logo.healthcheck']}`);
   const thereAreErrors = Object.keys(checkErrors).length > 0;
 
   const renderChecks = () => {

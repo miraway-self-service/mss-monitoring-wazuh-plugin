@@ -15,6 +15,7 @@ import {
   setCore,
   setPlugins,
   setCookies,
+  getUiSettings,
 } from './kibana-services';
 import {
   AppPluginStartDependencies,
@@ -68,6 +69,8 @@ export class WazuhPlugin implements Plugin<WazuhSetup, WazuhStart, WazuhSetupPlu
         //Check is user has Wazuh disabled
         const response = await core.http.get(`/api/check-wazuh`);
 
+        const darkMode = getUiSettings().get('theme:darkMode')
+
         params.element.classList.add('dscAppWrapper');
         const unmount = await renderApp(innerAngularName, params.element);
 
@@ -77,13 +80,15 @@ export class WazuhPlugin implements Plugin<WazuhSetup, WazuhStart, WazuhSetupPlu
             unmount();
           }
 
+          const logo = darkMode ? 'iso-white.svg' : response.logoSidebar ;
+
           return {
             status: response.isWazuhDisabled,
             category: {
               id: 'wazuh',
               label: 'Wazuh',
               order: 0,
-              euiIconType: core.http.basePath.prepend( `/plugins/wazuh/assets/${response.logoSidebar}`),
+              euiIconType: core.http.basePath.prepend( `/plugins/wazuh/assets/${logo}`),
             }}
         })
         return () => {

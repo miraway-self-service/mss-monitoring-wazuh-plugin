@@ -39,10 +39,13 @@ export class WazuhPlugin implements Plugin<WazuhSetup, WazuhStart, WazuhSetupPlu
   private hideTelemetryBanner?: () => void;
   
   public setup(core: CoreSetup, plugins: WazuhSetupPlugins): WazuhSetup {
+
+    const darkMode = core['uiSettings']['cache']['theme:darkMode']['userValue'] ? true : false;
+
     core.application.register({
       id: `wazuh`,
       title: 'Wazuh',
-      icon: core.http.basePath.prepend('/plugins/wazuh/assets/icon_blue.png'),
+      icon: core.http.basePath.prepend(`/plugins/wazuh/assets/${darkMode ? 'iso-white.svg' : 'icon_blue.png'}`),
       mount: async (params: AppMountParameters) => {
         if (!this.initializeInnerAngular) {
           throw Error('Wazuh plugin method initializeInnerAngular is undefined');
@@ -99,7 +102,7 @@ export class WazuhPlugin implements Plugin<WazuhSetup, WazuhStart, WazuhSetupPlu
         id: 'wazuh',
         label: 'Wazuh',
         order: 0,
-        euiIconType: core.http.basePath.prepend('/plugins/wazuh/assets/icon_blue.png'),
+        euiIconType: core.http.basePath.prepend(`/plugins/wazuh/assets/${darkMode ? 'iso-white.svg' : 'icon_blue.png'}`),
       },
       updater$: this.stateUpdater
     });

@@ -38,13 +38,13 @@ const trySetDefault = async (checkLogger: CheckLogger) => {
         }
       }
       if (errors.length) {
-        return Promise.reject('No API available to connect');
+        return Promise.reject(new Error('No API available to connect'));
       }
     }
-    return Promise.reject('No API configuration found');
+    return Promise.reject(new Error('No API configuration found'));
   } catch (error) {
     checkLogger.error(`Error connecting to API: ${error}`);
-    return Promise.reject(`Error connecting to API: ${error}`);
+    return Promise.reject(new Error(`Error connecting to API: ${error}`));
   }
 };
 
@@ -52,7 +52,7 @@ export const checkApiService = (appInfo: any) => async (checkLogger: CheckLogger
   let apiChanged = false;
   try {
     let currentApi = JSON.parse(AppState.getCurrentAPI() || '{}');
-    if(!currentApi.id){
+    if (!currentApi.id) {
       checkLogger.info(`No current API selected`);
       currentApi.id = await trySetDefault(checkLogger);
       apiChanged = true;
@@ -93,10 +93,10 @@ export const checkApiService = (appInfo: any) => async (checkLogger: CheckLogger
       checkLogger.error('Wazuh not ready yet');
     } else if (data.data.error || data.data.data.apiIsDown) {
       const errorMessage = data.data.data.apiIsDown
-      ? 'Wazuh API is down'
-      : `Error connecting to the API: ${
-          data.data.error && data.data.error.message ? ` ${data.data.error.message}` : ''
-        }`;
+        ? 'Wazuh API is down'
+        : `Error connecting to the API: ${
+            data.data.error && data.data.error.message ? ` ${data.data.error.message}` : ''
+          }`;
       checkLogger.error(errorMessage);
     }
   } catch (error) {

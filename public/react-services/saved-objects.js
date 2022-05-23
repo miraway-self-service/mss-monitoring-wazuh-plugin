@@ -31,27 +31,36 @@ export class SavedObject {
     const savedObjects = await GenericRequest.request(
       'GET',
       `/api/saved_objects/_find?type=index-pattern&fields=title&fields=fields&per_page=9999`
-      );
-      let indexPatterns = ((savedObjects || {}).data || {}).saved_objects || [];
+    );
+    let indexPatterns = ((savedObjects || {}).data || {}).saved_objects || [];
 
     let indexPatternsFields;
-    if(satisfyPluginPlatformVersion('<7.11')){
-      indexPatternsFields = indexPatterns.map(indexPattern => indexPattern?.attributes?.fields ? JSON.parse(indexPattern.attributes.fields) : []);
-    }else if(satisfyPluginPlatformVersion('>=7.11')){
-      indexPatternsFields = await Promise.all(indexPatterns.map(async indexPattern => {
-        try{
-          const {data: {fields}} = await GenericRequest.request(
-            'GET',
-            `/api/index_patterns/_fields_for_wildcard?pattern=${indexPattern.attributes.title}`,
-            {}
-          );
-          return fields;
-        }catch(error){
-          return [];
-        }
-      }));
+    if (satisfyPluginPlatformVersion('<7.11')) {
+      indexPatternsFields = indexPatterns.map((indexPattern) =>
+        indexPattern?.attributes?.fields ? JSON.parse(indexPattern.attributes.fields) : []
+      );
+    } else if (satisfyPluginPlatformVersion('>=7.11')) {
+      indexPatternsFields = await Promise.all(
+        indexPatterns.map(async (indexPattern) => {
+          try {
+            const {
+              data: { fields },
+            } = await GenericRequest.request(
+              'GET',
+              `/api/index_patterns/_fields_for_wildcard?pattern=${indexPattern.attributes.title}`,
+              {}
+            );
+            return fields;
+          } catch (error) {
+            return [];
+          }
+        })
+      );
     }
-    return indexPatterns.map((indexPattern, idx) => ({...indexPattern, _fields: indexPatternsFields[idx]}));
+    return indexPatterns.map((indexPattern, idx) => ({
+      ...indexPattern,
+      _fields: indexPatternsFields[idx],
+    }));
   }
 
   /**
@@ -81,13 +90,13 @@ export class SavedObject {
   }
 
   static validateIndexPatterns(list) {
-    const requiredFields = [
-      'timestamp',
-      'rule.groups',
-      'manager.name',
-      'agent.id',
-    ];
-    return list.filter(item => item && item._fields && requiredFields.every((reqField => item._fields.some(field => field.name === reqField))));
+    const requiredFields = ['timestamp', 'rule.groups', 'manager.name', 'agent.id'];
+    return list.filter(
+      (item) =>
+        item &&
+        item._fields &&
+        requiredFields.every((reqField) => item._fields.some((field) => field.name === reqField))
+    );
   }
 
   static async existsOrCreateIndexPattern(patternID) {
@@ -135,9 +144,7 @@ export class SavedObject {
         };
       }
     } catch (error) {
-      return ((error || {}).data || {}).message || false
-        ? error.data.message
-        : error.message || error;
+      return ((error || {}).data || {}).message || false ? new Error(error.data.message) : error;
     }
   }
 
@@ -154,11 +161,15 @@ export class SavedObject {
         true
       );
       let indexPatternFields;
-      if(satisfyPluginPlatformVersion('<7.11')){
-        indexPatternFields = indexPatternData?.data?.attributes?.fields ? JSON.parse(indexPatternData.data.attributes.fields) : [];
-      }else if(satisfyPluginPlatformVersion('>=7.11')){
-        try{
-          const {data: {fields}} = await GenericRequest.request(
+      if (satisfyPluginPlatformVersion('<7.11')) {
+        indexPatternFields = indexPatternData?.data?.attributes?.fields
+          ? JSON.parse(indexPatternData.data.attributes.fields)
+          : [];
+      } else if (satisfyPluginPlatformVersion('>=7.11')) {
+        try {
+          const {
+            data: { fields },
+          } = await GenericRequest.request(
             'GET',
             `/api/index_patterns/_fields_for_wildcard?pattern=${indexPatternData.data.attributes.title}`,
             {}
@@ -173,8 +184,8 @@ export class SavedObject {
       if (error && error.response && error.response.status == 404) return false;
       return Promise.reject(
         ((error || {}).data || {}).message || false
-          ? error.data.message
-          : error.message || `Error getting the '${patternID}' index pattern`
+          ? new Error(error.data.message)
+          : new Error(error.message || `Error getting the '${patternID}' index pattern`)
       );
     }
   }
@@ -193,9 +204,7 @@ export class SavedObject {
 
       return result;
     } catch (error) {
-      throw ((error || {}).data || {}).message || false
-        ? error.data.message
-        : error.message || error;
+      throw ((error || {}).data || {}).message || false ? new Error(error.data.message) : error;
     }
   }
 
@@ -203,21 +212,15 @@ export class SavedObject {
     try {
       // same logic as plugin platform when a new index is created, you need to refresh it to see its fields
       // we force the refresh of the index by requesting its fields and the assign these fields
-      await GenericRequest.request(
-        'PUT',
-        `/api/saved_objects/index-pattern/${id}`,
-        {
-          attributes: {
-            fields: JSON.stringify(fields),
-            timeFieldName: 'timestamp',
-            title: title
-          },
-        }
-      );
+      await GenericRequest.request('PUT', `/api/saved_objects/index-pattern/${id}`, {
+        attributes: {
+          fields: JSON.stringify(fields),
+          timeFieldName: 'timestamp',
+          title: title,
+        },
+      });
     } catch (error) {
-      throw ((error || {}).data || {}).message || false
-        ? error.data.message
-        : error.message || error;
+      throw ((error || {}).data || {}).message || false ? new Error(error.data.message) : error;
     }
   }
 
@@ -237,8 +240,8 @@ export class SavedObject {
       await this.refreshFieldsOfIndexPattern(pattern.id, pattern.title, fields);
     } catch (error) {
       return ((error || {}).data || {}).message || false
-        ? error.data.message
-        : error.message || error;
+        ? new Error(error.data.message)
+        : new Error(error.message) || error;
     }
   }
 
@@ -290,9 +293,7 @@ export class SavedObject {
       );
       return;
     } catch (error) {
-      throw ((error || {}).data || {}).message || false
-        ? error.data.message
-        : error.message || error;
+      throw ((error || {}).data || {}).message || false ? new Error(error.data.message) : error;
     }
   }
 

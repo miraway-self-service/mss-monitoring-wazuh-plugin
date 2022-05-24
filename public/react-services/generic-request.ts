@@ -10,7 +10,7 @@
  * Find more information about this on the LICENSE file.
  */
 
-import axios from 'axios';
+import axios, { AxiosError } from 'axios';
 import { AppState } from './app-state';
 import { WazuhConfig } from './wazuh-config';
 import { ApiCheck } from './wz-api-check';
@@ -18,16 +18,20 @@ import { WzMisc } from '../factories/misc';
 import { OdfeUtils } from '../utils';
 import { getHttp, getDataPlugin } from '../kibana-services';
 import { PLUGIN_PLATFORM_REQUEST_HEADERS } from '../../common/constants';
+import { ErrorFactory } from './error-factory';
+import { IHttpRequestConfigHeaders } from 'angular';
+
+type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 export class GenericRequest {
-  static async request(method, path, payload = null, returnError = false) {
+  static async request(method: RequestMethod, path: string, payload = null, returnError = false) {
     try {
       if (!method || !path) {
         throw new Error('Missing parameters');
       }
       const wazuhConfig = new WazuhConfig();
       const { timeout } = wazuhConfig.getConfig();
-      const requestHeaders = {
+      const requestHeaders: any = {
         ...PLUGIN_PLATFORM_REQUEST_HEADERS,
         'content-type': 'application/json',
       };
@@ -44,43 +48,17 @@ export class GenericRequest {
       } catch (error) {
         // Intended
       }
-      var options = {};
+      var options = {
+        method: method,
+        headers: requestHeaders,
+        url: tmpUrl,
+        timeout: timeout || 20000,
+      };
 
       const data = {};
-      if (method === 'GET') {
-        options = {
-          method: method,
-          headers: requestHeaders,
-          url: tmpUrl,
-          timeout: timeout || 20000,
-        };
-      }
-      if (method === 'PUT') {
-        options = {
-          method: method,
-          headers: requestHeaders,
-          data: payload,
-          url: tmpUrl,
-          timeout: timeout || 20000,
-        };
-      }
-      if (method === 'POST') {
-        options = {
-          method: method,
-          headers: requestHeaders,
-          data: payload,
-          url: tmpUrl,
-          timeout: timeout || 20000,
-        };
-      }
-      if (method === 'DELETE') {
-        options = {
-          method: method,
-          headers: requestHeaders,
-          data: payload,
-          url: tmpUrl,
-          timeout: timeout || 20000,
-        };
+
+      if (['PUT', 'POST', 'DELETE'].includes(method)) {
+        options['data'] = payload;
       }
 
       Object.assign(data, await axios(options));
@@ -90,7 +68,7 @@ export class GenericRequest {
 
       return data;
     } catch (err) {
-      OdfeUtils.checkOdfeSessionExpired(err);
+      OdfeUtils.checkOdfeSessionExpired(err as AxiosError);
       //if the requests fails, we need to check if the API is down
       const currentApi = JSON.parse(AppState.getCurrentAPI() || '{}');
       if (currentApi && currentApi.id) {
@@ -109,10 +87,9 @@ export class GenericRequest {
           }
         }
       }
-      if (returnError) return Promise.reject(err);
-      return (((err || {}).response || {}).data || {}).message || false
-        ? Promise.reject(new Error(err.response.data.message))
-        : Promise.reject(err || new Error('Server did not respond'));
+      const responseError = ErrorFactory.createError(err as Error);
+      if (returnError) return Promise.reject(responseError);
+      return Promise.reject(responseError);
     }
   }
 }

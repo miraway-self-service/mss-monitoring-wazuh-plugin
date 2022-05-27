@@ -9,7 +9,7 @@
  *
  * Find more information about this on the LICENSE file.
  */
-import axios from 'axios';
+import axios, { AxiosError, Method } from 'axios';
 import { AppState } from './app-state';
 import { ApiCheck } from './wz-api-check';
 import { WzAuthentication } from './wz-authentication';
@@ -19,6 +19,7 @@ import { OdfeUtils } from '../utils';
 import IApiResponse from './interfaces/api-response.interface';
 import { getHttp } from '../kibana-services';
 import { PLUGIN_PLATFORM_REQUEST_HEADERS } from '../../common/constants';
+import { ErrorFactory } from './error-factory';
 export class WzRequest {
   static wazuhConfig: any;
 
@@ -29,7 +30,7 @@ export class WzRequest {
    * @param {Object} payload
    */
   static async genericReq(
-    method,
+    method: Method,
     path,
     payload: any = null,
     customTimeout = false,
@@ -53,14 +54,13 @@ export class WzRequest {
       };
 
       const data = await axios(options);
-
       if (data['error']) {
         throw new Error(data['error']);
       }
 
       return Promise.resolve(data);
     } catch (error) {
-      OdfeUtils.checkOdfeSessionExpired(error);
+      OdfeUtils.checkOdfeSessionExpired(error as AxiosError);
       //if the requests fails, we need to check if the API is down
       const currentApi = JSON.parse(AppState.getCurrentAPI() || '{}');
       if (currentApi && currentApi.id) {
@@ -72,29 +72,20 @@ export class WzRequest {
           if (!window.location.hash.includes('#/settings')) {
             window.location.href = getHttp().basePath.prepend('/app/wazuh#/health-check');
           }
-          throw new Error(error);
+          // maybe return promise.reject(error);
+          throw ErrorFactory.createError(error);
         }
       }
-      const errorMessage =
-        (error && error.response && error.response.data && error.response.data.message) ||
-        (error || {}).message;
-      if (
-        typeof errorMessage === 'string' &&
-        errorMessage.includes('status code 401') &&
-        shouldRetry
-      ) {
+      const errorParsed = ErrorFactory.createError(error);
+      if (errorParsed.message.includes('status code 401') && shouldRetry) {
         try {
           await WzAuthentication.refresh(true);
           return this.genericReq(method, path, payload, customTimeout, false);
         } catch (error) {
-          return ((error || {}).data || {}).message || false
-            ? Promise.reject(this.returnErrorInstance(error, error.data.message))
-            : Promise.reject(this.returnErrorInstance(error, error.message));
+          return Promise.reject(ErrorFactory.createError(error));
         }
       }
-      return errorMessage
-        ? Promise.reject(this.returnErrorInstance(error, errorMessage))
-        : Promise.reject(this.returnErrorInstance(error,'Server did not respond'));
+      return Promise.reject(errorParsed);
     }
   }
 
@@ -108,7 +99,7 @@ export class WzRequest {
     try {
       if (!method || !path || !body) {
         throw new Error('Missing parameters');
-      }      
+      }
       const id = JSON.parse(AppState.getCurrentAPI()).id;
       const requestData = { method, path, body, id };
       const response = await this.genericReq('POST', '/api/request', requestData);
@@ -121,14 +112,14 @@ export class WzRequest {
         const failed_ids =
           ((((response.data || {}).data || {}).failed_items || [])[0] || {}).id || {};
         const message = (response.data || {}).message || 'Unexpected error';
-        const errorMessage = `${message} (${error.code}) - ${error.message} ${failed_ids && failed_ids.length > 1 ? ` Affected ids: ${failed_ids} ` : ''}`
-        return Promise.reject(this.returnErrorInstance(null, errorMessage));
+        const errorMessage = `${message} (${error.code}) - ${error.message} ${
+          failed_ids && failed_ids.length > 1 ? ` Affected ids: ${failed_ids} ` : ''
+        }`;
+        return Promise.reject(ErrorFactory.createError(errorMessage));
       }
       return Promise.resolve(response);
     } catch (error) {
-      return ((error || {}).data || {}).message || false
-        ? Promise.reject(this.returnErrorInstance(error, error.data.message))
-        : Promise.reject(this.returnErrorInstance(error, error.message));
+      return Promise.reject(ErrorFactory.createError(error));
     }
   }
 
@@ -147,23 +138,7 @@ export class WzRequest {
       const data = await this.genericReq('POST', '/api/csv', requestData, false);
       return Promise.resolve(data);
     } catch (error) {
-      return ((error || {}).data || {}).message || false
-        ? Promise.reject(this.returnErrorInstance(error, error.data.message))
-        : Promise.reject(this.returnErrorInstance(error, error.message));
+      return Promise.reject(ErrorFactory.createError(error));
     }
-  }
-
-  /**
-   * Customize message and return an error object
-   * @param error 
-   * @param message 
-   * @returns error
-   */
-  static returnErrorInstance(error, message){
-    if(!error || typeof error === 'string'){
-      return new Error(message || error);
-    }
-    error.message = message
-    return error
   }
 }

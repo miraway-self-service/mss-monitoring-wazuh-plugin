@@ -12,6 +12,7 @@
  *
  */
 
+import { ErrorFactory } from '../../../react-services/error-factory';
 import { getToasts } from '../../../kibana-services';
 import { ApiCheck, AppState, GenericRequest } from '../../../react-services';
 import { CheckLogger } from '../types/check_logger';
@@ -22,7 +23,7 @@ const trySetDefault = async (checkLogger: CheckLogger) => {
     const response = await GenericRequest.request('GET', '/hosts/apis');
     checkLogger.info(`API hosts found: ${response.data.length}`);
     const hosts = response.data;
-    const errors = [];
+    const errors: any[] = [];
 
     if (hosts.length) {
       for (var i = 0; i < hosts.length; i++) {
@@ -33,18 +34,21 @@ const trySetDefault = async (checkLogger: CheckLogger) => {
             return hosts[i].id;
           }
         } catch (err) {
-          checkLogger.info(`Could not connect to API id [${hosts[i].id}]: ${err.message || err}`);
-          errors.push(`Could not connect to API id [${hosts[i].id}]: ${err.message || err}`);
+          const errorMessage = `Could not connect to API id [${hosts[i].id}]: ${
+            err.message || err
+          }`;
+          checkLogger.info(errorMessage);
+          errors.push(errorMessage);
         }
       }
       if (errors.length) {
-        return Promise.reject(new Error('No API available to connect'));
+        return Promise.reject(ErrorFactory.createError('No API available to connect'));
       }
     }
-    return Promise.reject(new Error('No API configuration found'));
+    return Promise.reject(ErrorFactory.createError('No API configuration found'));
   } catch (error) {
     checkLogger.error(`Error connecting to API: ${error}`);
-    return Promise.reject(new Error(`Error connecting to API: ${error}`));
+    return Promise.reject(ErrorFactory.createError(error, `Error connecting to API: ${error}`));
   }
 };
 

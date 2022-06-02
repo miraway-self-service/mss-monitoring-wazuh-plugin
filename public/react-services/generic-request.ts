@@ -24,7 +24,12 @@ import { IHttpRequestConfigHeaders } from 'angular';
 type RequestMethod = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
 export class GenericRequest {
-  static async request(method: RequestMethod, path: string, payload = null, returnError = false) {
+  static async request(
+    method: RequestMethod,
+    path: string,
+    payload: any = null,
+    returnError = false
+  ) {
     try {
       if (!method || !path) {
         throw new Error('Missing parameters');

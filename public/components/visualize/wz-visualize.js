@@ -74,43 +74,33 @@ export const WzVisualize = compose(
       this._isMount = true;
       visHandler.removeAll();
       this.agentsStatus = false;
-      if (!this.monitoringEnabled) {
-        const data = await this.wzReq.apiReq('GET', '/agents/summary/status', {});
-        const result = ((data || {}).data || {}).data || false;
-        if (result) {
-          this.agentsStatus = [
-            {
-              title: 'Total',
-              description: result.total,
-            },
-            {
-              title: 'Active',
-              description: result.active,
-            },
-            {
-              title: 'Disconnected',
-              description: result.disconnected,
-            },
-            {
-              title: 'Never Connected',
-              description: result['never_connected'],
-            },
-            {
-              title: 'Agents coverage',
-              description: (result.total ? (result.active / result.total) * 100 : 0) + '%',
-            },
-          ];
-        }
-      }
     }
 
+    /**
+     * Reset the visualizations when the type of Dashboard is changed.
+     * 
+     * There are 2 kinds of Dashboards:
+     *   - General or overview   --> When to agent is pinned.
+     *   - Specific or per agent --> When there is an agent pinned.
+     * 
+     * The visualizations are reset only when the type of Dashboard changes 
+     * from a type to another, but aren't when the pinned agent changes.
+     * 
+     * More info:
+     * https://github.com/wazuh/wazuh-kibana-app/issues/4230#issuecomment-1152161434
+     * 
+     * @param {Object} prevProps 
+     */
     async componentDidUpdate(prevProps) {
-      if (prevProps.isAgent !== this.props.isAgent) {
+      if (
+        (!prevProps.isAgent && this.props.isAgent) ||
+        (prevProps.isAgent && !this.props.isAgent)
+      ) {
         this._isMount &&
           this.setState({
             visualizations: !!this.props.isAgent ? agentVisualizations : visualizations,
           });
-        typeof prevProps.isAgent !== 'undefined' && visHandler.removeAll();
+        visHandler.removeAll();
       }
     }
 
@@ -159,7 +149,7 @@ export const WzVisualize = compose(
     reloadToast = () => {
       const toastLifeTimeMs = 300000;
       const [mayor, minor] = appVersion.split('.');
-      const urlTroubleShootingDocs = `https://documentation.wazuh.com/${mayor}.${minor}/user-manual/elasticsearch/elastic-tuning/troubleshooting.html#index-pattern-was-refreshed-toast-keeps-popping-up`;
+      const urlTroubleShootingDocs = `https://documentation.wazuh.com/${mayor}.${minor}/user-manual/elasticsearch/troubleshooting.html#index-pattern-was-refreshed-toast-keeps-popping-up`;
       if(satisfyPluginPlatformVersion('<7.11')){
         getToasts().add({
           color: 'success',
@@ -230,29 +220,15 @@ export const WzVisualize = compose(
                     aria-label="Expand"
                   />
                 </EuiFlexGroup>
-                <div style={{ height: '100%' }}>
-                  {(vis.id !== 'Wazuh-App-Overview-General-Agents-status' ||
-                    (vis.id === 'Wazuh-App-Overview-General-Agents-status' &&
-                      this.monitoringEnabled)) && (
-                    <WzReduxProvider>
-                      <KibanaVis
-                        refreshKnownFields={this.refreshKnownFields}
-                        visID={vis.id}
-                        tab={selectedTab}
-                        {...this.props}
-                      ></KibanaVis>
-                    </WzReduxProvider>
-                  )}
-                  {vis.id === 'Wazuh-App-Overview-General-Agents-status' &&
-                    !this.monitoringEnabled && (
-                      <EuiPage style={{ background: 'transparent' }}>
-                        <EuiDescriptionList
-                          type="column"
-                          listItems={this.agentsStatus}
-                          style={{ maxWidth: '400px' }}
-                        />
-                      </EuiPage>
-                    )}
+                <div style={{ height: '100%' }}>   
+                  <WzReduxProvider>
+                    <KibanaVis
+                      refreshKnownFields={this.refreshKnownFields}
+                      visID={vis.id}
+                      tab={selectedTab}
+                      {...this.props}
+                    ></KibanaVis>
+                  </WzReduxProvider>
                 </div>
               </EuiFlexItem>
             </EuiPanel>

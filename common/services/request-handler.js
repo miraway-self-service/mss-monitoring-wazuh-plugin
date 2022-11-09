@@ -1,7 +1,6 @@
 import axios from 'axios';
 
 let allow = true;
-let currentid = 0;
 const cancelToken = axios.CancelToken
 const source = cancelToken.source();
 
@@ -32,8 +31,6 @@ export const request = async (options = '') => {
     if (!options.method | !options.url) {
         return Promise.reject("Missing parameters")
     }
-    const requestId = currentid;
-    currentid++;
 
     options = {...options,cancelToken: source.token, validateStatus: function (status) {
     return (status >= 200 && status < 300) || status === 401;

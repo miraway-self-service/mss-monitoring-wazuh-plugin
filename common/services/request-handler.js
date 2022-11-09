@@ -1,25 +1,14 @@
 import axios from 'axios';
 
 let allow = true;
-let aborts = [];
 let currentid = 0;
+const cancelToken = axios.CancelToken
+const source = cancelToken.source();
 
-const removeController = (id) => {
-    const index = aborts.findIndex(object => {
-        return object.id === id;
-    });
-    if (!id) {
-        return;
-    }
-    aborts.splice(index);
-    return;
-}
 
 export const disableRequests = () => {
     allow = false;
-    aborts.forEach(item => {
-        item.controller.abort();
-    })
+    source.cancel('Requests cancelled');
     return;
 }
 
@@ -45,13 +34,19 @@ export const request = async (options = '') => {
     }
     const requestId = currentid;
     currentid++;
-    const abort = new AbortController();
-    options = {...options,signal:abort.signal}
+
+    options = {...options,cancelToken: source.token, validateStatus: function (status) {
+    return (status >= 200 && status < 300) || status === 401;
+  },}
     if (allow) {
         try {
-            aborts.push({ id: requestId, controller: abort });
             const requestData = await axios(options);
-            removeController(requestId);
+            if(requestData.status === 401){
+                if(requestData.data.message === 'Unauthorized'){
+                    disableRequests();
+                }
+                throw new Error(requestData.data)
+            }
             return Promise.resolve(requestData);
         }
         catch (e) {

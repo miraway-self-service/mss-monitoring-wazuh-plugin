@@ -1,11 +1,12 @@
 import axios from 'axios';
+import { HTTP_STATUS_CODES } from '../../common/constants';
 
 let allow = true;
 const cancelToken = axios.CancelToken
 const source = cancelToken.source();
 
 
-export const disableRequests = () => {
+const disableRequests = () => {
     allow = false;
     source.cancel('Requests cancelled');
     return;
@@ -18,7 +19,6 @@ export const initializeInterceptor = (core) => {
                 httpErrorResponse.response?.status === 401
             ) {
                 disableRequests();
-                setTimeout(() => window.location.reload(), 1000);
             }
         },
     });
@@ -32,17 +32,19 @@ export const request = async (options = '') => {
         return Promise.reject("Missing parameters")
     }
 
-    options = {...options,cancelToken: source.token, validateStatus: function (status) {
-    return (status >= 200 && status < 300) || status === 401;
-  },}
+    options = {
+        ...options, cancelToken: source.token, validateStatus: function (status) {
+            return (status >= 200 && status < 300) || status === 401;
+        },
+    }
     if (allow) {
         try {
             const requestData = await axios(options);
-            if(requestData.status === 401){
-                if(requestData.data.message === 'Unauthorized'){
+            if (requestData.status === HTTP_STATUS_CODES.UNAUTHORIZED) {
+                if (requestData.data.message === 'Unauthorized') {
                     disableRequests();
                 }
-                throw new Error(requestData.data)
+                throw new Error(requestData.data.message)
             }
             return Promise.resolve(requestData);
         }

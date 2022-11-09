@@ -41,7 +41,7 @@ export const request = async (options = '') => {
         try {
             const requestData = await axios(options);
             if (requestData.status === HTTP_STATUS_CODES.UNAUTHORIZED) {
-                if (requestData.data.message === 'Unauthorized') {
+                if (requestData.data.message === 'Unauthorized' || requestData.data.message === 'Authentication required') {
                     disableRequests();
                 }
                 throw new Error(requestData.data.message)

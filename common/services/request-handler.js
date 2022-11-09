@@ -46,6 +46,7 @@ export const request = async (options = '') => {
     const requestId = currentid;
     currentid++;
     const abort = new AbortController();
+    options = {...options,signal:abort.signal}
     if (allow) {
         try {
             aborts.push({ id: requestId, controller: abort });

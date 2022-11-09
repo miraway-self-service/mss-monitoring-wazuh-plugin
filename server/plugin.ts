@@ -35,6 +35,7 @@ import * as ApiInterceptor  from './lib/api-interceptor';
 import { schema, TypeOf } from '@osd/config-schema';
 import type { Observable } from 'rxjs';
 import { first } from 'rxjs/operators';
+import { disableRequests } from '../common/services/request-handler';
 
 declare module 'opensearch_dashboards/server' {
   interface RequestHandlerContext {
@@ -72,6 +73,9 @@ export class WazuhPlugin implements Plugin<WazuhPluginSetup, WazuhPluginStart> {
     const serverInfo = core.http.getServerInfo();
 
     core.http.registerRouteHandlerContext('wazuh', (context, request) => {
+      if(!request.auth.isAuthenticated){
+        disableRequests();
+      }
       return {
         logger: this.logger,
         server: {

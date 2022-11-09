@@ -84,7 +84,6 @@ import {
   UI_SETTINGS,
 } from '../../../../src/plugins/data/public';
 import { addFatalError } from '../../../../src/plugins/opensearch_dashboards_legacy/public';
-import { WAZUH_ALERTS_PATTERN } from '../../common/constants';
 import {
   DEFAULT_COLUMNS_SETTING,
   SAMPLE_SIZE_SETTING,

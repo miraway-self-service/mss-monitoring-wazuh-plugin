@@ -11,8 +11,7 @@
  * Find more information about this on the LICENSE file.
  */
 
-import React, { useState, useEffect, Fragment } from 'react';
-import {categoriesNames} from '../../../../utils/config-equivalences';
+import React, { useState, useEffect } from 'react';
 import { AppNavigate } from '../../../../react-services/app-navigate';
 import {
   EuiFlexGroup,
@@ -24,10 +23,11 @@ import {
   EuiSearchBar,
 } from '@elastic/eui';
 import { EuiFormErrorText } from '@elastic/eui';
-import { PLUGIN_PLATFORM_WAZUH_DOCUMENTATION_URL_APP_CONFIGURATION } from '../../../../../common/constants';
+import { PLUGIN_PLATFORM_WAZUH_DOCUMENTATION_URL_PATH_APP_CONFIGURATION } from '../../../../../common/constants';
 import { getPluginDataPath } from '../../../../../common/plugin';
+import { webDocumentationLink } from '../../../../../common/services/web_documentation';
 
-export const Header = ({query, setQuery}) => {
+export const Header = ({query, setQuery, searchBarFilters}) => {
   return (
     <EuiFlexGroup gutterSize='none'>
       <EuiFlexItem>
@@ -38,13 +38,12 @@ export const Header = ({query, setQuery}) => {
       </EuiFlexItem>
       <EuiFlexItem>
         <EuiFlexGroup gutterSize='none' direction='column'>
-          <SearchBar query={query} setQuery={setQuery}/>
+          <SearchBar query={query} setQuery={setQuery} searchBarFilters={searchBarFilters}/>
         </EuiFlexGroup>
       </EuiFlexItem>
     </EuiFlexGroup>
   )
-}
-
+};
 
 const Title = () => {
   return (
@@ -60,14 +59,14 @@ const Title = () => {
               iconSize="l"
               aria-label="Help"
               target="_blank"
-              href={PLUGIN_PLATFORM_WAZUH_DOCUMENTATION_URL_APP_CONFIGURATION}
+              href={webDocumentationLink(PLUGIN_PLATFORM_WAZUH_DOCUMENTATION_URL_PATH_APP_CONFIGURATION)}
             ></EuiButtonIcon>
           </EuiToolTip>
         </h2>
       </EuiTitle>
     </EuiFlexItem>
   )
-}
+};
 
 const SubTitle = () => {
   return (
@@ -77,16 +76,15 @@ const SubTitle = () => {
       </EuiText>
     </EuiFlexItem>
   )
-}
+};
 
-const SearchBar = ({query, setQuery}) => {
-  const [categories, setCategories] = useState([]);
+const SearchBar = ({query, setQuery, searchBarFilters}) => {
   const [error, setError] = useState();
+  
   useEffect(() => {
-    const cats = categoriesNames.map(item => ({value: item}));
-    setCategories(cats);
     getDefaultCategory(setQuery)
-  }, [])
+  }, []);
+
   const onChange = (args) => {
     if(args.error){
       setError(args.error);
@@ -94,28 +92,23 @@ const SearchBar = ({query, setQuery}) => {
       setError(undefined);
       setQuery(args);
     }
-  }
+  };
+  
   return (
-    <Fragment>
+    <>
       <EuiSearchBar
-        filters={[{
-          type:'field_value_selection',
-          field:'category',
-          name:'Categories',
-          multiSelect:'or',
-          options:categories,
-        }]}
+        filters={searchBarFilters}
         query={query.query || query}
         onChange={onChange}
         />
       {!!error &&
         <EuiFormErrorText>{`${error.name}: ${error.message}`}</EuiFormErrorText >
       }
-    </Fragment>
+    </>
   )
-}
+};
 
 const getDefaultCategory = (setQuery) => {
   const category:string | undefined = AppNavigate.getUrlParameter('category')
   category && setQuery(`category:(${category})`)
-}
+};

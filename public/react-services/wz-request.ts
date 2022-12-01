@@ -15,11 +15,12 @@ import { ApiCheck } from './wz-api-check';
 import { WzAuthentication } from './wz-authentication';
 import { WzMisc } from '../factories/misc';
 import { WazuhConfig } from './wazuh-config';
-import { OdfeUtils } from '../utils';
 import IApiResponse from './interfaces/api-response.interface';
 import { getHttp } from '../kibana-services';
 import { PLUGIN_PLATFORM_REQUEST_HEADERS } from '../../common/constants';
 import { ErrorFactory } from './error-factory';
+import { request } from '../services/request-handler';
+
 export class WzRequest {
   static wazuhConfig: any;
 
@@ -33,13 +34,15 @@ export class WzRequest {
     method: Method,
     path,
     payload: any = null,
-    extraOptions: { shouldRetry?: boolean, checkCurrentApiIsUp?: boolean } = {
+    extraOptions: { shouldRetry?: boolean, checkCurrentApiIsUp?: boolean, overwriteHeaders?: any } = {
       shouldRetry: true, 
-      checkCurrentApiIsUp: true
+      checkCurrentApiIsUp: true,
+      overwriteHeaders: {}
     }
   ) {
     const shouldRetry = typeof extraOptions.shouldRetry === 'boolean' ? extraOptions.shouldRetry : true; 
-    const checkCurrentApiIsUp = typeof extraOptions.checkCurrentApiIsUp === 'boolean' ? extraOptions.checkCurrentApiIsUp : true; 
+    const checkCurrentApiIsUp = typeof extraOptions.checkCurrentApiIsUp === 'boolean' ? extraOptions.checkCurrentApiIsUp : true;
+    const overwriteHeaders = typeof extraOptions.overwriteHeaders === 'object' ? extraOptions.overwriteHeaders : {};
     try {
       if (!method || !path) {
         throw new Error('Missing parameters');
@@ -51,20 +54,20 @@ export class WzRequest {
       const url = getHttp().basePath.prepend(path);
       const options = {
         method: method,
-        headers: { ...PLUGIN_PLATFORM_REQUEST_HEADERS, 'content-type': 'application/json' },
+        headers: { ...PLUGIN_PLATFORM_REQUEST_HEADERS, 'content-type': 'application/json', ...overwriteHeaders },
         url: url,
         data: payload,
         timeout: timeout,
       };
 
-      const data = await axios(options);
+      const data = await request(options);
+
       if (data['error']) {
         throw new Error(data['error']);
       }
 
       return Promise.resolve(data);
     } catch (error) {
-      OdfeUtils.checkOdfeSessionExpired(error as AxiosError);
       //if the requests fails, we need to check if the API is down
       if(checkCurrentApiIsUp){
         const currentApi = JSON.parse(AppState.getCurrentAPI() || '{}');

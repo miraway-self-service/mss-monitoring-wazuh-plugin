@@ -52,9 +52,9 @@ export function ErrorResponse(message = null, code = null, statusCode = null, re
       message.includes('ENOENT') &&
       message.toLowerCase().includes('no such file or directory') &&
       message.toLowerCase().includes('data') &&
-      code === 5029
+      code === 5029 || code === 5030 || code === 5031 || code === 5032
     ) {
-      filteredMessage = 'Reporting was aborted';
+      filteredMessage = 'Reporting was aborted - no such file or directory';
     } else if (isString && code === 5029) {
       filteredMessage = `Reporting was aborted (${message})`;
     }

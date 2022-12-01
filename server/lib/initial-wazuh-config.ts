@@ -1,5 +1,5 @@
 /*
- * Wazuh app - Initial basic configuration file
+ * Wazuh app - App configuration file
  * Copyright (C) 2015-2022 Wazuh, Inc.
  *
  * This program is free software; you can redistribute it and/or modify
@@ -10,9 +10,14 @@
  * Find more information about this on the LICENSE file.
  */
 
-import { ASSETS_BASE_URL_PREFIX, WAZUH_MONITORING_DEFAULT_INDICES_REPLICAS, WAZUH_MONITORING_DEFAULT_INDICES_SHARDS, WAZUH_STATISTICS_DEFAULT_INDICES_REPLICAS, WAZUH_STATISTICS_DEFAULT_INDICES_SHARDS } from "../../common/constants";
+import {
+  PLUGIN_SETTINGS_CATEGORIES,
+  TPluginSettingWithKey,
+} from '../../common/constants';
+import { getPluginSettingDescription, getSettingsDefaultList, groupSettingsByCategory } from '../../common/services/settings';
+import { webDocumentationLink } from '../../common/services/web_documentation';
 
-export const initialWazuhConfig: string = `---
+export const header: string = `---
 #
 # Wazuh app - App configuration file
 # Copyright (C) 2015-2022 Wazuh, Inc.
@@ -24,213 +29,140 @@ export const initialWazuhConfig: string = `---
 #
 # Find more information about this on the LICENSE file.
 #
-# ======================== Wazuh app configuration file ========================
+${printSection('Wazuh app configuration file', {prefix: '# ', fill: '='})}
 #
-# Please check the documentation for more information on configuration options:
-# https://documentation.wazuh.com/current/installation-guide/index.html
+# Please check the documentation for more information about configuration options:
+# ${webDocumentationLink('user-manual/wazuh-dashboard/config-file.html')}
 #
 # Also, you can check our repository:
-# https://github.com/wazuh/wazuh-kibana-app
-#
-# ------------------------------- Disable roles -------------------------------
-#
-# Defines which Elasticsearch roles disable Wazuh
-# disabled_roles: 
-#      - wazuh_disabled
-#
-# ------------------------------- Index patterns -------------------------------
-#
-# Default index pattern to use.
-#pattern: wazuh-alerts-*
-#
-# ----------------------------------- Checks -----------------------------------
-#
-# Defines which checks must to be consider by the healthcheck
-# step once the Wazuh app starts. Values must to be true or false.
-#checks.pattern : true
-#checks.template: true
-#checks.fields  : true
-#checks.api     : true
-#checks.setup   : true
-#checks.metaFields: true
-#checks.timeFilter: true
-#checks.maxBuckets: true
-#
-# --------------------------------- Extensions ---------------------------------
-#
-# Defines which extensions should be activated when you add a new API entry.
-# You can change them after Wazuh app starts.
-# Values must to be true or false.
-#extensions.pci       : true
-#extensions.gdpr      : true
-#extensions.hipaa     : true
-#extensions.nist      : true
-#extensions.tsc       : true
-#extensions.audit     : true
-#extensions.oscap     : false
-#extensions.ciscat    : false
-#extensions.aws       : false
-#extensions.gcp       : false
-#extensions.virustotal: false
-#extensions.osquery   : false
-#extensions.docker    : false
-#
-# ---------------------------------- Timeout ----------------------------------
-#
-# Defines maximum timeout to be used on the Wazuh app requests.
-# It will be ignored if it is bellow 1500.
-# It means milliseconds before we consider a request as failed.
-# Default: 20000
-#timeout: 20000
-#
-# -------------------------------- API selector --------------------------------
-#
-# Defines if the user is allowed to change the selected
-# API directly from the Wazuh app top menu.
-# Default: true
-#api.selector: true
-#
-# --------------------------- Index pattern selector ---------------------------
-#
-# Defines if the user is allowed to change the selected
-# index pattern directly from the Wazuh app top menu.
-# Default: true
-#ip.selector: true
-#
-# List of index patterns to be ignored
-#ip.ignore: []
-#
-# -------------------------------- X-Pack RBAC ---------------------------------
-#
-# Custom setting to enable/disable built-in X-Pack RBAC security capabilities.
-# Default: enabled
-#xpack.rbac.enabled: true
-#
-# ------------------------------ wazuh-monitoring ------------------------------
-#
-# Custom setting to enable/disable wazuh-monitoring indices.
-# Values: true, false, worker
-# If worker is given as value, the app will show the Agents status
-# visualization but won't insert data on wazuh-monitoring indices.
-# Default: true
-#wazuh.monitoring.enabled: true
-#
-# Custom setting to set the frequency for wazuh-monitoring indices cron task.
-# Default: 900 (s)
-#wazuh.monitoring.frequency: 900
-#
-# Configure wazuh-monitoring-* indices shards and replicas.
-#wazuh.monitoring.shards: ${WAZUH_MONITORING_DEFAULT_INDICES_SHARDS}
-#wazuh.monitoring.replicas: ${WAZUH_MONITORING_DEFAULT_INDICES_REPLICAS}
-#
-# Configure wazuh-monitoring-* indices custom creation interval.
-# Values: h (hourly), d (daily), w (weekly), m (monthly)
-# Default: w
-#wazuh.monitoring.creation: w
-#
-# Default index pattern to use for Wazuh monitoring
-#wazuh.monitoring.pattern: wazuh-monitoring-*
-#
-# --------------------------------- wazuh-cron ----------------------------------
-#
-# Customize the index prefix of predefined jobs
-# This change is not retroactive, if you change it new indexes will be created
-# cron.prefix: wazuh
-#
-# --------------------------------- wazuh-sample-alerts -------------------------
-#
-# Customize the index name prefix of sample alerts
-# This change is not retroactive, if you change it new indexes will be created
-# It should match with a valid index template to avoid unknown fields on
-# dashboards
-#alerts.sample.prefix: wazuh-alerts-4.x-
-#
-# ------------------------------ wazuh-statistics -------------------------------
-#
-# Custom setting to enable/disable statistics tasks.
-#cron.statistics.status: true
-#
-# Enter the ID of the APIs you want to save data from, leave this empty to run
-# the task on all configured APIs
-#cron.statistics.apis: []
-#
-# Define the frequency of task execution using cron schedule expressions
-#cron.statistics.interval: 0 */5 * * * *
-#
-# Define the name of the index in which the documents are to be saved.
-#cron.statistics.index.name: statistics
-#
-# Define the interval in which the index will be created
-#cron.statistics.index.creation: w
-#
-# Configure statistics indices shards and replicas.
-#cron.statistics.shards: ${WAZUH_STATISTICS_DEFAULT_INDICES_SHARDS}
-#cron.statistics.replicas: ${WAZUH_STATISTICS_DEFAULT_INDICES_REPLICAS}
-#
-# ------------------------------ wazuh-logo-customization -------------------------------
-#
-#Define the name of the app logo saved in the path ${ASSETS_BASE_URL_PREFIX}
-#customization.logo.app: ''
-#
-#Define the name of the sidebar logo saved in the path ${ASSETS_BASE_URL_PREFIX}
-#customization.logo.sidebar: ''
-#
-#Define the name of the health-check logo saved in the path ${ASSETS_BASE_URL_PREFIX}
-#customization.logo.healthcheck: ''
-#
-#Define the name of the reports logo (.png) saved in the path ${ASSETS_BASE_URL_PREFIX}
-#customization.logo.reports: ''
-#
-# ---------------------------- Hide manager alerts ------------------------------
-# Hide the alerts of the manager in all dashboards and discover
-#hideManagerAlerts: false
-#
-# ------------------------------- App logging level -----------------------------
-# Set the logging level for the Wazuh App log files.
-# Default value: info
-# Allowed values: info, debug
-#logs.level: info
-#
-# -------------------------------- Enrollment DNS -------------------------------
-# Set the variable WAZUH_REGISTRATION_SERVER in agents deployment.
-# Default value: ''
-#enrollment.dns: ''
-#
-# Wazuh registration password
-# Default value: ''
-#enrollment.password: ''
-#-------------------------------- API entries -----------------------------------
-#The following configuration is the default structure to define an API entry.
-#
-#hosts:
-#  - <id>:
-      # URL
-      # API url
-      # url: http(s)://<url>
+# https://github.com/wazuh/wazuh-kibana-app`;
 
-      # Port
-      # API port
-      # port: <port>
+const pluginSettingsConfigurationFile = getSettingsDefaultList().filter(({isConfigurableFromFile}) => isConfigurableFromFile);
 
-      # Username
-      # API user's username
-      # username: <username>
+const pluginSettingsConfigurationFileGroupByCategory = groupSettingsByCategory(pluginSettingsConfigurationFile);
 
-      # Password
-      # API user's password
-      # password: <password>
+const pluginSettingsConfiguration = pluginSettingsConfigurationFileGroupByCategory.map(({category: categoryID, settings}) => {
+  const category = printSettingCategory(PLUGIN_SETTINGS_CATEGORIES[categoryID]);
 
-      # Run as
-      # Define how the app user gets his/her app permissions.
-      # Values:
-      #   - true: use his/her authentication context. Require Wazuh API user allows run_as.
-      #   - false or not defined: get same permissions of Wazuh API user.
-      # run_as: <true|false>
+  const pluginSettingsOfCategory = settings
+    .map(setting => printSetting(setting)
+    ).join('\n#\n');
+  /*
+  #------------------- {category name} --------------
+  #
+  #  {category description}
+  #
+  # {setting description}
+  # settingKey: settingDefaultValue
+  #
+  # {setting description}
+  # settingKey: settingDefaultValue
+  # ...
+  */
+  return [category, pluginSettingsOfCategory].join('\n#\n');
+}).join('\n#\n');
+
+
+export function printSettingValue(value: unknown): any{
+  if(typeof value === 'object'){
+    return JSON.stringify(value)
+  };
+
+  if(typeof value === 'string' && value.length === 0){
+    return `''`
+  };
+
+  return value;
+};
+
+export function printSetting(setting: TPluginSettingWithKey): string{
+  /*
+  # {setting description}
+  # {settingKey}: {settingDefaultValue}
+  */
+  return [
+    splitDescription(getPluginSettingDescription(setting)),
+    `# ${setting.key}: ${printSettingValue(setting.defaultValue)}`
+  ].join('\n')
+}
+
+export function printSettingCategory({title, description}){
+  /*
+  #------------------------------- {category title} -------------------------------
+  # {category description}
+  #
+  */
+  return [
+    printSection(title, {prefix: '# ', fill: '-'}),
+    ...(description ? [splitDescription(description)] : [''])
+  ].join('\n#\n')
+};
+
+export function printSection(text: string, options?: {maxLength?: number, prefix?: string,  suffix?: string, spaceAround?: number, fill?: string }){
+  const maxLength = options?.maxLength ?? 80;
+  const prefix = options?.prefix ?? '';
+  const sufix = options?.suffix ?? '';
+  const spaceAround = options?.spaceAround ?? 1;
+  const fill = options?.fill ?? ' ';
+  const fillLength = maxLength - prefix.length - sufix.length - (2 * spaceAround) - text.length;
+
+  return [
+    prefix,
+    fill.repeat(Math.floor(fillLength/2)),
+    ` ${text} `,
+    fill.repeat(Math.ceil(fillLength/2)),
+    sufix
+  ].join('');
+};
+
+export const hostsConfiguration = `${printSection('Wazuh hosts', {prefix: '# ', fill: '-'})}
+#
+# The following configuration is the default structure to define a host.
+#
+# hosts:
+#   # Host ID / name,
+#   - env-1:
+#       # Host URL
+#       url: https://env-1.example
+#       # Host / API port
+#       port: 55000
+#       # Host / API username
+#       username: wazuh-wui
+#       # Host / API password
+#       password: wazuh-wui
+#       # Use RBAC or not. If set to true, the username must be "wazuh-wui".
+#       run_as: true
+#   - env-2:
+#       url: https://env-2.example
+#       port: 55000
+#       username: wazuh-wui
+#       password: wazuh-wui
+#       run_as: true
+
 hosts:
   - default:
-     url: https://localhost
-     port: 55000
-     username: wazuh-wui
-     password: wazuh-wui
-     run_as: false
-`
+      url: https://localhost
+      port: 55000
+      username: wazuh-wui
+      password: wazuh-wui
+      run_as: false
+`;
+
+/**
+ * Given a string, this function builds a multine string, each line about 70
+ * characters long, splitted at the closest whitespace character to that lentgh.
+ *
+ * This function is used to transform the settings description
+ * into a multiline string to be used as the setting documentation.
+ *
+ * The # character is also appended to the beginning of each line.
+ *
+ * @param text
+ * @returns multine string
+ */
+export function splitDescription(text: string = ''): string {
+  const lines = text.match(/.{1,80}(?=\s|$)/g) || [];
+  return lines.map((z) => '# ' + z.trim()).join('\n');
+}
+
+export const initialWazuhConfig: string = [header, pluginSettingsConfiguration, hostsConfiguration].join('\n#\n');

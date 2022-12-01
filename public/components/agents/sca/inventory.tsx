@@ -16,8 +16,6 @@ import {
   EuiFlexGroup,
   EuiPanel,
   EuiPage,
-  EuiBasicTable,
-  EuiInMemoryTable,
   EuiSpacer,
   EuiText,
   EuiProgress,
@@ -25,8 +23,6 @@ import {
   EuiButton,
   EuiButtonIcon,
   EuiStat,
-  EuiHealth,
-  EuiDescriptionList,
   EuiButtonEmpty,
   EuiToolTip,
   EuiCallOut,
@@ -36,9 +32,7 @@ import {
 import { WzRequest } from '../../../react-services/wz-request';
 import { formatUIDate } from '../../../react-services/time-service';
 import exportCsv from '../../../react-services/wz-csv';
-import { getToasts }  from '../../../kibana-services';
-import { WzSearchBar } from '../../../components/wz-search-bar';
-import { RuleText, ComplianceText } from './components';
+import { getToasts } from '../../../kibana-services';
 import _ from 'lodash';
 import {
   UI_ERROR_SEVERITIES,
@@ -49,124 +43,98 @@ import {
 import { API_NAME_AGENT_STATUS, UI_LOGGER_LEVELS } from '../../../../common/constants';
 import { getErrorOrchestrator } from '../../../react-services/common-services';
 import { VisualizationBasic } from '../../common/charts/visualizations/basic';
+import { AppNavigate } from '../../../react-services/app-navigate';
+import SCAPoliciesTable from './inventory/agent-policies-table';
+import { InventoryPolicyChecksTable } from './inventory/checks-table';
+import { RuleText } from './components';
 
-export class Inventory extends Component {
+type InventoryProps = {
+  agent: { [key: string]: any };
+};
+
+type InventoryState = {
+  itemIdToExpandedRowMap: object;
+  showMoreInfo: boolean;
+  loading: boolean;
+  checksIsLoading: boolean;
+  redirect: boolean;
+  filters: object[];
+  pageTableChecks: { pageIndex: number; pageSize?: number };
+  policies: object[];
+  checks: object[];
+  lookingPolicy: { [key: string]: any } | boolean;
+  loadingPolicy: boolean;
+  secondTable: boolean;
+  secondTableBack: boolean;
+};
+export class Inventory extends Component<InventoryProps, InventoryState> {
   _isMount = false;
+  agent: { [key: string]: any } = {};
+  columnsPolicies: object[];
+  lookingPolicy: { [key: string]: any } | false = false;
   constructor(props) {
     super(props);
-    const { agent } = this.props;
-    this.state = { agent, items: [], itemIdToExpandedRowMap: {}, showMoreInfo: false, loading: false, filters: [], pageTableChecks: {pageIndex: 0}, policies: [] }
-    this.suggestions = {};
+    this.state = {
+      itemIdToExpandedRowMap: {},
+      showMoreInfo: false,
+      loading: false,
+      filters: [],
+      pageTableChecks: { pageIndex: 0 },
+      policies: [],
+      checks: [],
+      redirect: false,
+      secondTable: false,
+      secondTableBack: false,
+      checksIsLoading: false,
+      lookingPolicy: false,
+      loadingPolicy: false,
+    };
+
     this.columnsPolicies = [
       {
         field: 'name',
-        name: 'Policy'
+        name: 'Policy',
+        sortable: true,
       },
       {
         field: 'description',
         name: 'Description',
-        truncateText: true
+        truncateText: true,
+        sortable: true,
       },
       {
         field: 'end_scan',
         name: 'End scan',
         dataType: 'date',
-        render: formatUIDate
+        render: formatUIDate,
+        sortable: true,
       },
       {
         field: 'pass',
         name: 'Pass',
-        width: "100px"
+        width: '100px',
+        sortable: true,
       },
       {
         field: 'fail',
         name: 'Fail',
-        width: "100px"
+        width: '100px',
+        sortable: true,
       },
       {
         field: 'invalid',
         name: 'Not applicable',
-        width: "100px"
+        width: '100px',
+        sortable: true,
       },
       {
         field: 'score',
         name: 'Score',
-        render: score => {
+        render: (score) => {
           return `${score}%`;
         },
-        width: "100px"
+        width: '100px',
       },
-    ];
-    this.columnsChecks = [
-      {
-        field: 'id',
-        name: 'ID',
-        sortable: true,
-        width: "100px"
-      },
-      {
-        field: 'title',
-        name: 'Title',
-        sortable: true,
-        truncateText: true
-      },
-      {
-        name: 'Target',
-        truncateText: true,
-        render: item => (
-          <div>
-            {item.file ? (
-              <span>
-                <b>File:</b> {item.file}
-              </span>
-            ) : item.directory ? (
-              <span>
-                <b>Directory:</b> {item.directory}
-              </span>
-            ) : item.process ? (
-              <span>
-                <b>Process: </b> {item.process}
-              </span>
-            ) : item.command ? (
-              <span>
-                <b>Command: </b> {item.command}
-              </span>
-            ) : item.registry ? (
-              <span>
-                <b>Registry: </b> {item.registry}
-              </span>
-            ) : (
-                        '-'
-                      )}
-          </div>
-        )
-      },
-      {
-        field: 'result',
-        name: 'Result',
-        truncateText: true,
-        sortable: true,
-        width: "150px",
-        render: this.addHealthResultRender,
-      },
-      {
-        align: 'right',
-        width: "40px",
-        isExpander: true,
-        render: item => (
-          <EuiButtonIcon
-            onClick={() => this.toggleDetails(item)}
-            aria-label={
-              this.state.itemIdToExpandedRowMap[item.id] ? 'Collapse' : 'Expand'
-            }
-            iconType={
-              this.state.itemIdToExpandedRowMap[item.id]
-                ? 'arrowUp'
-                : 'arrowDown'
-            }
-          />
-        )
-      }
     ];
   }
 
@@ -179,13 +147,14 @@ export class Inventory extends Component {
       if (match && match[0]) {
         this.setState({ loading: true });
         const id = match[0].split('=')[1];
-        const policy = await WzRequest.apiReq(
-          'GET',
-          `/sca/${this.props.agent.id}`,
-          { "q": "policy_id=" + id }
-        );
+        const policy = await WzRequest.apiReq('GET', `/sca/${this.props.agent.id}`, {
+          q: 'policy_id=' + id,
+        });
         await this.loadScaPolicy(((((policy || {}).data || {}).data || {}).items || [])[0]);
-        window.location.href = window.location.href.replace(new RegExp('redirectPolicy=' + '[^&]*'), '');
+        window.location.href = window.location.href.replace(
+          new RegExp('redirectPolicy=' + '[^&]*'),
+          ''
+        );
         this.setState({ loading: false });
       }
     } catch (error) {
@@ -208,9 +177,19 @@ export class Inventory extends Component {
   async componentDidUpdate(prevProps, prevState) {
     if (!_.isEqual(this.props.agent, prevProps.agent)) {
       this.setState({ lookingPolicy: false }, async () => await this.initialize());
-    };
-    if(!_.isEqual(this.state.filters, prevState.filters)){
-      this.setState({itemIdToExpandedRowMap: {}, pageTableChecks: {pageIndex: 0, pageSize: this.state.pageTableChecks.pageSize}});
+    }
+    if (!_.isEqual(this.state.filters, prevState.filters)) {
+      this.setState({
+        itemIdToExpandedRowMap: {},
+        pageTableChecks: { pageIndex: 0, pageSize: this.state.pageTableChecks.pageSize },
+      });
+    }
+
+    const regex = new RegExp('redirectPolicyTable=' + '[^&]*');
+    const match = window.location.href.match(regex);
+    if (match && match[0] && !this.state.secondTable && !this.state.secondTableBack) {
+      this.loadScaPolicy(match[0].split('=')[1], true)
+      this.setState({secondTableBack: true, checksIsLoading: true})
     }
   }
 
@@ -218,67 +197,18 @@ export class Inventory extends Component {
     this._isMount = false;
   }
 
-  addHealthResultRender(result) {
-    const color = result => {
-      if (result.toLowerCase() === 'passed') {
-        return 'success';
-      } else if (result.toLowerCase() === 'failed') {
-        return 'danger';
-      } else {
-        return 'subdued';
-      }
-    };
-
-    return (
-      <EuiHealth color={color(result)} style={{ textTransform: 'capitalize' }}>
-        {result || 'Not applicable'}
-      </EuiHealth>
-    );
-  }
-
-  buildSuggestionSearchBar(policy, checks) {
-    if (this.suggestions[policy]) return;
-    const distinctFields = {};
-    checks.forEach(item => {
-      Object.keys(item).forEach(field => {
-        if (typeof item[field] === 'string') {
-          if (!distinctFields[field]) {
-            distinctFields[field] = {};
-          }
-          if (!distinctFields[field][item[field]]) {
-            distinctFields[field][item[field]] = true;
-          }
-        }
-      });
-    });
-
-    this.suggestions[policy] = [
-      { type: 'params', label: 'condition', description: 'Filter by check condition', operators: ['=', '!=',], values: (value) => { return Object.keys(distinctFields["condition"]).filter(item => item && item.toLowerCase().includes(value.toLowerCase())) } },
-      { type: 'params', label: 'file', description: 'Filter by check file', operators: ['=', '!=',], values: (value) => { return Object.keys(distinctFields["file"]).filter(item => item && item.toLowerCase().includes(value.toLowerCase())) } },
-      { type: 'params', label: 'title', description: 'Filter by check title', operators: ['=', '!=',], values: (value) => { return Object.keys(distinctFields["title"]).filter(item => item && item.toLowerCase().includes(value.toLowerCase())) } },
-      { type: 'params', label: 'result', description: 'Filter by check result', operators: ['=', '!=',], values: (value) => { return Object.keys(distinctFields["result"]).filter(item => item && item && item.toLowerCase().includes(value.toLowerCase())) } },
-      { type: 'params', label: 'status', description: 'Filter by check status', operators: ['=', '!=',], values: (value) => { return Object.keys(distinctFields["status"]).filter(item => item && item.toLowerCase().includes(value.toLowerCase())) } },
-      { type: 'params', label: 'rationale', description: 'Filter by check rationale', operators: ['=', '!=',], values: (value) => { return Object.keys(distinctFields["rationale"]).filter(item => item && item.toLowerCase().includes(value.toLowerCase())) } },
-      { type: 'params', label: 'registry', description: 'Filter by check registry', operators: ['=', '!=',], values: (value) => { return Object.keys(distinctFields["registry"] || {}).filter(item => item && item.toLowerCase().includes(value.toLowerCase())) } },
-      { type: 'params', label: 'description', description: 'Filter by check description', operators: ['=', '!=',], values: (value) => { return Object.keys(distinctFields["description"]).filter(item => item && item.toLowerCase().includes(value.toLowerCase())) } },
-      { type: 'params', label: 'remediation', description: 'Filter by check remediation', operators: ['=', '!=',], values: (value) => { return Object.keys(distinctFields["remediation"]).filter(item => item && item.toLowerCase().includes(value.toLowerCase())) } },
-      { type: 'params', label: 'reason', description: 'Filter by check reason', operators: ['=', '!=',], values: (value) => { return Object.keys(distinctFields["reason"]).filter(item => item && item.toLowerCase().includes(value.toLowerCase())) } },
-    ]
-
-  }
-
   async initialize() {
     try {
       this._isMount && this.setState({ loading: true });
       this.lookingPolicy = false;
-      const {data: {data: {affected_items: policies}}} = await WzRequest.apiReq(
-        'GET',
-        `/sca/${this.props.agent.id}`,
-        {}
-      );
+      const {
+        data: {
+          data: { affected_items: policies },
+        },
+      } = await WzRequest.apiReq('GET', `/sca/${this.props.agent.id}`, {});
       this._isMount && this.setState({ loading: false, policies });
     } catch (error) {
-      this.setState({ loading: false, policies: []});
+      this.setState({ loading: false, policies: [] });
 
       const options: UIErrorLog = {
         context: `${Inventory.name}.initialize`,
@@ -294,37 +224,31 @@ export class Inventory extends Component {
     }
   }
 
-  async loadScaPolicy(policy) {
+  handleBack (ev) {
+        AppNavigate.navigateToModule(ev, 'agents', { tab: 'welcome', agent: this.props.agent.id });
+        ev.stopPropagation();
+  };
+
+  async loadScaPolicy(policy, secondTable?) {
     this._isMount &&
       this.setState({
         loadingPolicy: true,
         itemIdToExpandedRowMap: {},
         pageTableChecks: { pageIndex: 0 },
+        secondTable: secondTable ? secondTable : false
       });
     if (policy) {
       try {
         const policyResponse = await WzRequest.apiReq('GET', `/sca/${this.props.agent.id}`, {
           params: {
-            q: 'policy_id=' + policy.policy_id,
+            q: 'policy_id=' + policy,
           },
         });
         const [policyData] = policyResponse.data.data.affected_items;
-        // It queries all checks without filters, because the filters are applied in the results
-        // due to the use of EuiInMemoryTable instead EuiTable components and do arequest with each change of filters.
-        const checksResponse = await WzRequest.apiReq(
-          'GET',
-          `/sca/${this.props.agent.id}/checks/${policy.policy_id}`,
-          {}
-        );
-        const checks = (
-          (((checksResponse || {}).data || {}).data || {}).affected_items || []
-        ).map((item) => ({ ...item, result: item.result || 'not applicable' }));
-        this.buildSuggestionSearchBar(policyData.policy_id, checks);
         this._isMount &&
-          this.setState({ lookingPolicy: policyData, loadingPolicy: false, items: checks });
+          this.setState({ lookingPolicy: policyData, loadingPolicy: false, checksIsLoading: false });
       } catch (error) {
-        this.setState({ lookingPolicy: policy, loadingPolicy: false });
-
+        this.setState({ lookingPolicy: policy, loadingPolicy: false, checksIsLoading: false });
         const options: UIErrorLog = {
           context: `${Inventory.name}.loadScaPolicy`,
           level: UI_LOGGER_LEVELS.ERROR as UILogLevel,
@@ -338,21 +262,11 @@ export class Inventory extends Component {
         getErrorOrchestrator().handleError(options);
       }
     } else {
-      this._isMount && this.setState({ lookingPolicy: policy, loadingPolicy: false, items: [] });
+      this._isMount && this.setState({ lookingPolicy: policy, loadingPolicy: false, items: [], checksIsLoading: false });
     }
   }
 
-  filterPolicyChecks = () => !!this.state.items && this.state.items.filter(check =>
-      this.state.filters.every(filter =>
-        filter.field === 'search'
-        ? Object.keys(check).some(key =>  ['string', 'number'].includes(typeof check[key]) && String(check[key]).toLowerCase().includes(filter.value.toLowerCase()))
-        : typeof check[filter.field] === 'string' && (filter.value === '' ? check[filter.field] === filter.value
-          : check[filter.field].toLowerCase().includes(filter.value.toLowerCase())
-        )
-      )
-    )
-
-  toggleDetails = item => {
+  toggleDetails = (item) => {
     const itemIdToExpandedRowMap = { ...this.state.itemIdToExpandedRowMap };
 
     if (itemIdToExpandedRowMap[item.id]) {
@@ -361,30 +275,30 @@ export class Inventory extends Component {
       let checks = '';
       checks += (item.rules || []).length > 1 ? 'Checks' : 'Check';
       checks += item.condition ? ` (Condition: ${item.condition})` : '';
-      const complianceText = item.compliance && item.compliance.length
-        ? item.compliance.map(el => `${el.key}: ${el.value}`).join('\n')
-        : '';
-      const rulesText = item.rules.length ? item.rules.map(el => el.rule).join('\n') : '';
+      const complianceText =
+        item.compliance && item.compliance.length
+          ? item.compliance.map((el) => `${el.key}: ${el.value}`).join('\n')
+          : '';
       const listItems = [
         {
           title: 'Check not applicable due to:',
-          description: item.reason
+          description: item.reason,
         },
         {
           title: 'Rationale',
-          description: item.rationale || '-'
+          description: item.rationale || '-',
         },
         {
           title: 'Remediation',
-          description: item.remediation || '-'
+          description: item.remediation || '-',
         },
         {
           title: 'Description',
-          description: item.description || '-'
+          description: item.description || '-',
         },
         {
           title: (item.directory || '').includes(',') ? 'Paths' : 'Path',
-          description: item.directory
+          description: item.directory,
         },
         {
           title: checks,
@@ -392,15 +306,13 @@ export class Inventory extends Component {
         },
         {
           title: 'Compliance',
-          description: <ComplianceText complianceText={complianceText} />
-        }
+          description: <ComplianceText complianceText={complianceText} />,
+        },
       ];
-      const itemsToShow = listItems.filter(x => {
+      const itemsToShow = listItems.filter((x) => {
         return x.description;
       });
-      itemIdToExpandedRowMap[item.id] = (
-        <EuiDescriptionList listItems={itemsToShow} />
-      );
+      itemIdToExpandedRowMap[item.id] = <EuiDescriptionList listItems={itemsToShow} />;
     }
     this.setState({ itemIdToExpandedRowMap });
   };
@@ -412,6 +324,10 @@ export class Inventory extends Component {
       toastLifeTimeMs: time,
     });
   };
+
+  /**
+   *
+   */
   async downloadCsv() {
     try {
       this.showToast('success', 'Your download should begin automatically...', 3000);
@@ -436,46 +352,34 @@ export class Inventory extends Component {
   }
 
   buttonStat(text, field, value) {
-    return <button onClick={() => this.setState({ filters: [{ field, value }] })}>{text}</button>
+    return <button onClick={() => this.setState({ filters: [{ field, value }] })}>{text}</button>;
   }
 
-  onChangeTableChecks({ page: {index: pageIndex, size: pageSize} }){
-    this.setState({ pageTableChecks: {pageIndex, pageSize} });
+  onChangeTableChecks({ page: { index: pageIndex, size: pageSize } }) {
+    this.setState({ pageTableChecks: { pageIndex, pageSize } });
   }
 
   render() {
-    const getPoliciesRowProps = (item, idx) => {
-      return {
-        'data-test-subj': `sca-row-${idx}`,
-        className: 'customRowClass',
-        onClick: () => this.loadScaPolicy(item)
-      };
-    };
-    const getChecksRowProps = (item, idx) => {
-      return {
-        'data-test-subj': `sca-check-row-${idx}`,
-        className: 'customRowClass',
-        onClick: () => this.toggleDetails(item)
-      };
-    };
+    const { onClickRow } = this.props
 
-    const sorting = {
-      sort: {
-        field: 'id',
-        direction: 'asc'
-      }
-    };
+    const handlePoliciesTableClickRow = async (policy) => {
+      onClickRow ? onClickRow(policy) : await this.loadScaPolicy(policy.policy_id)
+      this.setState({ loading: false, redirect: true })
+    }
+
     const buttonPopover = (
       <EuiButtonEmpty
         iconType="iInCircle"
         aria-label="Help"
-        onClick={() => this.setState({ showMoreInfo: !this.state.showMoreInfo })}>
-      </EuiButtonEmpty>
+        onClick={() => this.setState({ showMoreInfo: !this.state.showMoreInfo })}
+      ></EuiButtonEmpty>
     );
+    const { agent } = this.props;
+
     return (
       <Fragment>
         <div>
-          {(this.state.loading &&
+          {this.state.loading || this.state.checksIsLoading && (
             <div style={{ margin: 16 }}>
               <EuiSpacer size="m" />
               <EuiProgress size="xs" color="primary" />
@@ -483,164 +387,210 @@ export class Inventory extends Component {
           )}
         </div>
         <EuiPage>
-          {((this.props.agent && (this.props.agent || {}).status !== API_NAME_AGENT_STATUS.NEVER_CONNECTED && !this.state.policies.length && !this.state.loading) &&
-            <EuiCallOut title="No scans available" iconType="iInCircle">
-              <EuiButton color="primary" onClick={() => this.initialize()}>
-                Refresh
-              </EuiButton>
-            </EuiCallOut>
-          )}
+          {agent &&
+            (agent || {}).status !== API_NAME_AGENT_STATUS.NEVER_CONNECTED &&
+            !this.state.policies.length &&
+            !this.state.loading && (
+              <EuiCallOut title="No scans available" iconType="iInCircle">
+                <EuiButton color="primary" onClick={() => this.initialize()}>
+                  Refresh
+                </EuiButton>
+              </EuiCallOut>
+            )}
 
-          {((this.props.agent && (this.props.agent || {}).status === API_NAME_AGENT_STATUS.NEVER_CONNECTED && !this.state.loading) &&
-            <EuiCallOut title="Agent has never connected" style={{ width: "100%" }} iconType="iInCircle">
-              <EuiButton color="primary" onClick={() => this.initialize()}>
-                Refresh
-              </EuiButton>
-            </EuiCallOut>
-          )}
-          {((this.props.agent && (this.props.agent || {}).os && !this.state.lookingPolicy && this.state.policies.length > 0 && !this.state.loading) &&
-            <div>
-              {this.state.policies.length &&
-                <EuiFlexGroup style={{ 'marginTop': 0 }}>
-                  {this.state.policies.map((policy, idx) => (
-                    <EuiFlexItem key={idx} grow={false}>
-                      <EuiCard title description betaBadgeLabel={policy.name} style={{ paddingBottom: 0 }}>
-                        <VisualizationBasic
-                          type='donut'
-                          size={{ width: '100%', height: '150px' }}
-                          data={[
-                            { label: 'Pass', value: policy.pass, color: '#00a69b' },
-                            { label: 'Fail', value: policy.fail, color: '#ff645c' },
-                            {
-                              label: 'Not applicable',
-                              value: policy.invalid,
-                              color: '#5c6773'
-                            }
-                          ]}
-                          showLegend
-                          noDataTitle='No results'
-                          noDataMessage='No results were found.'
-                        />
-                        <EuiSpacer size="m" />
-                      </EuiCard>
+          {agent &&
+            (agent || {}).status === API_NAME_AGENT_STATUS.NEVER_CONNECTED &&
+            !this.state.loading && (
+              <EuiCallOut
+                title="Agent has never connected"
+                style={{ width: '100%' }}
+                iconType="iInCircle"
+              >
+                <EuiButton color="primary" onClick={() => this.initialize()}>
+                  Refresh
+                </EuiButton>
+              </EuiCallOut>
+            )}
+          {agent &&
+            (agent || {}).os &&
+            !this.state.lookingPolicy &&
+            this.state.policies.length > 0 &&
+            !this.state.loading && !this.state.checksIsLoading && (
+              <div>
+                {this.state.policies.length && (
+                  <EuiFlexGroup style={{ marginTop: 0 }}>
+                    {this.state.policies.map((policy: any, idx) => (
+                      <EuiFlexItem key={idx} grow={false}>
+                        <EuiCard
+                          title
+                          description
+                          betaBadgeLabel={policy.name}
+                          style={{ paddingBottom: 0 }}
+                        >
+                          <VisualizationBasic
+                            type="donut"
+                            size={{ width: '100%', height: '150px' }}
+                            data={[
+                              { label: 'Pass', value: policy.pass, color: '#00a69b' },
+                              { label: 'Fail', value: policy.fail, color: '#ff645c' },
+                              {
+                                label: 'Not applicable',
+                                value: policy.invalid,
+                                color: '#5c6773',
+                              },
+                            ]}
+                            showLegend
+                            noDataTitle="No results"
+                            noDataMessage="No results were found."
+                          />
+                          <EuiSpacer size="m" />
+                        </EuiCard>
+                      </EuiFlexItem>
+                    ))}
+                  </EuiFlexGroup>
+                )}
+                 <EuiSpacer size="m" />
+                <EuiFlexGroup>
+                  <EuiFlexItem>
+                    <EuiPanel>
+                      <SCAPoliciesTable
+                        agent={this.props.agent}
+                        columns={this.columnsPolicies}
+                        rowProps={handlePoliciesTableClickRow}
+                      />
+                    </EuiPanel>
+                  </EuiFlexItem>
+                </EuiFlexGroup>
+              </div>
+            )}
+          {agent &&
+            (agent || {}).os &&
+            this.state.lookingPolicy &&
+            ((!this.state.loading) || (!this.state.checksIsLoading )) && (
+              <div>
+                <EuiPanel paddingSize="l">
+                  <EuiFlexGroup>
+                    <EuiFlexItem grow={false}>
+                      <EuiButtonIcon
+                        color="primary"
+                        style={{ padding: '6px 0px' }}
+                        onClick={this.state.secondTableBack ? (ev) => this.handleBack(ev) : () => this.loadScaPolicy(false)}
+                        iconType="arrowLeft"
+                        aria-label="Back to policies"
+                        {...{ iconSize: 'l' }}
+                      />
                     </EuiFlexItem>
-                  ))}
-                </EuiFlexGroup>
-              }
-              <EuiSpacer size="m" />
-              <EuiPanel paddingSize="l">
-                <EuiFlexGroup>
-                  <EuiFlexItem>
-                    <EuiBasicTable
-                      items={this.state.policies}
-                      columns={this.columnsPolicies}
-                      rowProps={getPoliciesRowProps}
-                    />
-                  </EuiFlexItem>
-                </EuiFlexGroup>
-              </EuiPanel>
-            </div>
-          )}
-          {((this.props.agent && (this.props.agent || {}).os && this.state.lookingPolicy && !this.state.loading) &&
-            <div>
-              <EuiPanel paddingSize="l">
-                <EuiFlexGroup>
-                  <EuiFlexItem grow={false}>
-                    <EuiButtonIcon
-                      color='primary'
-                      style={{ padding: '6px 0px' }}
-                      onClick={() => this.loadScaPolicy(false)}
-                      iconType="arrowLeft"
-                      aria-label="Back to policies"
-                      {...{ iconSize: 'l' }}
-                    />
-                  </EuiFlexItem>
-                  <EuiFlexItem>
-                    <EuiTitle
-                      size="s">
-                      <h2>{this.state.lookingPolicy.name}&nbsp;
-                        <EuiToolTip position="right" content="Show policy checksum">
-                          <EuiPopover
-                            button={buttonPopover}
-                            isOpen={this.state.showMoreInfo}
-                            closePopover={() => this.setState({ showMoreInfo: false })}>
-                            <EuiFlexItem style={{ width: 700 }}>
-                              <EuiSpacer size="s" />
-                              <EuiText>
-                                <b>Policy description:</b> {this.state.lookingPolicy.description}
-                                <br></br>
-                                <b>Policy checksum:</b> {this.state.lookingPolicy.hash_file}
-                              </EuiText>
-                            </EuiFlexItem>
-                          </EuiPopover>
-                        </EuiToolTip>
-                      </h2>
-                    </EuiTitle>
-                  </EuiFlexItem>
-                  <EuiFlexItem grow={false}>
-                    <EuiButtonEmpty
-                      iconType="importAction"
-                      onClick={async () => await this.downloadCsv()} >
-                      Export formatted
-                    </EuiButtonEmpty>
-                  </EuiFlexItem>
-                  <EuiFlexItem grow={false}>
-                    <EuiButtonEmpty iconType="refresh" onClick={() => this.loadScaPolicy(this.state.lookingPolicy)}>
-                      Refresh
-                    </EuiButtonEmpty>
-                  </EuiFlexItem>
-                </EuiFlexGroup>
-                <EuiSpacer size="m" />
-                <EuiFlexGroup>
-                  <EuiFlexItem>
-                    <EuiStat title={this.buttonStat(this.state.lookingPolicy.pass, 'result', 'passed')} description="Pass" titleColor="secondary" titleSize="m" textAlign="center" />
-                  </EuiFlexItem>
-                  <EuiFlexItem>
-                    <EuiStat title={this.buttonStat(this.state.lookingPolicy.fail, 'result', 'failed')} description="Fail" titleColor="danger" titleSize="m" textAlign="center" />
-                  </EuiFlexItem>
-                  <EuiFlexItem>
-                    <EuiStat title={this.buttonStat(this.state.lookingPolicy.invalid, 'result', 'not applicable')} description="Not applicable" titleColor="subdued" titleSize="m" textAlign="center" />
-                  </EuiFlexItem>
-                  <EuiFlexItem>
-                    <EuiStat title={`${this.state.lookingPolicy.score}%`} description="Score" titleColor="accent" titleSize="m" textAlign="center" />
-                  </EuiFlexItem>
-                  <EuiFlexItem>
-                    <EuiStat title={formatUIDate(this.state.lookingPolicy.end_scan)} description="End scan" titleColor="primary" titleSize="s" textAlign="center" style={{ padding: 5 }} />
-                  </EuiFlexItem>
-                </EuiFlexGroup>
-                <EuiSpacer size="m" />
-
-                <EuiFlexGroup>
-                  <EuiFlexItem>
-                    <WzSearchBar
-                      filters={this.state.filters}
-                      suggestions={this.suggestions[this.state.lookingPolicy.policy_id]}
-                      placeholder='Filter or search'
-                      onFiltersChange={filters => { this.setState({ filters }) }} />
-                  </EuiFlexItem>
-                </EuiFlexGroup>
-
-                <EuiFlexGroup>
-                  <EuiFlexItem>
-                    <EuiInMemoryTable
-                      items={this.filterPolicyChecks()}
-                      columns={this.columnsChecks}
-                      rowProps={getChecksRowProps}
-                      itemId="id"
-                      itemIdToExpandedRowMap={this.state.itemIdToExpandedRowMap}
-                      isExpandable={true}
-                      sorting={sorting}
-                      pagination={this.state.pageTableChecks}
-                      loading={this.state.loadingPolicy}
-                      onTableChange={(change) => this.onChangeTableChecks(change)}
-                    />
-                  </EuiFlexItem>
-                </EuiFlexGroup>
-              </EuiPanel>
-            </div>
-          )}
+                    <EuiFlexItem>
+                      <EuiTitle size="s">
+                        <h2>
+                          {this.state.lookingPolicy.name}&nbsp;
+                          <EuiToolTip position="right" content="Show policy checksum">
+                            <EuiPopover
+                              button={buttonPopover}
+                              isOpen={this.state.showMoreInfo}
+                              closePopover={() => this.setState({ showMoreInfo: false })}
+                            >
+                              <EuiFlexItem style={{ width: 700 }}>
+                                <EuiSpacer size="s" />
+                                <EuiText>
+                                  <b>Policy description:</b> {this.state.lookingPolicy.description}
+                                  <br></br>
+                                  <b>Policy checksum:</b> {this.state.lookingPolicy.hash_file}
+                                </EuiText>
+                              </EuiFlexItem>
+                            </EuiPopover>
+                          </EuiToolTip>
+                        </h2>
+                      </EuiTitle>
+                    </EuiFlexItem>
+                    <EuiFlexItem grow={false}>
+                      <EuiButtonEmpty
+                        iconType="importAction"
+                        onClick={async () => await this.downloadCsv()}
+                      >
+                        Export formatted
+                      </EuiButtonEmpty>
+                    </EuiFlexItem>
+                    <EuiFlexItem grow={false}>
+                      <EuiButtonEmpty
+                        iconType="refresh"
+                        onClick={() => this.loadScaPolicy(this.state.lookingPolicy.policy_id)}
+                      >
+                        Refresh
+                      </EuiButtonEmpty>
+                    </EuiFlexItem>
+                  </EuiFlexGroup>
+                  <EuiSpacer size="m" />
+                  <EuiFlexGroup>
+                    <EuiFlexItem>
+                      <EuiStat
+                        title={this.buttonStat(this.state.lookingPolicy.pass, 'result', 'passed')}
+                        description="Pass"
+                        titleColor="secondary"
+                        titleSize="m"
+                        textAlign="center"
+                      />
+                    </EuiFlexItem>
+                    <EuiFlexItem>
+                      <EuiStat
+                        title={this.buttonStat(this.state.lookingPolicy.fail, 'result', 'failed')}
+                        description="Fail"
+                        titleColor="danger"
+                        titleSize="m"
+                        textAlign="center"
+                      />
+                    </EuiFlexItem>
+                    <EuiFlexItem>
+                      <EuiStat
+                        title={this.buttonStat(
+                          this.state.lookingPolicy.invalid,
+                          'result',
+                          'not applicable'
+                        )}
+                        description="Not applicable"
+                        titleColor="subdued"
+                        titleSize="m"
+                        textAlign="center"
+                      />
+                    </EuiFlexItem>
+                    <EuiFlexItem>
+                      <EuiStat
+                        title={`${this.state.lookingPolicy.score}%`}
+                        description="Score"
+                        titleColor="accent"
+                        titleSize="m"
+                        textAlign="center"
+                      />
+                    </EuiFlexItem>
+                    <EuiFlexItem>
+                      <EuiStat
+                        title={formatUIDate(this.state.lookingPolicy.end_scan)}
+                        description="End scan"
+                        titleColor="primary"
+                        titleSize="s"
+                        textAlign="center"
+                        style={{ padding: 5 }}
+                      />
+                    </EuiFlexItem>
+                  </EuiFlexGroup>
+                  <EuiSpacer size="m" />
+                  <EuiFlexGroup>
+                    <EuiFlexItem>
+                      <InventoryPolicyChecksTable
+                        agent={this.props.agent}
+                        lookingPolicy={this.state.lookingPolicy}              
+                      />
+                    </EuiFlexItem>
+                  </EuiFlexGroup>
+                </EuiPanel>
+              </div>
+            )}
         </EuiPage>
       </Fragment>
     );
   }
 }
+
+Inventory.defaultProps = {
+  onClickRow: undefined
+}  

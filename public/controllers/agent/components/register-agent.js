@@ -216,12 +216,64 @@ export const RegisterAgent = withErrorBoundary(
     }
 
     selectOS(os) {
-      this.setState({
-        selectedOS: os,
-        selectedVersion: '',
-        selectedArchitecture: '',
-        selectedSYS: '',
-      });
+      switch (os) {
+        case 'aix':
+          return this.setState({
+            selectedOS: os,
+            selectedVersion: '6.1 TL9',
+            selectedArchitecture: 'powerpc',
+            selectedSYS: '',
+          });
+        case 'alpine':
+          return this.setState({
+            selectedOS: os,
+            selectedVersion: '3.12.12',
+            selectedArchitecture: 'x86_64',
+            selectedSYS: '',
+          });
+        case 'fedora':
+          return this.setState({
+            selectedOS: os,
+            selectedVersion: '22',
+            selectedArchitecture: 'x86_64',
+            selectedSYS: '',
+          });
+        case 'hp':
+          return this.setState({
+            selectedOS: os,
+            selectedVersion: '11.31',
+            selectedArchitecture: 'x86_64',
+            selectedSYS: '',
+          });
+        case 'macos':
+          return this.setState({
+            selectedOS: os,
+            selectedVersion: 'sierra',
+            selectedArchitecture: 'intel/applesilicon',
+            selectedSYS: '',
+          });
+        case 'open':
+          return this.setState({
+            selectedOS: os,
+            selectedVersion: 'leap15',
+            selectedArchitecture: 'x86_64',
+            selectedSYS: '',
+          });
+        case 'raspbian':
+          return this.setState({
+            selectedOS: os,
+            selectedVersion: 'busterorgreater',
+            selectedArchitecture: 'x86_64',
+            selectedSYS: '',
+          });
+        default:
+          return this.setState({
+            selectedOS: os,
+            electedVersion: '',
+            selectedArchitecture: '',
+            selectedSYS: '',
+          });
+      }
     }
 
     systemSelector() {
@@ -2186,7 +2238,6 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
                       this.state.selectedVersion == 'debian9' ||
                       this.state.selectedVersion == 'debian10' ||
                       this.state.selectedVersion == 'busterorgreater' ||
-                      this.state.selectedVersion == 'busterorgreater' ||
                       this.state.selectedVersion === 'ubuntu15' ||
                       this.state.selectedVersion === 'leap15'
                         ? tabSystemD
@@ -2194,13 +2245,7 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
                           this.state.selectedVersion == 'windowsserver2008' ||
                           this.state.selectedVersion == 'windows7'
                         ? tabNet
-                        : this.state.selectedVersion == 'sierra' ||
-                          this.state.selectedVersion == 'highSierra' ||
-                          this.state.selectedVersion == 'mojave' ||
-                          this.state.selectedVersion == 'catalina' ||
-                          this.state.selectedVersion == 'bigSur' ||
-                          this.state.selectedVersion == 'monterrey' ||
-                          this.state.selectedVersion == 'ventura'
+                        : this.state.selectedVersion == 'sierra'
                         ? tabWazuhControlMacos
                         : this.state.selectedVersion == 'solaris10' ||
                           this.state.selectedVersion == 'solaris11' ||

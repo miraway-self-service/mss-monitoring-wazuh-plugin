@@ -385,6 +385,11 @@ const osButtons = [
   },
 ].sort(orderOSAlphabetically);
 
+// Host url of agent registration
+//const urlPackage = 'https://packages.wazuh.com/4.x';
+const urlPackage = 'https://packages-dev.wazuh.com/pre-release';
+const urlPackageKey = 'https://packages.wazuh.com/key';
+
 export {
   architectureButtons,
   architecturei386Andx86_64,
@@ -413,4 +418,6 @@ export {
   architectureButtonsAix,
   architectureButtonsHpUx,
   architectureButtonsWithPPC64LEAlpine,
+  urlPackage,
+  urlPackageKey,
 };

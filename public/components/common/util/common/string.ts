@@ -1,7 +1,11 @@
 import { i18n } from '@osd/i18n';
 
-export const translate = (key: string, defaultMessage: string = ' '): string => {
-  return i18n.translate(key, { defaultMessage });
+export const translate = (
+  key: string,
+  defaultMessage: string = ' ',
+  values = {},
+): string => {
+  return i18n.translate(key, { defaultMessage, values });
 };
 
 export const convertCamelCase = (words: string): string => {

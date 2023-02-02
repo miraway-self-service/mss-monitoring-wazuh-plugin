@@ -913,7 +913,7 @@ export const RegisterAgent = withErrorBoundary(
             isInvalid={this.state.agentNameError}
             error={[
               this.state.badCharacters.length < 1
-                ? 'The minimum length is 2 characters.'
+                ? translate("agents.rules.minCharacter", 'min-character')
                 : `The character${
                     this.state.badCharacters.length <= 1 ? '' : 's'
                   }
@@ -924,7 +924,7 @@ export const RegisterAgent = withErrorBoundary(
           >
             <EuiFieldText
               isInvalid={this.state.agentNameError}
-              placeholder='Name agent'
+              placeholder={translate("agents.info.name", 'name-agent')}
               value={this.state.agentName}
               onChange={event => this.setAgentName(event)}
             />
@@ -938,7 +938,7 @@ export const RegisterAgent = withErrorBoundary(
               <EuiCallOut
                 style={{ marginTop: '1.5rem' }}
                 color='warning'
-                title='This section could not be configured because you do not have permission to read groups.'
+                title={translate("agents.rules.configOrPermission", 'rules-config-or-permission')}
                 iconType='iInCircle'
               />
             </>
@@ -1682,6 +1682,8 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
       const stepOperateSysLabel = translate('agents.step.operateSys', 'step-operate-sys');
       const stepChooseLabel = translate('agents.step.choose', 'step-choose');
       const stepArchitectureLabel = translate('agents.step.architecture', 'step-architecture');
+      const startAgentLabel =  translate("agents.service.start", 'start-agent');
+      const verifyErrorLabel = translate("agents.step.verifyError",'verify-error');
 
       const steps = [
         {
@@ -2081,13 +2083,13 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
             !['hp', 'sol', 'alpine'].includes(this.state.selectedOS) ? (
             <EuiCallOut
               color='danger'
-              title={translate("agents.step.verifyError",'verify-error')}
+              title={verifyErrorLabel}
               iconType='alert'
             />
           ) : missingOSSelection.length ? (
             <EuiCallOut
               color='warning'
-              title={`Please select the ${missingOSSelection.join(', ')}.`}
+              title={translate('agents.rules.select', 'agent-select', {text: missingOSSelection.join(', ')})}
               iconType='iInCircle'
             />
           ) : (
@@ -2113,22 +2115,20 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
         this.state.selectedOS == ''
           ? [
               {
-                title: 'Start the agent',
+                title: startAgentLabel,
                 children: this.state.gotErrorRegistrationServiceInfo ? (
                   calloutErrorRegistrationServiceInfo
                 ) : this.state.agentNameError &&
                   !['hp', 'sol', 'alpine'].includes(this.state.selectedOS) ? (
                   <EuiCallOut
                     color='danger'
-                    title={'There are fields with errors. Please verify them.'}
+                    title={verifyErrorLabel}
                     iconType='alert'
                   />
                 ) : missingOSSelection.length ? (
                   <EuiCallOut
                     color='warning'
-                    title={`Please select the ${missingOSSelection.join(
-                      ', ',
-                    )}.`}
+                    title={translate('agents.rules.select', 'agent-select', {text: missingOSSelection.join(', ')})}
                     iconType='iInCircle'
                   />
                 ) : (
@@ -2197,7 +2197,7 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
         restartAgentCommand
           ? [
               {
-                title: 'Start the agent',
+                title: startAgentLabel,
                 children: this.state.gotErrorRegistrationServiceInfo ? (
                   calloutErrorRegistrationServiceInfo
                 ) : (
@@ -2211,7 +2211,7 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
                           {copy => (
                             <div className='copy-overlay' onClick={copy}>
                               <p>
-                                <EuiIcon type='copy' /> Copy command
+                                <EuiIcon type='copy' /> {translate("agents.service.copyCommand", 'copy-command')}
                               </p>
                             </div>
                           )}

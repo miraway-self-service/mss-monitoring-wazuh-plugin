@@ -16,6 +16,7 @@ import { EuiStat, EuiFlexItem, EuiFlexGroup, EuiPage, EuiToolTip } from '@elasti
 import { withErrorBoundary } from '../../../components/common/hocs';
 import { UI_ORDER_AGENT_STATUS } from '../../../../common/constants';
 import { agentStatusLabelByAgentStatus, agentStatusColorByAgentStatus } from '../../../../common/services/wz_agent_status';
+import { translate, convertCamelCase } from '../../../components/common/util';
 
 export const Stats = withErrorBoundary (class Stats extends Component {
   constructor(props) {
@@ -43,6 +44,8 @@ export const Stats = withErrorBoundary (class Stats extends Component {
   }
 
   renderTitle(total) {
+    const goToAgentsLabel = translate('overview.agents.gotoAll', 'go-to-all-agents')
+
     return <EuiToolTip position="top" content={`Go to all agents`}>
       <span>
         {total}
@@ -51,6 +54,11 @@ export const Stats = withErrorBoundary (class Stats extends Component {
   }
 
   render() {
+    const getLabelAgent = (label) => {
+      label = convertCamelCase(label);
+      return translate(`overviewWelcome.stats.${label}Agents`, `${label}_agents`);
+    }
+
     return (
       <EuiPage>
         <EuiFlexGroup>
@@ -69,7 +77,7 @@ export const Stats = withErrorBoundary (class Stats extends Component {
                       </span>
                     </EuiToolTip>
                   }
-                  description={`${label} agents`}
+                  description={getLabelAgent(label)}
                   titleColor={color}
                   textAlign="center"
                 />

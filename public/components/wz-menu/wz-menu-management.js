@@ -16,6 +16,7 @@ import { connect } from 'react-redux';
 import { AppNavigate } from '../../react-services/app-navigate'
 import { WAZUH_MENU_MANAGEMENT_SECTIONS_ID } from '../../../common/constants';
 import { WAZUH_MENU_MANAGEMENT_SECTIONS_CY_TEST_ID } from '../../../common/wazu-menu/wz-menu-management.cy';
+import { translate } from '../common/util';
 
 class WzMenuManagement extends Component {
   constructor(props) {
@@ -34,7 +35,7 @@ class WzMenuManagement extends Component {
       administration: {
         id: WAZUH_MENU_MANAGEMENT_SECTIONS_ID.ADMINISTRATION,
         cyTestId: WAZUH_MENU_MANAGEMENT_SECTIONS_CY_TEST_ID.ADMINISTRATION,
-        text: 'Administration',
+        text: translate('managementWelcome.betaBadgeLabel.administration'),
       },
       ruleset: {
         id: WAZUH_MENU_MANAGEMENT_SECTIONS_ID.RULESET,
@@ -44,57 +45,57 @@ class WzMenuManagement extends Component {
       rules: {
         id: WAZUH_MENU_MANAGEMENT_SECTIONS_ID.RULES,
         cyTestId: WAZUH_MENU_MANAGEMENT_SECTIONS_CY_TEST_ID.RULES,
-        text: 'Rules',
+        text: translate('managementWelcome.rules.title'),
       },
       decoders: {
         id: WAZUH_MENU_MANAGEMENT_SECTIONS_ID.DECODERS,
         cyTestId: WAZUH_MENU_MANAGEMENT_SECTIONS_CY_TEST_ID.DECODERS,
-        text: 'Decoders',
+        text: translate('managementWelcome.decoders.title'),
       },
       lists: {
         id: WAZUH_MENU_MANAGEMENT_SECTIONS_ID.CDB_LISTS,
         cyTestId: WAZUH_MENU_MANAGEMENT_SECTIONS_CY_TEST_ID.CDB_LISTS,
-        text: 'CDB lists',
+        text: translate('managementWelcome.CDBLists.title'),
       },
       groups: {
         id: WAZUH_MENU_MANAGEMENT_SECTIONS_ID.GROUPS,
         cyTestId: WAZUH_MENU_MANAGEMENT_SECTIONS_CY_TEST_ID.GROUPS,
-        text: 'Groups',
+        text: translate('managementWelcome.groups.title'),
       },
       configuration: {
         id: WAZUH_MENU_MANAGEMENT_SECTIONS_ID.CONFIGURATION,
         cyTestId: WAZUH_MENU_MANAGEMENT_SECTIONS_CY_TEST_ID.CONFIGURATION,
-        text: 'Configuration',
+        text: translate('managementWelcome.configuration.title'),
       },
       statusReports: {
         id: WAZUH_MENU_MANAGEMENT_SECTIONS_ID.STATUS_AND_REPORTS,
         cyTestId: WAZUH_MENU_MANAGEMENT_SECTIONS_CY_TEST_ID.STATUS_AND_REPORTS,
-        text: 'Status and reports',
+        text: translate('managementWelcome.betaBadgeLabel.statusAndReports'),
       },
       status: {
         id: WAZUH_MENU_MANAGEMENT_SECTIONS_ID.STATUS,
         cyTestId: WAZUH_MENU_MANAGEMENT_SECTIONS_CY_TEST_ID.STATUS,
-        text: 'Status',
+        text: translate('managementWelcome.status.title'),
       },
       cluster: {
         id: WAZUH_MENU_MANAGEMENT_SECTIONS_ID.CLUSTER,
         cyTestId: WAZUH_MENU_MANAGEMENT_SECTIONS_CY_TEST_ID.CLUSTER,
-        text: 'Cluster',
+        text: translate('managementWelcome.cluster.title'),
       },
       logs: {
         id: WAZUH_MENU_MANAGEMENT_SECTIONS_ID.LOGS,
         cyTestId: WAZUH_MENU_MANAGEMENT_SECTIONS_CY_TEST_ID.LOGS,
-        text: 'Logs',
+        text: translate('managementWelcome.logs.title'),
       },
       reporting: {
         id: WAZUH_MENU_MANAGEMENT_SECTIONS_ID.REPORTING,
         cyTestId: WAZUH_MENU_MANAGEMENT_SECTIONS_CY_TEST_ID.REPORTING,
-        text: 'Reporting',
+        text: translate('managementWelcome.reporting.title'),
       },
       statistics: {
         id: WAZUH_MENU_MANAGEMENT_SECTIONS_ID.STATISTICS,
         cyTestId: WAZUH_MENU_MANAGEMENT_SECTIONS_CY_TEST_ID.STATISTICS,
-        text: 'Statistics',
+        text: translate('managementWelcome.statistics.title'),
       },
     };
 
@@ -173,7 +174,7 @@ class WzMenuManagement extends Component {
                 this.props.closePopover();
                 window.location.href = '#/manager';
               }}>
-              Management directory
+              {translate('wzMenuManagement.managementDirectory')}
               </EuiButtonEmpty>
           </EuiFlexItem>
         </EuiFlexGroup>

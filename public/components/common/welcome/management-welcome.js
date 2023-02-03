@@ -26,6 +26,7 @@ import store from '../../../redux/store';
 import { updateManagementSection } from '../../../redux/actions/managementActions';
 import WzReduxProvider from '../../../redux/wz-redux-provider';
 import { connect } from 'react-redux';
+import { translate } from '../util';
 
 class ManagementWelcome extends Component {
   constructor(props) {
@@ -54,7 +55,7 @@ class ManagementWelcome extends Component {
         <EuiPage className="wz-welcome-page">
           <EuiFlexGroup>
             <EuiFlexItem>
-              <EuiCard title description betaBadgeLabel="Administration">
+              <EuiCard title description betaBadgeLabel={translate('managementWelcome.betaBadgeLabel.administration')}>
                 <EuiSpacer size="m" />
                 <EuiFlexGroup>
                   <EuiFlexItem>
@@ -68,9 +69,9 @@ class ManagementWelcome extends Component {
                           color="primary"
                         />
                       }
-                      title="Rules"
+                      title={translate('managementWelcome.rules.title')}
                       onClick={() => this.switchSection('rules')}
-                      description="Manage your Wazuh cluster rules."
+                      description={translate('managementWelcome.rules.description')}
                     />
                   </EuiFlexItem>
                   <EuiFlexItem>
@@ -84,9 +85,9 @@ class ManagementWelcome extends Component {
                           color="primary"
                         />
                       }
-                      title="Decoders"
+                      title={translate('managementWelcome.decoders.title')}
                       onClick={() => this.switchSection('decoders')}
-                      description="Manage your Wazuh cluster decoders."
+                      description={translate('managementWelcome.decoders.description')}
                     />
                   </EuiFlexItem>
                 </EuiFlexGroup>
@@ -102,9 +103,9 @@ class ManagementWelcome extends Component {
                           color="primary"
                         />
                       }
-                      title="CDB lists"
+                      title={translate('managementWelcome.CDBLists.title')}
                       onClick={() => this.switchSection('lists')}
-                      description="Manage your Wazuh cluster CDB lists."
+                      description={translate('managementWelcome.CDBLists.description')}
                     />
                   </EuiFlexItem>
                   <EuiFlexItem>
@@ -118,9 +119,9 @@ class ManagementWelcome extends Component {
                           color="primary"
                         />
                       }
-                      title="Groups"
+                      title={translate('managementWelcome.groups.title')}
                       onClick={() => this.switchSection('groups')}
-                      description="Manage your agent groups."
+                      description={translate('managementWelcome.groups.description')}
                     />
                   </EuiFlexItem>
                 </EuiFlexGroup>
@@ -132,9 +133,9 @@ class ManagementWelcome extends Component {
                       icon={
                         <EuiIcon size="xl" type="devToolsApp" color="primary" />
                       }
-                      title="Configuration"
+                      title={translate('managementWelcome.configuration.title')}
                       onClick={() => this.switchSection('configuration')}
-                      description="Manage your Wazuh cluster configuration."
+                      description={translate('managementWelcome.configuration.description')}
                     />
                   </EuiFlexItem>
                   <EuiFlexItem />
@@ -142,7 +143,7 @@ class ManagementWelcome extends Component {
               </EuiCard>
             </EuiFlexItem>
             <EuiFlexItem>
-              <EuiCard title description betaBadgeLabel="Status and reports">
+              <EuiCard title description betaBadgeLabel={translate('managementWelcome.betaBadgeLabel.statusAndReports')}>
                 <EuiSpacer size="m" />
                 <EuiFlexGroup>
                   <EuiFlexItem>
@@ -152,9 +153,9 @@ class ManagementWelcome extends Component {
                       icon={
                         <EuiIcon size="xl" type="uptimeApp" color="primary" />
                       }
-                      title="Status"
+                      title={translate('managementWelcome.status.title')}
                       onClick={() => this.switchSection('status')}
-                      description="Manage your Wazuh cluster status."
+                      description={translate('managementWelcome.status.description')}
                     />
                   </EuiFlexItem>
                   <EuiFlexItem>
@@ -168,9 +169,9 @@ class ManagementWelcome extends Component {
                           color="primary"
                         />
                       }
-                      title="Cluster"
+                      title={translate('managementWelcome.cluster.title')}
                       onClick={() => this.switchSection('monitoring')}
-                      description="Visualize your Wazuh cluster."
+                      description={translate('managementWelcome.cluster.description')}
                     />
                   </EuiFlexItem>
                 </EuiFlexGroup>
@@ -182,9 +183,9 @@ class ManagementWelcome extends Component {
                       icon={
                         <EuiIcon size="xl" type="filebeatApp" color="primary"/>
                       }
-                      title="Logs"
+                      title={translate('managementWelcome.logs.title')}
                       onClick={() => this.switchSection('logs')}
-                      description="Logs from your Wazuh cluster."
+                      description={translate('managementWelcome.logs.description')}
                     />
                   </EuiFlexItem>
                   <EuiFlexItem>
@@ -198,9 +199,9 @@ class ManagementWelcome extends Component {
                           color="primary"
                         />
                       }
-                      title="Reporting"
+                      title={translate('managementWelcome.reporting.title')}
                       onClick={() => this.switchSection('reporting')}
-                      description="Check your stored Wazuh reports."
+                      description={translate('managementWelcome.reporting.description')}
                     />
                   </EuiFlexItem>
                 </EuiFlexGroup>
@@ -212,9 +213,9 @@ class ManagementWelcome extends Component {
                       icon={
                         <EuiIcon size="xl" type="visualizeApp" color="primary" />
                       }
-                      title="Statistics"
+                      title={translate('managementWelcome.statistics.title')}
                       onClick={() => this.switchSection('statistics')}
-                      description="Information about the Wazuh environment"
+                      description={translate('managementWelcome.statistics.description')}
                     />
                   </EuiFlexItem>
                   <EuiFlexItem>

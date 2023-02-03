@@ -266,7 +266,7 @@ export const AgentsPreview = compose(
                                 </EuiToolTip>
                               }
                               titleSize="s"
-                              description="Last registered agent"
+                              description={translate("agentsPreview.details.lastRegister")}
                               titleColor="primary"
                             />
                           </EuiFlexItem>
@@ -283,7 +283,7 @@ export const AgentsPreview = compose(
                                 </EuiToolTip>
                               }
                               titleSize="s"
-                              description="Most active agent"
+                              description={translate("agentsPreview.details.mostActive")}
                               titleColor="primary"
                             />
                           </EuiFlexItem>

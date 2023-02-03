@@ -55,6 +55,7 @@ import { withErrorBoundary, withReduxProvider } from '../hocs';
 import { compose } from 'redux';
 import { API_NAME_AGENT_STATUS } from '../../../../common/constants';
 import { webDocumentationLink } from '../../../../common/services/web_documentation';
+import { translate } from '../util';
 
 export const AgentsWelcome = compose(
   withReduxProvider,
@@ -525,20 +526,20 @@ class AgentsWelcome extends Component {
         <EuiEmptyPrompt
           iconType="securitySignalDetected"
           style={{ marginTop: 20 }}
-          title={<h2>Agent has never connected.</h2>}
+          title={<h2>{translate("mainAgents.message.neverConnected")}</h2>}
           body={
             <Fragment>
               <p>
-                The agent has been registered but has not yet connected to the manager.
+                {translate("configurationNoAgent.message.registerButNotConnected")}
             </p>
               <a href={webDocumentationLink('user-manual/agents/agent-connection.html')} target="_blank">
-                Checking connection with the Wazuh server
+                {translate("configurationNoAgent.message.checkConnect")}
               </a>
             </Fragment>
           }
           actions={
             <EuiButton href='#/agents-preview?' color="primary" fill>
-              Back
+              {translate("common.back")}
           </EuiButton>
           }
         />)

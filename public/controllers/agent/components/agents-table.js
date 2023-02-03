@@ -67,98 +67,98 @@ export const AgentsTable = withErrorBoundary(
         {
           type: 'q',
           label: 'status',
-          description: 'Filter by agent connection status',
+          description: translate("agentsTable.suggest.status"),
           operators: ['=', '!='],
           values: UI_ORDER_AGENT_STATUS,
         },
         {
           type: 'q',
           label: 'group_config_status',
-          description: 'Filter by agent synced configuration status',
+          description: translate("agentsTable.suggest.groupConfigStatus"),
           operators: ['=', '!='],
           values: [AGENT_SYNCED_STATUS.SYNCED, AGENT_SYNCED_STATUS.NOT_SYNCED],
         },
         {
           type: 'q',
           label: 'os.platform',
-          description: 'Filter by OS platform',
+          description: translate("agentsTable.suggest.osPlatform"),
           operators: ['=', '!='],
           values: async (value) => getAgentFilterValues('os.platform', value, { q: 'id!=000' }),
         },
         {
           type: 'q',
           label: 'ip',
-          description: 'Filter by agent IP',
+          description: translate("agentsTable.suggest.ip"),
           operators: ['=', '!='],
           values: async (value) => getAgentFilterValues('ip', value, { q: 'id!=000' }),
         },
         {
           type: 'q',
           label: 'name',
-          description: 'Filter by agent name',
+          description: translate("agentsTable.suggest.name"),
           operators: ['=', '!='],
           values: async (value) => getAgentFilterValues('name', value, { q: 'id!=000' }),
         },
         {
           type: 'q',
           label: 'id',
-          description: 'Filter by agent id',
+          description: translate("agentsTable.suggest.id"),
           operators: ['=', '!='],
           values: async (value) => getAgentFilterValues('id', value, { q: 'id!=000' }),
         },
         {
           type: 'q',
           label: 'group',
-          description: 'Filter by agent group',
+          description: translate("agentsTable.suggest.group"),
           operators: ['=', '!='],
           values: async (value) => getAgentFilterValues('group', value, { q: 'id!=000' }),
         },
         {
           type: 'q',
           label: 'node_name',
-          description: 'Filter by node name',
+          description: translate("agentsTable.suggest.nodeName"),
           operators: ['=', '!='],
           values: async (value) => getAgentFilterValues('node_name', value, { q: 'id!=000' }),
         },
         {
           type: 'q',
           label: 'manager',
-          description: 'Filter by manager',
+          description: translate("agentsTable.suggest.manager"),
           operators: ['=', '!='],
           values: async (value) => getAgentFilterValues('manager', value, { q: 'id!=000' }),
         },
         {
           type: 'q',
           label: 'version',
-          description: 'Filter by agent version',
+          description: translate("agentsTable.suggest.version"),
           operators: ['=', '!='],
           values: async (value) => getAgentFilterValues('version', value, { q: 'id!=000' }),
         },
         {
           type: 'q',
           label: 'configSum',
-          description: 'Filter by agent config sum',
+          description: translate("agentsTable.suggest.configSum"),
           operators: ['=', '!='],
           values: async (value) => getAgentFilterValues('configSum', value, { q: 'id!=000' }),
         },
         {
           type: 'q',
           label: 'mergedSum',
-          description: 'Filter by agent merged sum',
+          description: translate("agentsTable.suggest.mergedSum"),
           operators: ['=', '!='],
           values: async (value) => getAgentFilterValues('mergedSum', value, { q: 'id!=000' }),
         },
         {
           type: 'q',
           label: 'dateAdd',
-          description: 'Filter by add date',
+          description: translate("agentsTable.suggest.dateAdd"),
           operators: ['=', '!='],
           values: async (value) => getAgentFilterValues('dateAdd', value, { q: 'id!=000' }),
         },
         {
           type: 'q',
           label: 'lastKeepAlive',
-          description: 'Filter by last keep alive',
+          description: translate("agentsTable.suggest.lastKeepAlive"),
           operators: ['=', '!='],
           values: async (value) => getAgentFilterValues('lastKeepAlive', value, { q: 'id!=000' }),
         },
@@ -242,7 +242,7 @@ export const AgentsTable = withErrorBoundary(
           error: {
             error: error,
             message: error.message || error,
-            title: `Could not get the agents list`,
+            title: translate("agentsTable.error.notAgentList"),
           },
         };
         getErrorOrchestrator().handleError(options);
@@ -304,9 +304,12 @@ export const AgentsTable = withErrorBoundary(
     }
 
     actionButtonsRender(agent) {
+      const textOpenPanel = translate("agentsTable.btn.openPanel");
+      const textOpenConfigLabel = translate("agentsTable.btn.openConfig");
+
       return (
         <div className={'icon-box-action'}>
-          <EuiToolTip content="Open summary panel for this agent" position="left">
+          <EuiToolTip content={textOpenPanel} position="left">
             <EuiButtonIcon
               onClick={(ev) => {
                 ev.stopPropagation();
@@ -314,12 +317,12 @@ export const AgentsTable = withErrorBoundary(
               }}
               iconType="eye"
               color={'primary'}
-              aria-label="Open summary panel for this agent"
+              aria-label={textOpenPanel}
             />
           </EuiToolTip>
           &nbsp;
           {agent.status !== API_NAME_AGENT_STATUS.NEVER_CONNECTED && (
-            <EuiToolTip content="Open configuration for this agent" position="left">
+            <EuiToolTip content={textOpenConfigLabel} position="left">
               <EuiButtonIcon
                 onClick={(ev) => {
                   ev.stopPropagation();
@@ -327,7 +330,7 @@ export const AgentsTable = withErrorBoundary(
                 }}
                 color={'primary'}
                 iconType="wrench"
-                aria-label="Open configuration for this agent"
+                aria-label={textOpenConfigLabel}
               />
             </EuiToolTip>
           )}
@@ -392,11 +395,11 @@ export const AgentsTable = withErrorBoundary(
         <>
           <EuiFlexItem grow={false}>
             <EuiButtonEmpty iconType="importAction" onClick={this.downloadCsv}>
-              Export formatted
+              {translate("common.export.formated")}
             </EuiButtonEmpty>
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
-            <EuiToolTip content="Select columns table" position="left">
+            <EuiToolTip content={translate("agentsTable.tooltip.selectCol")} position="left">
               <EuiButtonEmpty onClick={this.openColumnsFilter}>
                 <EuiIcon type="managementApp" color="primary" />
               </EuiButtonEmpty>
@@ -427,7 +430,9 @@ export const AgentsTable = withErrorBoundary(
             <EuiCallOut
               size="s"
               title={
-                !allSelected ? `The ${selectedItems.length} agents on this page are selected` : ''
+                !allSelected ? translate("agentsTable.item.selected", {
+                  selectedItemsLength: selectedItems.length
+                }) : ''
               }
             >
               <EuiFlexGroup>
@@ -440,9 +445,7 @@ export const AgentsTable = withErrorBoundary(
                         }));
                     }}
                   >
-                    {allSelected
-                      ? `Clear all agents selection (${totalItems})`
-                      : `Select all agents (${totalItems})`}
+                    {translate(`agentsTable.agent.${ allSelected ? "clearAll" : "selectAll"}`, { totalItems })}
                   </EuiButton>
                 </EuiFlexItem>
               </EuiFlexGroup>
@@ -484,7 +487,7 @@ export const AgentsTable = withErrorBoundary(
       },
       {
         field: 'group',
-        name: translate("agentsTable.col.groups"),
+        name: translate("agentsTable.col.group"),
         width: '14%',
         truncateText: true,
         sortable: true,
@@ -586,7 +589,7 @@ export const AgentsTable = withErrorBoundary(
                 <EuiFlexItem>
                   {!!this.state.totalItems && (
                     <EuiTitle size={'s'} style={{ padding: '6px 0px' }}>
-                      <h2>Agents ({this.state.totalItems})</h2>
+                      <h2>{translate("agentsTable.label.agents")} ({this.state.totalItems})</h2>
                     </EuiTitle>
                   )}
                 </EuiFlexItem>

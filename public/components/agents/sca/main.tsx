@@ -17,6 +17,7 @@ import { compose } from 'redux';
 import { PromptSelectAgent, PromptNoSelectedAgent } from '../prompts';
 import { withGuard, withUserAuthorizationPrompt, withAgentSupportModule } from '../../common/hocs';
 import { API_NAME_AGENT_STATUS } from '../../../../common/constants';
+import { translate } from '../../common/util/common/string';
 
 const mapStateToProps = (state) => ({
   currentAgentData: state.appStateReducers.currentAgentData,
@@ -38,7 +39,7 @@ export const MainSca = compose(
   withGuard(
     (props) => !(props.currentAgentData && props.currentAgentData.id && props.agent),
     () => (
-      <PromptNoSelectedAgent body="You need to select an agent to see Security Configuration Assessment inventory." />
+      <PromptNoSelectedAgent body={translate("main.promptMessage.noSelectAgent")} />
     )
   ),
   withGuard(
@@ -47,7 +48,7 @@ export const MainSca = compose(
       return agentData.status === API_NAME_AGENT_STATUS.NEVER_CONNECTED;
     },
     () => (
-      <PromptSelectAgent title="Agent has never connected" body="The agent has never been connected please select another" />
+      <PromptSelectAgent title={translate("main.promptMessage.neverConnect")} body={translate("main.promptMessage.neverConnectDes")} />
     )
   ),
   withUserAuthorizationPrompt((props) => {

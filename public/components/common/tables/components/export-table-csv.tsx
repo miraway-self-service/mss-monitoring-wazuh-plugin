@@ -21,6 +21,7 @@ import { getToasts }  from '../../../../kibana-services';
 import { UI_ERROR_SEVERITIES } from '../../../../react-services/error-orchestrator/types';
 import { UI_LOGGER_LEVELS } from '../../../../../common/constants';
 import { getErrorOrchestrator } from '../../../../react-services/common-services';
+import { translate } from '../../util/common/string';
 
 export function ExportTableCsv({ endpoint, totalItems, filters, title }) {
 
@@ -61,7 +62,7 @@ export function ExportTableCsv({ endpoint, totalItems, filters, title }) {
   
   return <EuiFlexItem grow={false}>
   <EuiButtonEmpty isDisabled={(totalItems == 0)} iconType="importAction" onClick={() => downloadCsv()}>
-    Export formatted
+  {translate("common.exportFormated")}
   </EuiButtonEmpty>
     </EuiFlexItem>
 }

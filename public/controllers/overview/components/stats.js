@@ -44,7 +44,7 @@ export const Stats = withErrorBoundary (class Stats extends Component {
   }
 
   renderTitle(total) {
-    const goToAgentsLabel = translate('overview.agents.gotoAll', 'go-to-all-agents')
+    const goToAgentsLabel = translate('overview.agents.gotoAll')
 
     return <EuiToolTip position="top" content={`Go to all agents`}>
       <span>
@@ -56,7 +56,7 @@ export const Stats = withErrorBoundary (class Stats extends Component {
   render() {
     const getLabelAgent = (label) => {
       label = convertCamelCase(label);
-      return translate(`overviewWelcome.stats.${label}Agents`, `${label}_agents`);
+      return translate(`overviewWelcome.stats.${label}Agents`);
     }
 
     return (

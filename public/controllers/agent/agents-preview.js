@@ -26,6 +26,7 @@ import { UI_LOGGER_LEVELS } from '../../../common/constants';
 import { UI_ERROR_SEVERITIES } from '../../react-services/error-orchestrator/types';
 import { getErrorOrchestrator } from '../../react-services/common-services';
 import { webDocumentationLink } from '../../../common/services/web_documentation';
+import { translate } from '../../components/common/util/common/string';
 
 export class AgentsPreviewController {
   /**
@@ -167,14 +168,17 @@ export class AgentsPreviewController {
 
       return;
     } catch (error) {
+      const errorMessage = error.message || error;
       const options = {
         context: `${AgentsPreviewController.name}.downloadCsv`,
         level: UI_LOGGER_LEVELS.ERROR,
         severity: UI_ERROR_SEVERITIES.BUSINESS,
         error: {
           error: error,
-          message: error.message || error,
-          title: `Error exporting CSV: ${error.message || error}`,
+          message: errorMessage,
+          title: translate("agentsPreview.errors.exoprtCsv", {
+            error: errorMessage
+          }),
         },
       };
       getErrorOrchestrator().handleError(options);
@@ -203,6 +207,7 @@ export class AgentsPreviewController {
       }
       return this.mostActiveAgent;
     } catch (error) {
+      const errorMessage = error.message || error;
       const options = {
         context: `${AgentsPreviewController.name}.getMostActive`,
         level: UI_LOGGER_LEVELS.ERROR,
@@ -210,10 +215,10 @@ export class AgentsPreviewController {
         store: true,
         error: {
           error: error,
-          message: error.message || error,
-          title: `An error occurred while trying to get the most active agent: ${
-            error.message || error
-          }`,
+          message: errorMessage,
+          title: translate("agentsPreview.errors.activeAgent", {
+            error: errorMessage
+          }),
         },
       };
       getErrorOrchestrator().handleError(options);
@@ -272,14 +277,17 @@ export class AgentsPreviewController {
       const numToClean = url.startsWith('https://') ? 8 : 7;
       return url.substr(numToClean);
     } catch (error) {
+      const errorMessage = error.message || error;
       const options = {
         context: `${AgentsPreviewController.name}.getCurrentApiAddress`,
         level: UI_LOGGER_LEVELS.ERROR,
         severity: UI_ERROR_SEVERITIES.UI,
         error: {
           error: error,
-          message: error.message || error,
-          title: `Could not get the Wazuh API address: ${error.message || error}`,
+          message: errorMessage,
+          title: translate("agentsPreview.errors.addressApi", {
+            error: errorMessage
+          }),
         },
       };
       getErrorOrchestrator().handleError(options);
@@ -295,14 +303,17 @@ export class AgentsPreviewController {
       const result = ((data || {}).data || {}).data || {};
       return result.api_version;
     } catch (error) {
+      const errorMessage = error.message || error;
       const options = {
         context: `${AgentsPreviewController.name}.getWazuhVersion`,
         level: UI_LOGGER_LEVELS.ERROR,
         severity: UI_ERROR_SEVERITIES.BUSINESS,
         error: {
           error: error,
-          message: error.message || error,
-          title: `Could not get the Wazuh version: ${error.message || error}`,
+          message: errorMessage,
+          title: translate("agentsPreview.errors.version", {
+            error: errorMessage
+          }),
         },
       };
       getErrorOrchestrator().handleError(options);

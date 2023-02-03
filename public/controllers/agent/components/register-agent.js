@@ -757,18 +757,12 @@ export const RegisterAgent = withErrorBoundary(
     checkMissingOSSelection() {
       if (!this.state.selectedOS) {
         return [
-          translate('registerAgent.selectOs.operateSys', 'selectOs-operateSys'),
+          translate('registerAgent.selectOs.operateSys'),
         ];
       }
 
-      const selectOsLabel = translate(
-        'registerAgent.selectOs.tilte',
-        'selectOs-tilte',
-      );
-      const selectOsArchitectureLabel = translate(
-        'registerAgent.selectOs.architecture',
-        'selectOs-architecture',
-      );
+      const selectOsLabel = translate('registerAgent.selectOs.tilte');
+      const selectOsArchitectureLabel = translate('registerAgent.selectOs.architecture');
 
       console.log('this.state.selectedOS', this.state.selectedOS);
       switch (this.state.selectedOS) {
@@ -921,8 +915,8 @@ export const RegisterAgent = withErrorBoundary(
             isInvalid={this.state.agentNameError}
             error={[
               this.state.badCharacters.length < 1
-                ? translate('registerAgent.rules.minCharacter', 'min-character')
-                : translate('registerAgent.rules.regexChar', 'regex-char', {
+                ? translate('registerAgent.rules.minCharacter')
+                : translate('registerAgent.rules.regexChar', {
                     pluralOrSingular:
                       this.state.badCharacters.length <= 1 ? '' : 's',
                     tobe: this.state.badCharacters.length <= 1 ? 'is' : 'are',
@@ -932,7 +926,7 @@ export const RegisterAgent = withErrorBoundary(
           >
             <EuiFieldText
               isInvalid={this.state.agentNameError}
-              placeholder={translate('registerAgent.info.name', 'name-agent')}
+              placeholder={translate('registerAgent.info.name')}
               value={this.state.agentName}
               onChange={event => this.setAgentName(event)}
             />
@@ -946,10 +940,7 @@ export const RegisterAgent = withErrorBoundary(
               <EuiCallOut
                 style={{ marginTop: '1.5rem' }}
                 color='warning'
-                title={translate(
-                  'registerAgent.rules.configOrPermission',
-                  'rules-config-or-permission',
-                )}
+                title={translate('registerAgent.rules.configOrPermission')}
                 iconType='iInCircle'
               />
             </>
@@ -959,12 +950,12 @@ export const RegisterAgent = withErrorBoundary(
 
       const agentGroup = (
         <EuiText style={{ marginTop: '1.5rem' }}>
-          <p>{translate('registerAgent.group.select', 'group-select')}</p>
+          <p>{translate('registerAgent.group.select')}</p>
           <EuiComboBox
             placeholder={
               !this.state.groups.length
-                ? translate('common.default', 'default-text')
-                : translate('agents.selectGroup.titlte', 'select-group')
+                ? translate('common.default')
+                : translate('agents.selectGroup.titlte')
             }
             options={this.state.groups}
             selectedOptions={this.state.selectedGroup}
@@ -979,10 +970,7 @@ export const RegisterAgent = withErrorBoundary(
       );
       const passwordInput = (
         <EuiFieldText
-          placeholder={translate(
-            'registerAgent.step.wazuhPassword',
-            'wazuh-password',
-          )}
+          placeholder={translate('registerAgent.step.wazuhPassword')}
           value={this.state.wazuhPassword}
           onChange={event => this.setWazuhPassword(event)}
         />
@@ -1034,21 +1022,17 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
       const field = `${this.state.selectedOS}Text`;
       const text = customTexts[field];
       const language = this.getHighlightCodeLanguage(this.state.selectedOS);
-      const warningUpgrade = translate(
-        'registerAgent.service.warningUpgrade',
-        'warning-upgrade',
-      );
+      const warningUpgrade = translate('registerAgent.service.warningUpgrade');
 
       const textAndLinkToCheckConnectionDocumentation = (
         <p>
-          {translate('registerAgent.service.verifyConnect', 'verify-connect') +
-            ' '}
+          {translate('registerAgent.service.verifyConnect') + ' '}
           <a
             href={urlCheckConnectionDocumentation}
             target='_blank'
             rel='noreferrer'
           >
-            {translate('registerAgent.service.document', 'document')}.
+            {translate('registerAgent.service.document')}.
           </a>
         </p>
       );
@@ -1056,15 +1040,12 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
       const warningCommand = (
         <>
           <p>
-            {translate('registerAgent.message.please', 'please')}
+            {translate('registerAgent.message.please')}
             <a href={urlWindowsPackage}>
               {' '}
-              {translate('registerAgent.message.download', 'download')}{' '}
+              {translate('registerAgent.message.download')}{' '}
             </a>
-            {translate(
-              'registerAgent.message.downloadPackage',
-              'download-package',
-            )}
+            {translate('registerAgent.message.downloadPackage')}
           </p>
         </>
       );
@@ -1075,22 +1056,16 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
             <ul className='wz-callout-list'>
               <li>
                 <span>
-                  {translate(
-                    'registerAgent.rules.permissionAdmin',
-                    'permission-admin',
-                  )}
+                  {translate('registerAgent.rules.permissionAdmin')}
                 </span>
               </li>
               <li>
                 <span>
-                  {translate(
-                    'registerAgent.rules.powerShell',
-                    'powerShell-required',
-                  )}
+                  {translate('registerAgent.rules.powerShell')}
                 </span>
               </li>
             </ul>
-            <p>{translate('registerAgent.rules.runCommand', 'run-command')}</p>
+            <p>{translate('registerAgent.rules.runCommand')}</p>
           </EuiCallOut>
           <EuiSpacer></EuiSpacer>
         </>
@@ -1101,31 +1076,13 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
         this.selectSYS(selectedTab.id);
       };
 
-      const permissionRegisterLabel = translate(
-        'registerAgent.errors.permissionRegister',
-        'error-register',
-      );
-      const extraInstallLabel = translate(
-        'registerAgent.message.extraInstall',
-        'extra-install',
-      );
-      const stepLabel = translate('registerAgent.step.title', 'steps');
-      const afterInstallHeadLabel =
-        translate(
-          'registerAgent.message.afterInstallHead',
-          'after-install-head',
-        ) + ' ';
-      const afterInstallFootLabel = translate(
-        'registerAgent.message.afterInstallFoot',
-        'after-install-foot',
-      );
-      const agentEnrollLabel =
-        translate('registerAgent.message.enroll', 'agent-enroll') + ' ';
-
-      const installOrEnrollInHostLabel = translate(
-        'registerAgent.command.installOrEnrollInHost',
-        'install-or-enroll-in-host',
-      );
+      const permissionRegisterLabel = translate('registerAgent.errors.permissionRegister');
+      const extraInstallLabel = translate('registerAgent.message.extraInstall');
+      const stepLabel = translate('registerAgent.step.title');
+      const afterInstallHeadLabel = translate('registerAgent.message.afterInstallHead') + ' ';
+      const afterInstallFootLabel = translate('registerAgent.message.afterInstallFoot');
+      const agentEnrollLabel = translate('registerAgent.message.enroll') + ' ';
+      const installOrEnrollInHostLabel = translate('registerAgent.command.installOrEnrollInHost');
 
       const calloutErrorRegistrationServiceInfo = this.state
         .gotErrorRegistrationServiceInfo ? (
@@ -1149,10 +1106,7 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
             <EuiText>
               {this.state.agentName.length > 0 ? (
                 <p>
-                  {translate(
-                    'registerAgent.command.installOrEnroll',
-                    'install-or-enroll',
-                  )}
+                  {translate('registerAgent.command.installOrEnroll')}
                 </p>
               ) : (
                 <p>{installOrEnrollInHostLabel}</p>
@@ -1385,10 +1339,7 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
                 color='danger'
                 title={
                   <>
-                    {translate(
-                      'registerAgent.message.configProtoHead',
-                      'config-proto-head',
-                    )}
+                    {translate('registerAgent.message.configProtoHead')}
                     <EuiLink
                       target='_blank'
                       href={webDocumentationLink(
@@ -1396,15 +1347,9 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
                         appVersionMajorDotMinor,
                       )}
                     >
-                      {translate(
-                        'registerAgent.message.configProtoBody',
-                        'config-proto-body',
-                      )}
+                      {translate('registerAgent.message.configProtoBody')}
                     </EuiLink>{' '}
-                    {translate(
-                      'registerAgent.message.configProtoFoot',
-                      'config-proto-foot',
-                    )}
+                    {translate('registerAgent.message.configProtoFoot')}
                   </>
                 }
                 iconType='iInCircle'
@@ -1736,30 +1681,12 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
         }
       };
 
-      const stepOperateSysLabel = translate(
-        'registerAgent.step.operateSys',
-        'step-operate-sys',
-      );
-      const stepChooseLabel = translate(
-        'registerAgent.step.choose',
-        'step-choose',
-      );
-      const stepArchitectureLabel = translate(
-        'registerAgent.step.architecture',
-        'step-architecture',
-      );
-      const startAgentLabel = translate(
-        'registerAgent.service.start',
-        'start-agent',
-      );
-      const verifyErrorLabel = translate(
-        'registerAgent.step.verifyError',
-        'verify-error',
-      );
-      const copyCommandLabel = translate(
-        'registerAgent.service.copyCommand',
-        'copy-command',
-      );
+      const stepOperateSysLabel = translate('registerAgent.step.operateSys');
+      const stepChooseLabel = translate('registerAgent.step.choose');
+      const stepArchitectureLabel = translate('registerAgent.step.architecture');
+      const startAgentLabel = translate('registerAgent.service.start');
+      const verifyErrorLabel = translate('registerAgent.step.verifyError');
+      const copyCommandLabel = translate('registerAgent.service.copyCommand');
 
       const steps = [
         {
@@ -2231,7 +2158,6 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
               {
                 title: translate(
                   'registerAgent.step.wazuhPassword',
-                  'wazuh-password',
                 ),
                 children: <Fragment>{passwordInput}</Fragment>,
               },
@@ -2244,10 +2170,7 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
         )
           ? [
               {
-                title: translate(
-                  'registerAgent.step.assignNameOrGroupAgent',
-                  'assign-namee-or-group-agent',
-                ),
+                title: translate('registerAgent.step.assignNameOrGroupAgent'),
                 children: (
                   <Fragment>
                     {agentName}
@@ -2272,7 +2195,7 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
           ) : missingOSSelection.length ? (
             <EuiCallOut
               color='warning'
-              title={translate('registerAgent.rules.select', 'agent-select', {
+              title={translate('registerAgent.rules.select', {
                 text: missingOSSelection.join(', '),
               })}
               iconType='iInCircle'
@@ -2313,10 +2236,7 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
                 ) : missingOSSelection.length ? (
                   <EuiCallOut
                     color='warning'
-                    title={translate(
-                      'registerAgent.rules.select',
-                      'agent-select',
-                      {
+                    title={translate('registerAgent.rules.select',{
                         text: missingOSSelection.join(', '),
                       },
                     )}
@@ -2427,7 +2347,7 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
                       <EuiFlexItem>
                         <EuiTitle>
                           <h2>
-                            {translate('registerAgent.deploy', 'agents-deploy')}
+                            {translate('registerAgent.deploy')}
                           </h2>
                         </EuiTitle>
                       </EuiFlexItem>
@@ -2438,7 +2358,7 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
                             onClick={() => this.props.addNewAgent(false)}
                             iconType='cross'
                           >
-                            {translate('common.close', 'close-text')}
+                            {translate('common.close')}
                           </EuiButtonEmpty>
                         )}
                         {!this.props.hasAgents() && (
@@ -2447,7 +2367,7 @@ apk add wazuh-agent=${this.state.wazuhVersion}-r1`,
                             onClick={() => this.props.reload()}
                             iconType='refresh'
                           >
-                            {translate('common.refresh', 'refresh-text')}
+                            {translate('common.refresh')}
                           </EuiButtonEmpty>
                         )}
                       </EuiFlexItem>

@@ -30,7 +30,7 @@ import {
 } from '@elastic/eui';
 import { getToasts } from '../../../kibana-services';
 import { AppNavigate } from '../../../react-services/app-navigate';
-import { GroupTruncate } from '../../../components/common/util';
+import { GroupTruncate, translate } from '../../../components/common/util';
 import { WzSearchBar, filtersToObject } from '../../../components/wz-search-bar';
 import { getAgentFilterValues } from '../../../controllers/management/components/management/groups/get-agents-filters-values';
 import { WzButtonPermissions } from '../../../components/common/permissions/button';
@@ -470,7 +470,7 @@ export const AgentsTable = withErrorBoundary(
       },
       {
         field: 'name',
-        name: 'Name',
+        name: translate("agentsTable.col.name"),
         sortable: true,
         width: '10%',
         truncateText: true,
@@ -484,7 +484,7 @@ export const AgentsTable = withErrorBoundary(
       },
       {
         field: 'group',
-        name: 'Group(s)',
+        name: translate("agentsTable.col.groups"),
         width: '14%',
         truncateText: true,
         sortable: true,
@@ -500,35 +500,35 @@ export const AgentsTable = withErrorBoundary(
       },
       {
         field: 'node_name',
-        name: 'Cluster node',
+        name: translate("agentsTable.col.nodeName"),
         width: '8%',
         truncateText: true,
         sortable: true,
       },
       {
         field: 'version',
-        name: 'Version',
+        name: translate("agentsTable.col.version"),
         width: '5%',
         truncateText: true,
         sortable: true,
       },
       {
         field: 'dateAdd',
-        name: 'Registration date',
+        name: translate("agentsTable.col.dateAdd"),
         width: '8%',
         truncateText: true,
         sortable: true,
       },
       {
         field: 'lastKeepAlive',
-        name: 'Last keep alive',
+        name: translate("agentsTable.col.lastKeepAlive"),
         width: '8%',
         truncateText: true,
         sortable: true,
       },
       {
         field: 'status',
-        name: 'Status',
+        name: translate("agentsTable.col.status"),
         truncateText: true,
         sortable: true,
         width: '10%',
@@ -536,7 +536,7 @@ export const AgentsTable = withErrorBoundary(
       },
       {
         field: 'group_config_status',
-        name: 'Synced',
+        name:  translate("agentsTable.col.synced"),
         truncateText: true,
         sortable: true,
         width: '10%',
@@ -546,7 +546,7 @@ export const AgentsTable = withErrorBoundary(
         align: 'right',
         width: '5%',
         field: 'actions',
-        name: 'Actions',
+        name: translate("agentsTable.col.actions"),
         render: (agent) => this.actionButtonsRender(agent),
       },
     ];
@@ -599,7 +599,7 @@ export const AgentsTable = withErrorBoundary(
                 iconType="plusInCircle"
                 onClick={() => this.props.addingNewAgent()}
               >
-                Deploy new agent
+                {translate("agentsTable.btn.deploy")}
               </WzButtonPermissions>
             </EuiFlexItem>
             {formattedButton}
@@ -618,12 +618,12 @@ export const AgentsTable = withErrorBoundary(
               filters={this.state.filters}
               suggestions={this.suggestions}
               onFiltersChange={(filters) => this.setState({ filters, pageIndex: 0 })}
-              placeholder="Filter or search agent"
+              placeholder={translate("agentsTable.btn.filterOrSearch")}
             />
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
             <EuiButton iconType="refresh" fill={true} onClick={() => this.reloadAgents()}>
-              Refresh
+              {translate('common.refresh')}
             </EuiButton>
           </EuiFlexItem>
         </EuiFlexGroup>
@@ -726,7 +726,7 @@ export const AgentsTable = withErrorBoundary(
               loading={isLoading}
               rowProps={getRowProps}
               cellProps={getCellProps}
-              noItemsMessage="No agents found"
+              noItemsMessage={translate("agentsTable.message.noAgent")}
               {...(pagination && { pagination })}
             />
           </EuiFlexItem>

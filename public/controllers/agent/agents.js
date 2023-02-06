@@ -35,6 +35,7 @@ import { UI_LOGGER_LEVELS } from '../../../common/constants';
 import { UI_ERROR_SEVERITIES } from '../../react-services/error-orchestrator/types';
 import { getErrorOrchestrator } from '../../react-services/common-services';
 import { getSettingDefaultValue } from '../../../common/services/settings';
+import { translate } from '../../components/common/util/common/string';
 
 export class AgentsController {
   /**
@@ -219,10 +220,11 @@ export class AgentsController {
         } else if (result) {
           ErrorHandler.info(result.msg);
         } else {
-          throw new Error('Unexpected error upgrading agent');
+          throw new Error(translate("agents.errors.upgrade"));
         }
         this.$scope.restartingAgent = false;
       } catch (error) {
+        const errorMessage = error.message || error;
         const options = {
           context: `${AgentsController.name}.restartAgent`,
           level: UI_LOGGER_LEVELS.ERROR,
@@ -230,8 +232,10 @@ export class AgentsController {
           store: true,
           error: {
             error: error,
-            message: error.message || error,
-            title: `Error restarting the agent: ${error.message || error}`,
+            message: errorMessage,
+            title: translate("agents.errors.restart", {
+              error: errorMessage
+            }),
           },
         };
         getErrorOrchestrator().handleError(options);
@@ -244,6 +248,7 @@ export class AgentsController {
     try {
       this.$scope.getAgent();
     } catch (error) {
+      const errorMessage = error.message || error;
       const options = {
         context: `${AgentsController.name}.$onInit`,
         level: UI_LOGGER_LEVELS.ERROR,
@@ -251,8 +256,10 @@ export class AgentsController {
         store: true,
         error: {
           error: error,
-          message: error.message || error,
-          title: `Error getting the agent: ${error.message || error}`,
+          message: errorMessage,
+          title: translate("agents.errors.getting", {
+            error: errorMessage
+          }),
         },
       };
       getErrorOrchestrator().handleError(options);
@@ -276,6 +283,7 @@ export class AgentsController {
           this.$location.search('configSubTab', true);
         }
       } catch (error) {
+        const errorMessage = error.message || error;
         const options = {
           context: `${AgentsController.name}.switchConfigTab`,
           level: UI_LOGGER_LEVELS.ERROR,
@@ -283,8 +291,10 @@ export class AgentsController {
           store: true,
           error: {
             error: error,
-            message: error.message || error,
-            title: `${error.message || error} Set configuration path`,
+            message: errorMessage,
+            title: translate("agents.errors.setConfigPath", {
+              error: errorMessage
+            }),
           },
         };
         getErrorOrchestrator().handleError(options);

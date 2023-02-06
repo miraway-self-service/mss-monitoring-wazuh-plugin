@@ -46,6 +46,7 @@ import { UI_ERROR_SEVERITIES } from '../../../react-services/error-orchestrator/
 import { getErrorOrchestrator } from '../../../react-services/common-services';
 import { VisualizationBasic } from '../../../components/common/charts/visualizations/basic';
 import { agentStatusColorByAgentStatus, agentStatusLabelByAgentStatus } from '../../../../common/services/wz_agent_status';
+import { translate } from '../../../components/common/util/common/string';
 
 export const AgentsPreview = compose(
   withErrorBoundary,
@@ -150,7 +151,7 @@ export const AgentsPreview = compose(
           error: {
             error: error,
             message: error.message || error,
-            title: `Could not get the agents summary`,
+            title: translate('agentsPreview.message.summary'),
           },
         };
         getErrorOrchestrator().handleError(options);
@@ -202,8 +203,8 @@ export const AgentsPreview = compose(
                               color,
                               onClick: () => this.filterAgentByStatus(status)
                             }))}
-                            noDataTitle='No results'
-                            noDataMessage='No results were found.'
+                            noDataTitle={translate('agentsPreview.message.noRes')}
+                            noDataMessage={translate('agentsPreview.message.noData')}
                           />
                         </EuiFlexItem>
                       </EuiFlexGroup>
@@ -217,7 +218,10 @@ export const AgentsPreview = compose(
                             <EuiStat
                               isLoading={this.state.loadingSummary}
                               title={
-                                <EuiToolTip position="top" content={`Filter by agent status: ${status}`}>
+                                <EuiToolTip position="top" content={translate(
+                                  'agentsPreview.tooltip.filterStatus',
+                                  { status },
+                                )}>
                                   <span onClick={() => this.filterAgentByStatus(status)} style={{cursor: 'pointer'}}>
                                     {this.state.agentStatusSummary[status]}
                                   </span>
@@ -235,7 +239,7 @@ export const AgentsPreview = compose(
                             isLoading={this.state.loadingSummary}
                             title={`${this.state.agentsActiveCoverage}%`}
                             titleSize='s'
-                            description="Agents coverage"
+                            description={translate("agentsPreview.details.agentsCoverage")}
                             className="white-space-nowrap"
                             />
                         </EuiFlexItem>
@@ -244,7 +248,7 @@ export const AgentsPreview = compose(
                             isLoading={this.state.loadingSummary}
                             title={`${this.state.agentsSynced}%`}
                             titleSize='s'
-                            description="Synced agents"
+                            description={translate("agentsPreview.details.syncedAgents")}
                             className="white-space-nowrap"
                           />
                         </EuiFlexItem>
@@ -262,7 +266,7 @@ export const AgentsPreview = compose(
                                 </EuiToolTip>
                               }
                               titleSize="s"
-                              description="Last registered agent"
+                              description={translate("agentsPreview.details.lastRegister")}
                               titleColor="primary"
                             />
                           </EuiFlexItem>
@@ -279,7 +283,7 @@ export const AgentsPreview = compose(
                                 </EuiToolTip>
                               }
                               titleSize="s"
-                              description="Most active agent"
+                              description={translate("agentsPreview.details.mostActive")}
                               titleColor="primary"
                             />
                           </EuiFlexItem>

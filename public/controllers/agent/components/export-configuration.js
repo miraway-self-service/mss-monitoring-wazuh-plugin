@@ -23,6 +23,7 @@ import PropTypes from 'prop-types';
 import { UnsupportedComponents } from '../../../utils/components-os-support';
 import { WAZUH_AGENTS_OS_TYPE } from '../../../../common/constants';
 import { withErrorBoundary } from '../../../components/common/hocs';
+import { translate } from '../../../components/common/util';
 
 export const ExportConfiguration = withErrorBoundary (class ExportConfiguration extends Component {
   constructor(props) {
@@ -34,22 +35,25 @@ export const ExportConfiguration = withErrorBoundary (class ExportConfiguration 
     };
 
     const agentOptions = [
-      'Global configuration',
-      'Communication',
-      'Anti-flooding settings',
-      'Labels',
-      'Policy monitoring',
+      translate("exportConfiguration.options.global"),
+      translate("exportConfiguration.options.communication"),
+      translate("exportConfiguration.options.antiFloodingSettings"),
+      translate("exportConfiguration.options.labels"),
+      translate("exportConfiguration.options.policyMonitoring"),
       { name: 'oscap', desc: 'OpenSCAP' },
       'CIS-CAT',
       'Osquery',
-      'Inventory data',
-      'Active response',
-      'Commands',
-      { name: 'docker', desc: 'Docker listener' },
-      'Log collection',
-      'Integrity monitoring'
+      translate("exportConfiguration.options.inventoryData"),
+      translate("exportConfiguration.options.activeResponse"),
+      translate("exportConfiguration.options.commands"),
+      { name: 'docker', desc: 'Docker' },
+      translate("exportConfiguration.options.logCollection"),
+      translate("exportConfiguration.options.integrityMonitoring"),
     ];
-    const groupOptions = ['Configurations', 'Agents in group'];
+    const groupOptions = [
+      translate("exportConfiguration.options.configurations"), 
+      translate("exportConfiguration.options.agentsInGroup"), 
+    ];
 
     this.options = [];
     const list = this.props.type === 'agent' ? agentOptions : groupOptions;
@@ -145,9 +149,9 @@ export const ExportConfiguration = withErrorBoundary (class ExportConfiguration 
         <EuiSpacer size="s" />
         {this.options.length > 3 &&
           <><EuiButtonEmpty size="xs" onClick={() => this.selectAll(true)}>
-            Select all
+            {translate("exportConfiguration.options.selectAll")}
           </EuiButtonEmpty><EuiSpacer size="s" /><EuiButtonEmpty size="xs" onClick={() => this.selectAll(false)}>
-              Unselect all
+          {translate("exportConfiguration.options.unSelect")}
             </EuiButtonEmpty></>}
         <EuiSpacer size="m" />
         <EuiButton
@@ -158,7 +162,7 @@ export const ExportConfiguration = withErrorBoundary (class ExportConfiguration 
           }}
           fill
         >
-          Generate PDF report
+          {translate("exportConfiguration.pdf.generate")}
         </EuiButton>
       </EuiPopover>
     );

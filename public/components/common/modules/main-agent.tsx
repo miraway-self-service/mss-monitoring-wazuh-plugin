@@ -33,6 +33,7 @@ import { ReportingService } from '../../../react-services/reporting';
 import { WAZUH_MODULES } from '../../../../common/wazuh-modules';
 import { AgentInfo } from '../../common/welcome/agents-info';
 import { getAngularModule } from '../../../kibana-services';
+import { translate } from '../util/common/string';
 
 export class MainModuleAgent extends Component {
   props!: {
@@ -139,7 +140,7 @@ export class MainModuleAgent extends Component {
             iconType="document"
             isLoading={this.state.loadingReport}
             onClick={async () => this.startReport()}>
-            Generate report
+            {translate("mainAgents.report.generate")}
           </EuiButtonEmpty>
         </EuiFlexItem>
       )
@@ -279,7 +280,7 @@ export class MainModuleAgent extends Component {
         {(!agent || !agent.os) &&
           <EuiCallOut
             style={{ margin: '66px 16px 0 16px' }}
-            title="This agent has never connected"
+            title={translate("mainAgents.message.neverConnected")}
             color="warning"
             iconType="alert">
           </EuiCallOut>

@@ -41,6 +41,7 @@ import {
 } from '../../../react-services/error-orchestrator/types';
 import { getErrorOrchestrator } from '../../../react-services/common-services';
 import { webDocumentationLink } from '../../../../common/services/web_documentation';
+import { translate } from '../../common/util/common/string';
 
 export class Inventory extends Component {
   _isMount = false;
@@ -211,7 +212,7 @@ export class Inventory extends Component {
             <EuiFlexItem />
             <EuiFlexItem grow={false}>
               <EuiButtonEmpty iconType="importAction" onClick={() => this.downloadCsv()}>
-                Export formatted
+                {translate("common.export.formated")}
               </EuiButtonEmpty>
             </EuiFlexItem>
           </EuiFlexGroup>

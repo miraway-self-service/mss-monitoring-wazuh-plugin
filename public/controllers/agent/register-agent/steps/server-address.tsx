@@ -6,6 +6,7 @@ import {
 } from '@elastic/eui';
 import React, { useEffect, useState } from 'react';
 import { UI_LOGGER_LEVELS } from '../../../../../common/constants';
+import { translate } from '../../../../components/common/util';
 import { getErrorOrchestrator } from '../../../../react-services/common-services';
 import { UI_ERROR_SEVERITIES } from '../../../../react-services/error-orchestrator/types';
 import { getMasterNode } from '../../components/register-agent-service';
@@ -149,10 +150,10 @@ const ServerAddress = (props: Props) => {
   return (
     <EuiText>
       <p>
-        This is the address the agent uses to communicate with the Wazuh server. It can be an IP address or a fully qualified domain name (FQDN).
+        {translate("serverAddress.description")}
       </p>
       <EuiComboBox
-        placeholder='Server Address'
+        placeholder={translate("serverAddress.title")}
         singleSelection={true}
         isLoading={isLoading}
         selectedOptions={selectedNodeIPs}

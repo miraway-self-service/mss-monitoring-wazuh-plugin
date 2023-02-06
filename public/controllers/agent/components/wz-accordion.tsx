@@ -7,6 +7,7 @@ import {
   htmlIdGenerator,
 } from '@elastic/eui';
 import { osButtons } from '../wazuh-config';
+import { translate } from '../../../components/common/util/common/string';
 
 export const PrincipalButtonGroup = ({
   legend,
@@ -40,11 +41,12 @@ export const PrincipalButtonGroup = ({
 export const WzAccordion = ({ children }) => {
   const [isAccordionOpen, setIsAccordionOpen] = useState(false);
   const rightArrowAccordionId = htmlIdGenerator('wz-accordion')();
+  const toggleLabel = translate(`wzAccordion.${isAccordionOpen ? 'open' : 'hide'}`)
   return (
     <EuiAccordion
       id={rightArrowAccordionId}
       arrowDisplay='left'
-      buttonContent={isAccordionOpen ? 'Show less' : 'Show more'}
+      buttonContent={toggleLabel}
       onToggle={(isOpen: boolean) => setIsAccordionOpen(isOpen)}
       className={'action-btn-td'}
     >

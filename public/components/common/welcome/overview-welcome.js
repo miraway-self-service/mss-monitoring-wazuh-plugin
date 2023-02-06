@@ -78,8 +78,8 @@ export const OverviewWelcome = withErrorBoundary(
 
 
     addAgent() {
-      const noAgentText = translate('overviewWelcome.agent.notExist', 'no_agents');
-      const addAgentText = translate('overviewWelcome.agent.add',  'add_agent' );
+      const noAgentText = translate('overviewWelcome.agent.notExist');
+      const addAgentText = translate('overviewWelcome.agent.add');
 
       return (
         <>
@@ -105,8 +105,8 @@ export const OverviewWelcome = withErrorBoundary(
     }
 
     render() {
-      const betaBadgeLabel = translate('overviewWelcome.label.sercurity', 'security_information_management' );
-      const auditAndProlicyLabel = translate('overviewWelcome.label.auditAndProlicy', 'auditing_and_policy_monitoring' );
+      const betaBadgeLabel = translate('overviewWelcome.label.sercurity' );
+      const auditAndProlicyLabel = translate('overviewWelcome.label.auditAndProlicy' );
 
       return (
       <Fragment>

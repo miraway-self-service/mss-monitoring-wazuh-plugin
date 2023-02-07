@@ -46,7 +46,7 @@ import { UI_ERROR_SEVERITIES } from '../../../react-services/error-orchestrator/
 import { getErrorOrchestrator } from '../../../react-services/common-services';
 import { VisualizationBasic } from '../../../components/common/charts/visualizations/basic';
 import { agentStatusColorByAgentStatus, agentStatusLabelByAgentStatus } from '../../../../common/services/wz_agent_status';
-import { translate } from '../../../components/common/util/common/string';
+import { convertCamelCase, translate } from '../../../components/common/util/common/string';
 
 export const AgentsPreview = compose(
   withErrorBoundary,
@@ -180,6 +180,10 @@ export const AgentsPreview = compose(
 
     render() {
       const evolutionIsReady = this.props.resultState !== 'loading';
+      const getStatusLabel = (label) => {
+        return translate(`common.status.${convertCamelCase(label)}`)
+      }
+      const viewAgentDetailLabel = translate("agentsPreview.tooltip.viewAgentDetail");
 
       return (
         <EuiPage className="flex-column">
@@ -189,7 +193,7 @@ export const AgentsPreview = compose(
               (
                 <>
                   <EuiFlexItem className="agents-status-pie" grow={false}>
-                    <EuiCard title description betaBadgeLabel="Status" className="eui-panel">
+                    <EuiCard title description betaBadgeLabel={translate("agentsTable.col.status")} className="eui-panel">
                       <EuiFlexGroup>
                         <EuiFlexItem className="align-items-center">
                           <VisualizationBasic
@@ -198,7 +202,7 @@ export const AgentsPreview = compose(
                             size={{ width: '100%', height: '150px' }}
                             showLegend
                             data={this.agentStatus.map(({status, label, color}) => ({
-                              label,
+                              label: getStatusLabel(label),
                               value: this.state.agentStatusSummary[status] || 0,
                               color,
                               onClick: () => this.filterAgentByStatus(status)
@@ -211,7 +215,7 @@ export const AgentsPreview = compose(
                     </EuiCard>
                   </EuiFlexItem>
                   <EuiFlexItem grow={false} className="agents-details-card">
-                    <EuiCard title description betaBadgeLabel="Details">
+                    <EuiCard title description betaBadgeLabel={translate("agentsPreview.details.title")}>
                       <EuiFlexGroup wrap={true} className="group-details">
                         {this.agentStatus.map(({status, label, color}) => (
                           <EuiFlexItem key={`agent-details-status-${status}`}>
@@ -220,7 +224,7 @@ export const AgentsPreview = compose(
                               title={
                                 <EuiToolTip position="top" content={translate(
                                   'agentsPreview.tooltip.filterStatus',
-                                  { status },
+                                  { status: getStatusLabel(status) },
                                 )}>
                                   <span onClick={() => this.filterAgentByStatus(status)} style={{cursor: 'pointer'}}>
                                     {this.state.agentStatusSummary[status]}
@@ -228,7 +232,7 @@ export const AgentsPreview = compose(
                                 </EuiToolTip>
                               }
                               titleSize="s"
-                              description={label}
+                              description={getStatusLabel(label)}
                               titleColor={color}
                               className="white-space-nowrap"
                             />
@@ -259,7 +263,7 @@ export const AgentsPreview = compose(
                               className="euiStatLink last-agents-link"
                               isLoading={this.state.loadingAgents}
                               title={
-                                <EuiToolTip position="top" content="View agent details">
+                                <EuiToolTip position="top" content={viewAgentDetailLabel}>
                                   <a onClick={() => this.showAgent(this.state.lastRegisteredAgent)}>
                                     {this.state.lastRegisteredAgent?.name || '-'}
                                   </a>
@@ -276,7 +280,7 @@ export const AgentsPreview = compose(
                               className={this.state.agentMostActive?.name ? 'euiStatLink' : ''}
                               isLoading={this.state.loadingAgents}
                               title={
-                                <EuiToolTip position="top" content="View agent details">
+                                <EuiToolTip position="top" content={viewAgentDetailLabel}>
                                   <a onClick={() => this.showAgent(this.state.agentMostActive)}>
                                     {this.state.agentMostActive?.name || '-'}
                                   </a>
@@ -304,7 +308,7 @@ export const AgentsPreview = compose(
                     title
                     description
                     paddingSize="none"
-                    betaBadgeLabel="Evolution"
+                    betaBadgeLabel={translate("agentsPreview.details.evolution")}
                   >
                     <EuiFlexGroup>
                       <EuiFlexItem>

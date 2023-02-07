@@ -55,7 +55,7 @@ import { withErrorBoundary, withReduxProvider } from '../hocs';
 import { compose } from 'redux';
 import { API_NAME_AGENT_STATUS } from '../../../../common/constants';
 import { webDocumentationLink } from '../../../../common/services/web_documentation';
-import { translate } from '../util';
+import { translate } from '../util/common/string';
 
 export const AgentsWelcome = compose(
   withReduxProvider,
@@ -146,36 +146,38 @@ class AgentsWelcome extends Component {
     );
   }
 
+  getMenuTrans = (label) => translate(`agentsSection.menuAgent.${label}`);
+
   updateMenuAgents() {
     const defaultMenuAgents = {
       general: {
         id: 'general',
-        text: 'Security events',
+        text: this.getMenuTrans("general"),
         isPin: true,
       },
       fim: {
         id: 'fim',
-        text: 'Integrity monitoring',
+        text: this.getMenuTrans("fim"),
         isPin: true,
       },
       sca: {
         id: 'sca',
-        text: 'SCA',
+        text: this.getMenuTrans("agentsSection.menuAgent.scaCompact"),
         isPin: true,
       },
       audit: {
         id: 'audit',
-        text: 'System Auditing',
+        text: this.getMenuTrans("audit"),
         isPin: true,
       },
       vuls: {
         id: 'vuls',
-        text: 'Vulnerabilities',
+        text: this.getMenuTrans("vuls"),
         isPin: true,
       },
       mitre: {
         id: 'mitre',
-        text: 'MITRE ATT&CK',
+        text: this.getMenuTrans("mitre"),
         isPin: true,
       },
     }
@@ -293,7 +295,7 @@ class AgentsWelcome extends Component {
                       iconSide="right"
                       iconType="arrowDown"
                       onClick={() => this.setState({ switchModule: !this.state.switchModule })}>
-                      Modules
+                      {translate("agentsWelcome.events.module")}
                       </EuiButtonEmpty>
                   }
                   isOpen={this.state.switchModule}
@@ -324,21 +326,21 @@ class AgentsWelcome extends Component {
                 <EuiButtonEmpty
                   iconType="inspect"
                   onClick={() => this.props.switchTab('syscollector')}>
-                  Inventory data
+                 {translate("exportConfiguration.options.inventoryData")}
                 </EuiButtonEmpty>
               </EuiFlexItem>
               <EuiFlexItem grow={false} style={{ marginTop: 7 }}>
                 <EuiButtonEmpty
                   iconType="stats"
                   onClick={() => this.props.switchTab('stats')}>
-                  Stats
+                  {translate("wazuhModules.stats.title")}
                 </EuiButtonEmpty>
               </EuiFlexItem>
               <EuiFlexItem grow={false} style={{ marginTop: 7 }}>
                 <EuiButtonEmpty
                   iconType="gear"
                   onClick={() => this.props.switchTab('configuration')}>
-                  Configuration
+                  {translate("wazuhModules.configuration.title")}
                 </EuiButtonEmpty>
               </EuiFlexItem>
             </EuiFlexGroup>
@@ -434,6 +436,8 @@ class AgentsWelcome extends Component {
   }
 
   renderMitrePanel() {
+    const openMitreLabel = translate("extendedInfomation.mitre.open");
+
     return (
       <Fragment>
         <EuiPanel paddingSize="s" height={{ height: 300 }}>
@@ -445,7 +449,7 @@ class AgentsWelcome extends Component {
                 </h2>
               </EuiFlexItem>
               <EuiFlexItem grow={false} style={{ alignSelf: 'center' }}>
-                <EuiToolTip position="top" content="Open MITRE">
+                <EuiToolTip position="top" content={openMitreLabel}>
                   <EuiButtonIcon
                     iconType="popout"
                     color="primary"
@@ -454,7 +458,7 @@ class AgentsWelcome extends Component {
                       this.router.reload();
                     }
                     }
-                    aria-label="Open MITRE" />
+                    aria-label={openMitreLabel} />
                 </EuiToolTip>
               </EuiFlexItem>
             </EuiFlexGroup>
@@ -489,7 +493,7 @@ class AgentsWelcome extends Component {
           <EuiFlexGroup>
             <EuiFlexItem>
               <h2 className="embPanel__title wz-headline-title">
-                <EuiText size="xs"><h2>Events count evolution</h2></EuiText>
+                <EuiText size="xs"><h2>{translate("agentsWelcome.events.countEvolution")}</h2></EuiText>
               </h2>
             </EuiFlexItem>
           </EuiFlexGroup>

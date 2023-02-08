@@ -109,7 +109,7 @@ class AgentsWelcome extends Component {
     const breadcrumb = [
       { text: '' },
       {
-        text: 'Agents',
+        text: 'Kiosks',
         href: "#/agents-preview"
       },
       {

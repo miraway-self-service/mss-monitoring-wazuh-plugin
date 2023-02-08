@@ -496,7 +496,7 @@ export class AgentsController {
           text: '',
         },
         {
-          text: 'Agents',
+          text: 'Kiosks',
           href: '#/agents-preview',
         },
         { agent: this.$scope.agent },

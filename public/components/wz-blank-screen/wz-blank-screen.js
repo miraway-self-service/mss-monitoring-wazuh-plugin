@@ -14,6 +14,7 @@ import { EuiButton, EuiSpacer } from '@elastic/eui';
 import { ErrorComponentPrompt } from '../common/error-boundary-prompt/error-boundary-prompt';
 import { PLUGIN_PLATFORM_WAZUH_DOCUMENTATION_URL_PATH_TROUBLESHOOTING, PLUGIN_PLATFORM_URL_GUIDE, PLUGIN_PLATFORM_URL_GUIDE_TITLE } from '../../../common/constants';
 import { webDocumentationLink } from '../../../common/services/web_documentation';
+import { translate } from '../common/util/common/string';
 
 export class WzBlankScreen extends Component {
   constructor(props) {
@@ -37,7 +38,7 @@ export class WzBlankScreen extends Component {
             <EuiSpacer />
 
             <EuiButton onClick={this.props.goToOverview} color="primary" fill>
-              Refresh
+              {translate("common.refresh")}
             </EuiButton>
           </>
         }

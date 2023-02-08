@@ -30,6 +30,7 @@ import { AgentSelectionTable } from './agents-selection-table';
 import { AppState } from '../../../../react-services/app-state';
 import { getDataPlugin } from '../../../../kibana-services';
 import { getSettingDefaultValue } from '../../../../../common/services/settings';
+import { translate } from '../../../../components/common/util';
 
 class OverviewActions extends Component {
   constructor(props) {
@@ -144,6 +145,8 @@ class OverviewActions extends Component {
 
   render() {
     let modal;
+    const exploreAgentLabel = translate("overviewActions.agent.explore");
+    const unpinAgentLabel = translate("overviewActions.agent.unpin");
 
     if (this.state.isAgentModalVisible || this.props.state.showExploreAgentModal) {
       modal = (
@@ -155,7 +158,7 @@ class OverviewActions extends Component {
               initialFocus="[name=popswitch]"
             >
               <EuiModalHeader>
-                <EuiModalHeaderTitle>Explore agent</EuiModalHeaderTitle>
+                <EuiModalHeaderTitle>{exploreAgentLabel}</EuiModalHeaderTitle>
               </EuiModalHeader>
 
               <EuiModalBody>
@@ -187,8 +190,8 @@ class OverviewActions extends Component {
             this.props.updateCurrentAgentData({});
             this.removeAgentsFilter();
           }}
-          tooltip={{ position: 'bottom', content: 'Unpin agent' }}
-          aria-label="Unpin agent"
+          tooltip={{ position: 'bottom', content: unpinAgentLabel }}
+          aria-label={unpinAgentLabel}
         />
       );
     }
@@ -202,16 +205,16 @@ class OverviewActions extends Component {
         tooltip={{
           position: 'bottom',
           content: !avaliableForAgent
-            ? 'This module is not supported for agents.'
+            ? translate("overviewActions.module.notSupport")
             : thereAgentSelected
-            ? 'Change agent selected'
-            : 'Select an agent to explore its modules',
+            ? translate("overviewActions.agent.change")
+            : translate("overviewActions.select.agent"),
         }}
         style={thereAgentSelected ? { background: 'rgba(0, 107, 180, 0.1)' } : undefined}
         iconType="watchesApp"
         onClick={() => this.showAgentModal()}
       >
-        {thereAgentSelected ? `${this.props.agent.name} (${this.props.agent.id})` : 'Explore agent'}
+        {thereAgentSelected ? `${this.props.agent.name} (${this.props.agent.id})` : exploreAgentLabel}
       </WzButton>
     );
 

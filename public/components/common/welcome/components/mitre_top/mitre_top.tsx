@@ -28,6 +28,13 @@ import { getIndexPattern } from '../../../../../components/overview/mitre/lib';
 import { getMitreCount } from './lib';
 import { AppNavigate } from '../../../../../react-services/app-navigate';
 import { getDataPlugin } from '../../../../../kibana-services';
+import { translate, convertCamelCase } from '../../../util/common/string';
+
+interface AlertCountResponse {
+  key: string,
+  doc_count: number,
+  transKey?: string
+}
 
 export class MitreTopTactics extends Component {
   _isMount = false;
@@ -39,7 +46,7 @@ export class MitreTopTactics extends Component {
     [key: string]: any;
   };
   state: {
-    alertsCount: { key: string; doc_count: number }[];
+    alertsCount: AlertCountResponse[];
     isLoading: boolean;
     time: any;
     filterParams: object;
@@ -71,9 +78,7 @@ export class MitreTopTactics extends Component {
         () => this._isMount && this.setState({ time: this.timefilter.getTime(), isLoading: true })
       );
     this.indexPattern = await getIndexPattern();
-    getMitreCount(this.props.agentId, this.timefilter.getTime(), undefined).then((alertsCount) =>
-      this.setState({ alertsCount, isLoading: false })
-    );
+    this.fetchMitreCount();
   }
 
   async componentWillUnmount() {
@@ -92,14 +97,7 @@ export class MitreTopTactics extends Component {
   async componentDidUpdate() {
     const { selectedTactic, isLoading } = this.state;
     if (isLoading) {
-      getMitreCount(this.props.agentId, this.timefilter.getTime(), selectedTactic).then(
-        (alertsCount) => {
-          if (alertsCount.length === 0) {
-            this.setState({ selectedTactic: undefined, isLoading: false });
-          }
-          this.setState({ alertsCount, isLoading: false });
-        }
-      );
+      this.fetchMitreCount(selectedTactic);
     }
   }
 
@@ -122,7 +120,7 @@ export class MitreTopTactics extends Component {
           <EuiText size="xs">
             <EuiFlexGroup>
               <EuiFlexItem style={{ margin: 0, padding: '12px 0px 0px 10px' }}>
-                <h3>Top Tactics</h3>
+                <h3>{translate("mitreTop.title")}</h3>
               </EuiFlexItem>
             </EuiFlexGroup>
           </EuiText>
@@ -139,7 +137,7 @@ export class MitreTopTactics extends Component {
                     });
                   }}
                 >
-                  {tactic.key}
+                  {tactic.transKey}
                 </EuiFacetButton>
               ))}
             </EuiFlexItem>
@@ -168,11 +166,11 @@ export class MitreTopTactics extends Component {
                   });
                 }}
                 iconType="sortLeft"
-                aria-label="Back Top Tactics"
+                aria-label={this.getTacticTrans("backTopTactics")}
               />
             </EuiFlexItem>
             <EuiFlexItem>
-              <h3>{selectedTactic}</h3>
+              <h3>{this.getTacticTrans(selectedTactic)}</h3>
             </EuiFlexItem>
           </EuiFlexGroup>
         </EuiText>
@@ -207,6 +205,24 @@ export class MitreTopTactics extends Component {
         }
       />
     );
+  }
+
+  fetchMitreCount(selectedTactic: string | undefined = undefined) {
+    getMitreCount(this.props.agentId, this.timefilter.getTime(), selectedTactic).then((alertsCount) => {
+      if (alertsCount?.length) {
+        alertsCount = alertsCount.map((alert: AlertCountResponse) => {
+          alert.transKey = this.getTacticTrans(alert.key);
+          return alert;
+        })
+      }
+      this.setState({ alertsCount, isLoading: false })
+    });
+  }
+
+  getTacticTrans(key) {
+    if (!key) return "";
+
+    return translate(`mitreTop.tactic.${convertCamelCase(key)}`)
   }
 
   onChangeFlyout = (flyoutOn) => {

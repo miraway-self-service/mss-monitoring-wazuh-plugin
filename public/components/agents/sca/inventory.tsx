@@ -50,6 +50,7 @@ import { AppNavigate } from '../../../react-services/app-navigate';
 import SCAPoliciesTable from './inventory/agent-policies-table';
 import { InventoryPolicyChecksTable } from './inventory/checks-table';
 import { RuleText } from './components';
+import { translate } from '../../common/util/common/string';
 
 type InventoryProps = {
   agent: { [key: string]: any };
@@ -400,6 +401,7 @@ export class Inventory extends Component<InventoryProps, InventoryState> {
       ></EuiButtonEmpty>
     );
     const { agent } = this.props;
+    const refreshLabel = translate("common.refresh");
 
     return (
       <Fragment>
@@ -419,7 +421,7 @@ export class Inventory extends Component<InventoryProps, InventoryState> {
             !this.state.loading && (
               <EuiCallOut title='No scans available' iconType='iInCircle'>
                 <EuiButton color='primary' onClick={() => this.initialize()}>
-                  Refresh
+                  {refreshLabel}
                 </EuiButton>
               </EuiCallOut>
             )}
@@ -433,7 +435,7 @@ export class Inventory extends Component<InventoryProps, InventoryState> {
                 iconType='iInCircle'
               >
                 <EuiButton color='primary' onClick={() => this.initialize()}>
-                  Refresh
+                  {refreshLabel}
                 </EuiButton>
               </EuiCallOut>
             )}

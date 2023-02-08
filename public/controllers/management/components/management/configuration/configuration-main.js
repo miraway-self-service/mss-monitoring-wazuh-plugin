@@ -33,7 +33,7 @@ export default compose(
       breadcrumb = [
         { text: '' },
         {
-          text: 'Agents',
+          text: 'Kiosks',
           href: '#/agents-preview',
         },
         { agent: props.agent },

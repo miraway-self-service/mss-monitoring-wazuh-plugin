@@ -955,7 +955,7 @@ export const RegisterAgent = withErrorBoundary(
             placeholder={
               !this.state.groups.length
                 ? translate('common.default')
-                : translate('agents.selectGroup.titlte')
+                : translate('registerAgent.selectGroup.titlte')
             }
             options={this.state.groups}
             selectedOptions={this.state.selectedGroup}

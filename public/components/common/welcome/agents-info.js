@@ -25,6 +25,7 @@ import WzTextWithTooltipIfTruncated from '../wz-text-with-tooltip-if-truncated';
 import { WzStat } from '../../wz-stat';
 import { GroupTruncate } from '../util/agent-group-truncate'
 import { AgentStatus } from '../../agents/agent_status';
+import { translate } from '../util';
 
 export class AgentInfo extends Component {
   constructor(props) {
@@ -140,30 +141,33 @@ export class AgentInfo extends Component {
 
   render() {
     const { agent } = this.props;
+    const operateSysLabel = translate("registerAgent.selectOs.operateSys");
+    const versionLabel = translate("agentsTable.col.version");
+    const statusLabel = translate("agentsTable.col.status");
     let arrayStats;
 
     if (this.props.isCondensed) {
       arrayStats = [
         { title: agent.id, description: 'ID', style: { maxWidth: 100 } },
-        { title: agent.status, description: 'Status', style: { maxWidth: 150 } },
-        { title: agent.version, description: 'Version', style: { maxWidth: 150 } },
+        { title: agent.status, description: statusLabel, style: { maxWidth: 150 } },
+        { title: agent.version, description: versionLabel, style: { maxWidth: 150 } },
         {
           title: agent.name,
-          description: 'Operating system',
+          description: operateSysLabel,
           style: { minWidth: 200, maxWidth: 200 }
         }
       ];
     } else {
       arrayStats = [
         { title: agent.id, description: 'ID', style: { minWidth: 30 } },
-        { title: agent.status, description: 'Status', style: { minWidth: 130 } },
+        { title: agent.status, description: statusLabel, style: { minWidth: 130 } },
         { title: agent.ip, description: 'IP', style: { minWidth: 80 } },
-        { title: agent.version, description: 'Version', style: { minWidth: 100 } },
-        { title: agent.group, description: 'Groups', style: { minWidth: 150 } },
-        { title: agent.name, description: 'Operating system', style: { minWidth: 150 } },
-        { title: agent.node_name && agent.node_name !== 'unknown' ? agent.node_name : '-', description: 'Cluster node', style: { minWidth: 120 } },
-        { title: formatUIDate(agent.dateAdd), description: 'Registration date', style: { minWidth: 180 } },
-        { title: formatUIDate(agent.lastKeepAlive), description: 'Last keep alive', style: { minWidth: 180 } },
+        { title: agent.version, description: versionLabel, style: { minWidth: 100 } },
+        { title: agent.group, description: translate("agentsTable.col.groups"), style: { minWidth: 150 } },
+        { title: agent.name, description: operateSysLabel, style: { minWidth: 150 } },
+        { title: agent.node_name && agent.node_name !== 'unknown' ? agent.node_name : '-', description: translate("agentsTable.col.nodeName"), style: { minWidth: 120 } },
+        { title: formatUIDate(agent.dateAdd), description: translate("agentsTable.col.dateAdd"), style: { minWidth: 180 } },
+        { title: formatUIDate(agent.lastKeepAlive), description: translate("agentsTable.col.lastKeepAlive"), style: { minWidth: 180 } },
       ];
     }
 

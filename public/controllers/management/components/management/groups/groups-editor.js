@@ -36,7 +36,7 @@ import GroupsHandler from './utils/groups-handler';
 import { getToasts } from '../../../../../kibana-services';
 import { validateXML } from '../configuration/utils/xml';
 import { WzButtonPermissions } from '../../../../../components/common/permissions/button';
-import { WzOverlayMask } from '../../../../../components/common/util';
+import { translate, WzOverlayMask } from '../../../../../components/common/util';
 import 'brace/theme/textmate';
 import 'brace/mode/xml';
 import 'brace/snippets/xml';
@@ -165,7 +165,7 @@ class WzGroupsEditor extends Component {
         isDisabled={name.length <= 4 || (isEditable && xmlError ? true : false)}
         onClick={() => this.save(name)}
       >
-        {isEditable && xmlError ? 'XML format error' : 'Save'}
+        {isEditable && xmlError ? translate('common.xmlError') : translate('common.save')}
       </WzButtonPermissions>
     );
 
@@ -177,17 +177,17 @@ class WzGroupsEditor extends Component {
       modal = (
         <EuiOverlayMask>
           <EuiConfirmModal
-            title="Unsubmitted changes"
+            title={translate('groupsEditor.modal.title')}
             onConfirm={() => {
               closeModal;
               this.props.cleanFileContent();
             }}
             onCancel={closeModal}
-            cancelButtonText="No, don't do it"
-            confirmButtonText="Yes, do it"
+            cancelButtonText={translate('groupsEditor.modal.cancel')}
+            confirmButtonText={translate('groupsEditor.modal.confirm')}
           >
             <p style={{ textAlign: 'center' }}>
-              There are unsaved changes. Are you sure you want to proceed?
+              {translate('groupsEditor.modal.message')}
             </p>
           </EuiConfirmModal>
         </EuiOverlayMask>
@@ -204,7 +204,7 @@ class WzGroupsEditor extends Component {
                   <EuiFlexItem>
                     <EuiTitle>
                       <span style={{ fontSize: '22px' }}>
-                        <EuiToolTip position="right" content={`Back to groups`}>
+                        <EuiToolTip position="right" content={translate('groupsEditor.tooltip.back')}>
                           <EuiButtonIcon
                             aria-label="Back"
                             color="primary"
@@ -219,8 +219,8 @@ class WzGroupsEditor extends Component {
                             }}
                           />
                         </EuiToolTip>
-                        {name} <span style={{ color: 'grey' }}>of</span> {groupName}{' '}
-                        <span style={{ color: 'grey' }}>group</span>
+                        {name} <span style={{ color: 'grey' }}>{translate('groupsEditor.of')}</span> {groupName}{' '}
+                        <span style={{ color: 'grey' }}></span>
                       </span>
                     </EuiTitle>
                   </EuiFlexItem>

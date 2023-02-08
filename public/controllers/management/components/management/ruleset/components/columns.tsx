@@ -201,7 +201,7 @@ export default class RulesetColumns {
                       }
                     }}
                     color="danger"
-                    modalTitle={'Are you sure?'}
+                    modalTitle={translate('common.modalTitle.confirm')}
                     modalProps={{
                       buttonColor: 'danger',
                     }}

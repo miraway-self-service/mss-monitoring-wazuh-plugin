@@ -62,7 +62,7 @@ export function ExportTableCsv({ endpoint, totalItems, filters, title }) {
   
   return <EuiFlexItem grow={false}>
   <EuiButtonEmpty isDisabled={(totalItems == 0)} iconType="importAction" onClick={() => downloadCsv()}>
-  {translate("common.exportFormated")}
+  {translate("common.export.formated")}
   </EuiButtonEmpty>
     </EuiFlexItem>
 }

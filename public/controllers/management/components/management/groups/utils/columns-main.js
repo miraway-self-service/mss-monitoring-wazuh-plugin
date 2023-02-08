@@ -2,6 +2,7 @@ import React from 'react';
 import { EuiToolTip, EuiButtonIcon } from '@elastic/eui';
 import GroupsHandler from './groups-handler';
 import { WzButtonPermissions } from '../../../../../../components/common/permissions/button';
+import { translate } from '../../../../../../components/common/util';
 
 export default class GroupsColums {
   constructor(tableProps) {
@@ -12,24 +13,24 @@ export default class GroupsColums {
       this.columns = [
         {
           field: 'name',
-          name: 'Name',
+          name: translate('groups.columnName.name'),
           align: 'left',
           sortable: true
         },
         {
           field: 'count',
-          name: 'Agents',
+          name: translate('groups.columnName.agents'),
           align: 'left',
           sortable: true
         },
         {
           field: 'configSum',
-          name: 'Configuration checksum',
+          name: translate('groups.columnName.configurationChecksum'),
           align: 'left'
         }
       ];
       this.columns.push({
-        name: 'Actions',
+        name: translate('groups.columnName.actions'),
         align: 'left',
         render: item => {
           return (
@@ -37,7 +38,7 @@ export default class GroupsColums {
               <WzButtonPermissions
                 buttonType='icon'
                 permissions={[{action: 'group:read', resource: `group:id:${item.name}`}]}
-                tooltip={{position: 'top', content: `View ${item.name} details`}}
+                tooltip={{position: 'top', content: translate('common.tooltip.viewDetail')}}
                 aria-label="View group details"
                 iconType="eye"
                 onClick={async () => {
@@ -48,7 +49,7 @@ export default class GroupsColums {
               <WzButtonPermissions
                 buttonType='icon'
                 permissions={[{action: 'group:read', resource: `group:id:${item.name}`}]}
-                tooltip={{position: 'top', content: 'Edit group configuration'}}
+                tooltip={{position: 'top', content: translate('common.tooltip.edit')}}
                 aria-label="Edit group configuration"
                 iconType="pencil"
                 onClick={async ev => {
@@ -59,7 +60,7 @@ export default class GroupsColums {
               <WzButtonPermissions
                 buttonType='icon'
                 permissions={[{action: 'group:delete', resource: `group:id:${item.name}`}]}
-                tooltip={{posiiton: 'top', content: item.name === 'default' ? `The ${item.name} group cannot be deleted`: `Delete ${item.name}`}}
+                tooltip={{posiiton: 'top', content: item.name === 'default' ? translate('groups.tooltip.groupCantDeleted') : translate('common.tooltip.delete')}}
                 aria-label="Delete content"
                 iconType="trash"
                 onClick={async ev => {

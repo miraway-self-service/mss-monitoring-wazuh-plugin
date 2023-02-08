@@ -128,7 +128,7 @@ export const ExportConfiguration = withErrorBoundary (class ExportConfiguration 
         style={{ marginTop: '4px' }}
         onClick={this.exportClick.bind(this)}
       >
-        Export PDF
+        {translate('common.export.pdf')}
       </EuiButtonEmpty>
     );
     return (

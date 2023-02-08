@@ -30,6 +30,7 @@ import { ReportingService } from '../../../../../react-services/reporting';
 import { UI_LOGGER_LEVELS } from '../../../../../../common/constants';
 import { UI_ERROR_SEVERITIES } from '../../../../../react-services/error-orchestrator/types';
 import { getErrorOrchestrator } from '../../../../../react-services/common-services';
+import { translate } from '../../../../../components/common/util';
 
 
 class WzGroupsActionButtonsFiles extends Component {
@@ -232,7 +233,7 @@ class WzGroupsActionButtonsFiles extends Component {
     try {
       this.props.updateLoadingStatus(true);
       await this.groupsHandler.saveGroup(this.state.newGroupName);
-      this.showToast('success', 'Success', 'The group has been created successfully', 2000);
+      this.showToast('success', translate('common.success'), translate('groups.addNewGroup.successMessage'), 2000);
       this.clearGroupName();
 
       this.props.updateIsProcessing(true);
@@ -254,8 +255,8 @@ class WzGroupsActionButtonsFiles extends Component {
       await this.exportCsv(`/groups/${this.props.state.itemDetail.name}/files`, filters, 'Groups');
       this.showToast(
         'success',
-        'Success',
-        'CSV. Your download should begin automatically...',
+        translate('common.success'),
+        translate('group.downloadCSV.successMessage'),
         2000
       );
     } catch (error) {
@@ -267,7 +268,7 @@ class WzGroupsActionButtonsFiles extends Component {
         error: {
           error: error,
           message: error.message || error,
-          title: `Error when exporting the CSV file: ${error.message || error}`,
+          title: `${translate('group.downloadCSV.errorMessage')} ${error.message || error}`,
         },
       };
       getErrorOrchestrator().handleError(options);
@@ -296,7 +297,7 @@ class WzGroupsActionButtonsFiles extends Component {
         iconType="documentEdit"
         onClick={() => this.showGroupConfiguration()}
       >
-        Edit group configuration
+        {translate('groupDetail.fileTab.editGroupConfiguration')}
       </WzButtonPermissions>
     );
 
@@ -320,14 +321,14 @@ class WzGroupsActionButtonsFiles extends Component {
         onClick={async () => await this.generateCsv()}
         isLoading={this.state.generatingCsv}
       >
-        Export formatted
+        {translate('common.export.formated')}
       </EuiButtonEmpty>
     );
 
     // Refresh
     const refreshButton = (
       <EuiButtonEmpty iconType="refresh" onClick={async () => await this.refresh()}>
-        Refresh
+        {translate('common.refresh')}
       </EuiButtonEmpty>
     );
 

@@ -20,6 +20,7 @@ import {
 import { withButtonOpenOnClick } from '../hocs';
 import { WzButton } from './button';
 import { WzButtonPermissions } from '../permissions/button';
+import { translate } from '../util/common/string';
 
 export const WzButtonOpenOnClick = withButtonOpenOnClick(WzButton);
 export const WzButtonPermissionsOpenOnClick = withButtonOpenOnClick(WzButtonPermissions);
@@ -95,7 +96,7 @@ export const WzButtonModalConfirm: React.FunctionComponent<WzButtonModalConfirmP
   )
 };
 
-export const WzButtonPermissionsModalConfirm: React.FunctionComponent<WzButtonModalConfirmProps> = ({onConfirm, onCancel, modalTitle, modalConfirmText = 'Confirm', modalCancelText = 'Cancel', modalProps = {}, ...rest }) => {
+export const WzButtonPermissionsModalConfirm: React.FunctionComponent<WzButtonModalConfirmProps> = ({onConfirm, onCancel, modalTitle, modalConfirmText = translate('common.confirm'), modalCancelText = translate('common.cancel'), modalProps = {}, ...rest }) => {
   return (
     <WzButtonPermissionsOpenOnClick
       {...rest}

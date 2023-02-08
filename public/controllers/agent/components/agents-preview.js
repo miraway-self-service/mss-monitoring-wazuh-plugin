@@ -51,7 +51,7 @@ import { convertCamelCase, translate } from '../../../components/common/util/com
 export const AgentsPreview = compose(
   withErrorBoundary,
   withReduxProvider,
-  withGlobalBreadcrumb([{ text: '' }, { text: 'Agents' }]),
+  withGlobalBreadcrumb([{ text: '' }, { text: 'Kiosks' }]),
   withUserAuthorizationPrompt([
     [
       { action: 'agent:read', resource: 'agent:id:*' },

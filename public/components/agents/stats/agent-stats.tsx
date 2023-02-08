@@ -95,7 +95,7 @@ export const MainAgentStats = compose(
       text: ''
     },
     {
-      text: 'Agents',
+      text: 'Kiosks',
       href: "#/agents-preview"
     },
     { agent },

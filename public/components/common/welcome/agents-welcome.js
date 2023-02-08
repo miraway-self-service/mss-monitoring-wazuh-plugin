@@ -162,7 +162,7 @@ class AgentsWelcome extends Component {
       },
       sca: {
         id: 'sca',
-        text: this.getMenuTrans("agentsSection.menuAgent.scaCompact"),
+        text: this.getMenuTrans("scaCompact"),
         isPin: true,
       },
       audit: {
@@ -233,7 +233,7 @@ class AgentsWelcome extends Component {
                 iconSide="right"
                 iconType="arrowDown"
                 onClick={() => this.setState({ switchModule: !this.state.switchModule })}>
-                More...
+                {translate("common.more")}...
               </EuiButtonEmpty>
             }
             isOpen={this.state.switchModule}
@@ -436,7 +436,7 @@ class AgentsWelcome extends Component {
   }
 
   renderMitrePanel() {
-    const openMitreLabel = translate("extendedInfomation.mitre.open");
+    const openMitreLabel = translate("agentsWelcome.mitre.open");
 
     return (
       <Fragment>
@@ -503,7 +503,7 @@ class AgentsWelcome extends Component {
               <KibanaVis
                 visID={'Wazuh-App-Agents-Welcome-Events-Evolution'}
                 tab={'welcome'}
-              ></KibanaVis>
+              />
             </WzReduxProvider>
           </div>
           <div style={{ display: this.props.resultState === 'loading' ? 'block' : 'none', alignSelf: "center", paddingTop: 100 }}>

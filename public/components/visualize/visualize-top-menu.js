@@ -24,6 +24,7 @@ import {
 } from '@elastic/eui';
 import './visualize-top-menu.scss';
 import WzReduxProvider from '../../redux/wz-redux-provider';
+import { translate } from '../common/util';
 
 export class VisualizeTopMenu extends Component {
   constructor(props) {
@@ -69,7 +70,7 @@ export class VisualizeTopMenu extends Component {
             initialFocus="[name=popswitch]"
           >
             <EuiModalHeader>
-              <EuiModalHeaderTitle>Select an agent</EuiModalHeaderTitle>
+              <EuiModalHeaderTitle>{translate("visualizeTopMenu.agent.select")}</EuiModalHeaderTitle>
             </EuiModalHeader>
             <EuiModalBody>
               <div>
@@ -80,7 +81,7 @@ export class VisualizeTopMenu extends Component {
                     this.closeAgentModal();
                   }}
                 >
-                  agent
+                  {translate("visualizeTopMenu.agent.title")}
                 </button>
               </div>
             </EuiModalBody>
@@ -103,22 +104,22 @@ export class VisualizeTopMenu extends Component {
             {this.state.isAgent && (
               <div className="TopMenuAgent">
                 <EuiKeyPadMenuItem
-                  label="Change Agent"
+                  label={translate("visualizeTopMenu.agent.change", { agent: ""})}
                   onClick={() => this.showAgentModal()}
                   betaBadgeLabel="Change"
-                  betaBadgeTooltipContent={`Change Agent ${this.state.isAgent}`}
+                  betaBadgeTooltipContent={translate("visualizeTopMenu.agent.change", { agent: this.state.isAgent})}
                   betaBadgeIconType="merge"
                 >
                   <EuiIcon type="watchesApp" color="primary" size="m" />
                 </EuiKeyPadMenuItem>
                 <EuiKeyPadMenuItem
-                  label="Remove Agent"
+                  label={translate("visualizeTopMenu.agent.remove", { agent: ""})}
                   onClick={() => {
                     this.setState({ isAgent: false });
                     this.props.setAgent(false);
                   }}
-                  betaBadgeLabel="Remove"
-                  betaBadgeTooltipContent={`Remove Agent ${this.state.isAgent}`}
+                  betaBadgeLabel={translate("common.remove")}
+                  betaBadgeTooltipContent={translate("visualizeTopMenu.agent.remove", { agent: this.state.isAgent})}
                   betaBadgeIconType="cross"
                 >
                   <EuiIcon type="watchesApp" color="primary" size="m" />

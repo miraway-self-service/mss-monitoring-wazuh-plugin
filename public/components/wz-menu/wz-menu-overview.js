@@ -30,126 +30,126 @@ class WzMenuOverview extends Component {
       extensions: []
     };
 
-    getMenuTrans = (label) => translate(`agentsSection.menuAgent.${label}`);
+    this.getMenuTrans = (label) => translate(`agentsSection.menuAgent.${label}`);
 
     this.overviewSections = {
       securityInformation: {
         id: 'securityInformation',
-        text: getMenuTrans("securityInformation"),
+        text: this.getMenuTrans("securityInformation"),
       },
       auditing: { id: 'auditing', text: translate("agentsSection.menuAgent.auditing") },
       threatDetection: {
         id: 'threatDetection',
-        text: getMenuTrans("threatDetection"),
+        text: this.getMenuTrans("threatDetection"),
       },
       regulatoryCompliance: {
         id: 'regulatoryCompliance',
-        text: getMenuTrans("regulatoryCompliance"),
+        text: this.getMenuTrans("regulatoryCompliance"),
       },
       general: {
         id: WAZUH_MODULES_ID.SECURITY_EVENTS,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.SECURITY_EVENTS,
-        text: getMenuTrans("general"),
+        text: this.getMenuTrans("general"),
       },
       fim: {
         id: WAZUH_MODULES_ID.INTEGRITY_MONITORING,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.INTEGRITY_MONITORING,
-        text: getMenuTrans("fim"),
+        text: this.getMenuTrans("fim"),
       },
       aws: {
         id: WAZUH_MODULES_ID.AMAZON_WEB_SERVICES,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.AMAZON_WEB_SERVICES,
-        text: getMenuTrans("aws"),
+        text: this.getMenuTrans("aws"),
       },
       office: {
         id: WAZUH_MODULES_ID.OFFICE_365,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.OFFICE_365,
-        text: getMenuTrans("office365"),
+        text: this.getMenuTrans("office365"),
       },
       gcp: {
         id: WAZUH_MODULES_ID.GOOGLE_CLOUD_PLATFORM,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.GOOGLE_CLOUD_PLATFORM,
-        text: getMenuTrans("gcp"),
+        text: this.getMenuTrans("gcp"),
       },
       pm: {
         id: WAZUH_MODULES_ID.POLICY_MONITORING,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.POLICY_MONITORING,
-        text: getMenuTrans("pm"),
+        text: this.getMenuTrans("pm"),
       },
       sca: {
         id: WAZUH_MODULES_ID.SECURITY_CONFIGURATION_ASSESSMENT,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.SECURITY_CONFIGURATION_ASSESSMENT,
-        text: getMenuTrans("sca"),
+        text: this.getMenuTrans("sca"),
       },
       audit: {
         id: WAZUH_MODULES_ID.AUDITING,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.AUDITING,
-        text:  getMenuTrans("audit"),
+        text:  this.getMenuTrans("audit"),
       },
       oscap: {
         id: WAZUH_MODULES_ID.OPEN_SCAP,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.OPEN_SCAP,
-        text: getMenuTrans("oscap"),
+        text: this.getMenuTrans("oscap"),
       },
       ciscat: {
         id: WAZUH_MODULES_ID.CIS_CAT,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.CIS_CAT,
-        text: getMenuTrans("ciscat"),
+        text: this.getMenuTrans("ciscat"),
       },
       vuls: {
         id: WAZUH_MODULES_ID.VULNERABILITIES,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.VULNERABILITIES,
-        text: getMenuTrans("vuls"),
+        text: this.getMenuTrans("vuls"),
       },
       virustotal: {
         id: WAZUH_MODULES_ID.VIRUSTOTAL,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.VIRUSTOTAL,
-        text: getMenuTrans("virustotal"),
+        text: this.getMenuTrans("virustotal"),
       },
       osquery: {
         id: WAZUH_MODULES_ID.OSQUERY,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.OSQUERY,
-        text: getMenuTrans("osquery"),
+        text: this.getMenuTrans("osquery"),
       },
       docker: {
         id: WAZUH_MODULES_ID.DOCKER,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.DOCKER,
-        text: getMenuTrans("docker"),
+        text: this.getMenuTrans("docker"),
       },
       mitre: {
         id: WAZUH_MODULES_ID.MITRE_ATTACK,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.MITRE_ATTACK,
-        text: getMenuTrans("mitre"),
+        text: this.getMenuTrans("mitre"),
       },
       pci: {
         id: WAZUH_MODULES_ID.PCI_DSS,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.PCI_DSS,
-        text: getMenuTrans("pci"),
+        text: this.getMenuTrans("pci"),
       },
       gdpr: {
         id: WAZUH_MODULES_ID.GDPR,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.GDPR,
-        text: getMenuTrans("gdpr"),
+        text: this.getMenuTrans("gdpr"),
       },
       hipaa: {
         id: WAZUH_MODULES_ID.HIPAA,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.HIPAA,
-        text: getMenuTrans("hipaa"),
+        text: this.getMenuTrans("hipaa"),
       },
       nist: {
         id: WAZUH_MODULES_ID.NIST_800_53,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.NIST_800_53,
-        text: getMenuTrans("nist"),
+        text: this.getMenuTrans("nist"),
       },
       tsc: {
         id: WAZUH_MODULES_ID.TSC,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.TSC,
-        text: getMenuTrans("tsc"),
+        text: this.getMenuTrans("tsc"),
       },
       github: {
         id: WAZUH_MODULES_ID.GITHUB,
         cyTestId: WAZUH_MENU_MODULES_SECTIONS_CY_TEST_ID.GITHUB,
-        text: getMenuTrans("github"),
+        text: this.getMenuTrans("github"),
       },
     };
 

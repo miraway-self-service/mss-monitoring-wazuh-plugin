@@ -6,6 +6,7 @@ import { getErrorOrchestrator } from '../../../../../../react-services/common-se
 import { UIErrorLog } from '../../../../../../react-services/error-orchestrator/types';
 import { getErrorOptions } from '../../common/error-helper';
 import { Columns } from '../../common/interfaces';
+import { translate } from '../../../../../../components/common/util';
 
 
 export default class DecodersColumns {
@@ -22,25 +23,25 @@ export default class DecodersColumns {
       decoders: [
         {
           field: 'name',
-          name: 'Name',
+          name: translate('decodersTable.columnName.name'),
           align: 'left',
-          sortable: true
+          sortable: true,
         },
         {
           field: 'details.program_name',
-          name: 'Program name',
+          name: translate('decodersTable.columnName.programName'),
           align: 'left',
-          sortable: false
+          sortable: false,
         },
         {
           field: 'details.order',
-          name: 'Order',
+          name: translate('decodersTable.columnName.order'),
           align: 'left',
-          sortable: false
+          sortable: false,
         },
         {
           field: 'filename',
-          name: 'File',
+          name: translate('decodersTable.columnName.file'),
           align: 'left',
           sortable: true,
           render: (value, item) => {
@@ -49,42 +50,49 @@ export default class DecodersColumns {
                 buttonType='link'
                 permissions={getReadButtonPermissions(item)}
                 tooltip={{ position: 'top', content: `Show ${value} content` }}
-                onClick={async (ev) => {
+                onClick={async ev => {
                   try {
                     ev.stopPropagation();
-                    const resourcesHandler = new ResourcesHandler(ResourcesConstants.DECODERS);
+                    const resourcesHandler = new ResourcesHandler(
+                      ResourcesConstants.DECODERS,
+                    );
                     const result = await resourcesHandler.getFileContent(value);
-                    const file = { name: value, content: result, path: item.relative_dirname };
+                    const file = {
+                      name: value,
+                      content: result,
+                      path: item.relative_dirname,
+                    };
                     this.props.updateFileContent(file);
                   } catch (error) {
                     const options: UIErrorLog = getErrorOptions(
                       error,
-                      'Decoders.readFileContent'
+                      'Decoders.readFileContent',
                     );
                     getErrorOrchestrator().handleError(options);
                   }
-                }}>
+                }}
+              >
                 {value}
               </WzButtonPermissions>
             );
-          }
+          },
         },
         {
           field: 'relative_dirname',
-          name: 'Path',
+          name: translate('decodersTable.columnName.path'),
           align: 'left',
-          sortable: true
-        }
+          sortable: true,
+        },
       ],
       files: [
         {
           field: 'filename',
-          name: 'File',
+          name: translate('decodersTable.columnName.file'),
           align: 'left',
-          sortable: true
+          sortable: true,
         },
         {
-          name: 'Actions',
+          name: translate('decodersTable.columnName.actions'),
           align: 'left',
           render: item => {
             if (item.relative_dirname.startsWith('ruleset/')) {
@@ -92,25 +100,36 @@ export default class DecodersColumns {
                 <WzButtonPermissions
                   buttonType='icon'
                   permissions={getReadButtonPermissions(item)}
-                  aria-label="Show content"
-                  iconType="eye"
-                  tooltip={{ position: 'top', content: `View the content of ${item.filename}` }}
+                  aria-label='Show content'
+                  iconType='eye'
+                  tooltip={{
+                    position: 'top',
+                    content: `View the content of ${item.filename}`,
+                  }}
                   onClick={async ev => {
                     try {
                       ev.stopPropagation();
-                      const resourcesHandler = new ResourcesHandler(ResourcesConstants.DECODERS);
-                      const result = await resourcesHandler.getFileContent(item.filename);
-                      const file = { name: item.filename, content: result, path: item.relative_dirname };
+                      const resourcesHandler = new ResourcesHandler(
+                        ResourcesConstants.DECODERS,
+                      );
+                      const result = await resourcesHandler.getFileContent(
+                        item.filename,
+                      );
+                      const file = {
+                        name: item.filename,
+                        content: result,
+                        path: item.relative_dirname,
+                      };
                       this.props.updateFileContent(file);
                     } catch (error) {
                       const options: UIErrorLog = getErrorOptions(
                         error,
-                        'Decoders.readFileContent'
+                        'Decoders.readFileContent',
                       );
                       getErrorOrchestrator().handleError(options);
                     }
                   }}
-                  color="primary"
+                  color='primary'
                 />
               );
             } else {
@@ -119,45 +138,59 @@ export default class DecodersColumns {
                   <WzButtonPermissions
                     buttonType='icon'
                     permissions={getEditButtonPermissions(item)}
-                    aria-label="Edit content"
-                    iconType="pencil"
-                    tooltip={{ position: 'top', content: `Edit ${item.filename} content` }}
+                    aria-label='Edit content'
+                    iconType='pencil'
+                    tooltip={{
+                      position: 'top',
+                      content: `Edit ${item.filename} content`,
+                    }}
                     onClick={async ev => {
                       try {
                         ev.stopPropagation();
-                        const resourcesHandler = new ResourcesHandler(ResourcesConstants.DECODERS);
-                        const result = await resourcesHandler.getFileContent(item.filename);
-                        const file = { name: item.filename, content: result, path: item.relative_dirname };
+                        const resourcesHandler = new ResourcesHandler(
+                          ResourcesConstants.DECODERS,
+                        );
+                        const result = await resourcesHandler.getFileContent(
+                          item.filename,
+                        );
+                        const file = {
+                          name: item.filename,
+                          content: result,
+                          path: item.relative_dirname,
+                        };
                         this.props.updateFileContent(file);
                       } catch (error) {
                         const options: UIErrorLog = getErrorOptions(
                           error,
-                          'Files.editFileContent'
+                          'Files.editFileContent',
                         );
                         getErrorOrchestrator().handleError(options);
                       }
                     }}
-                    color="primary"
+                    color='primary'
                   />
                   <WzButtonPermissionsModalConfirm
-                    buttonType="icon"
+                    buttonType='icon'
                     permissions={getDeleteButtonPermissions(item)}
-                    tooltip={{ position: 'top', content: `Remove ${item.filename} file` }}
-                    aria-label="Delete file"
-                    iconType="trash"
+                    tooltip={{
+                      position: 'top',
+                      content: `Remove ${item.filename} file`,
+                    }}
+                    aria-label='Delete file'
+                    iconType='trash'
                     onConfirm={async () => {
                       try {
                         this.props.removeItems([item]);
                       } catch (error) {
                         const options: UIErrorLog = getErrorOptions(
                           error,
-                          'Files.deleteFile'
+                          'Files.deleteFile',
                         );
                         getErrorOrchestrator().handleError(options);
                       }
                     }}
-                    color="danger"
-                    modalTitle={'Are you sure?'}
+                    color='danger'
+                    modalTitle={translate('common.modalTitle.confirm')}
                     modalProps={{
                       buttonColor: 'danger',
                     }}
@@ -165,9 +198,9 @@ export default class DecodersColumns {
                 </div>
               );
             }
-          }
-        }
-      ]
+          },
+        },
+      ],
     };
 
     const getReadButtonPermissions = (item) => {

@@ -40,6 +40,7 @@ import { WzButtonPermissions } from '../../../../../../components/common/permiss
 import { UI_ERROR_SEVERITIES } from '../../../../../../react-services/error-orchestrator/types';
 import { UI_LOGGER_LEVELS } from '../../../../../../../common/constants';
 import { getErrorOrchestrator } from '../../../../../../react-services/common-services';
+import { translate } from '../../../../../../components/common/util';
 
 class WzListEditor extends Component {
   constructor(props) {
@@ -282,7 +283,7 @@ class WzListEditor extends Component {
         <EuiFlexItem grow={false}>
           <EuiTitle>
             <h2>
-              <EuiToolTip position="right" content={'Back to lists'}>
+              <EuiToolTip position="right" content={translate('listEditor.tooltip.backToList')}>
                 <EuiButtonIcon
                   aria-label="Back"
                   color="primary"
@@ -299,7 +300,7 @@ class WzListEditor extends Component {
           <EuiFieldText
             fullWidth={true}
             style={{ marginLeft: '-18px', width: 'calc(100% - 28px)' }}
-            placeholder="New CDB list name"
+            placeholder={translate('listEditor.placeholder.newCDBListName')}
             value={this.state.newListName}
             onChange={this.onNewListNameChange}
             aria-label="Use aria labels when no actual label is in use"
@@ -324,7 +325,7 @@ class WzListEditor extends Component {
         isLoading={this.state.isSaving}
         onClick={async () => this.saveList(name, path, newList)}
       >
-        Save
+        {translate('common.save')}
       </WzButtonPermissions>
     );
 
@@ -337,7 +338,7 @@ class WzListEditor extends Component {
               iconType="plusInCircle"
               onClick={() => this.openAddEntry()}
             >
-              Add new entry
+              {translate('listEditor.button.addNewEntry')}
             </WzButtonPermissions>
           </EuiFlexItem>
         )}
@@ -410,7 +411,7 @@ class WzListEditor extends Component {
         <EuiFlexItem grow={false}>
           <EuiTitle>
             <span style={{ fontSize: '22px' }}>
-              <EuiToolTip position="right" content={'Back to lists'}>
+              <EuiToolTip position="right" content={translate('listEditor.tooltip.backToList')}>
                 <EuiButtonIcon
                   aria-label="Back"
                   color="primary"
@@ -436,20 +437,20 @@ class WzListEditor extends Component {
     return [
       {
         field: 'key',
-        name: 'Key',
+        name: translate('listEditor.tableColumn.key'),
         align: 'left',
         sortable: true,
       },
       {
         field: 'value',
-        name: 'Value',
+        name: translate('listEditor.tableColumn.value'),
         align: 'left',
         sortable: true,
         render: (value, item) => {
           if (this.state.editing === item.key) {
             return (
               <EuiFieldText
-                placeholder="New value"
+                placeholder={translate('listEditor.placeholder.newValue')}
                 value={this.state.editingValue}
                 onChange={this.onChangeEditingValue}
                 aria-label="Use aria labels when no actual label is in use"
@@ -461,7 +462,7 @@ class WzListEditor extends Component {
         },
       },
       {
-        name: 'Actions',
+        name: translate('listEditor.tableColumn.actions'),
         align: 'left',
         render: (item) => {
           if (this.state.editing === item.key) {
@@ -524,7 +525,7 @@ class WzListEditor extends Component {
   render() {
     const { listContent: { name, path }, isLoading } = this.props;
 
-    const message = isLoading ? false : 'No results...';
+    const message = isLoading ? false : translate('common.table.noResults');
 
     const addingNew = name === false || !name;
     const listName = this.state.newListName || name;
@@ -585,7 +586,7 @@ class WzListEditor extends Component {
                       isLoading={this.state.generatingCsv}
                       onClick={async () => exportToCsv()}
                     >
-                      Export formatted
+                      {translate('common.export.formated')}
                     </EuiButtonEmpty>
                   </EuiFlexItem>
                 )}

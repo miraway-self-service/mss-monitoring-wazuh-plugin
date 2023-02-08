@@ -3,6 +3,7 @@ import { EuiToolTip, EuiButtonIcon } from '@elastic/eui';
 import GroupsHandler from '../utils/groups-handler';
 import beautifier from '../../../../../../utils/json-beautifier';
 import { WzButtonPermissions } from '../../../../../../components/common/permissions/button';
+import { translate } from '../../../../../../components/common/util';
 
 export default class GroupsFilesColumns {
   constructor(tableProps) {
@@ -40,7 +41,7 @@ export default class GroupsFilesColumns {
       this.columns = [
         {
           field: 'filename',
-          name: 'File',
+          name: translate('groupFilesTable.columnName.file'),
           align: 'left',
           sortable: true
         },
@@ -52,12 +53,12 @@ export default class GroupsFilesColumns {
         }
       ];
       this.columns.push({
-        name: 'Actions',
+        name: translate('groupFilesTable.columnName.actions'),
         align: 'left',
         render: item => {
           return (
             <div>
-              <EuiToolTip position="top" content={`See file content`}>
+              <EuiToolTip position="top" content={translate('common.tooltip.viewDetail')}>
                 <EuiButtonIcon
                   aria-label="See file content"
                   iconType="eye"
@@ -71,7 +72,7 @@ export default class GroupsFilesColumns {
                   aria-label="Edit content"
                   iconType="pencil"
                   permissions={[{ action: 'group:read', resource: `group:id:${itemDetail.name}` }]}
-                  tooltip={{ position: 'top', content: `Edit ${item.filename}` }}
+                  tooltip={{ position: 'top', content: translate('common.tooltip.edit') }}
                   onClick={() => this.actionFile(item, true)}
                   color="primary"
                 />

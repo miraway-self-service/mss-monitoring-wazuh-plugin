@@ -27,6 +27,7 @@ import ReportingColums from './utils/columns-main';
 import { UI_ERROR_SEVERITIES } from '../../../../../react-services/error-orchestrator/types';
 import { UI_LOGGER_LEVELS } from '../../../../../../common/constants';
 import { getErrorOrchestrator } from '../../../../../react-services/common-services';
+import { translate } from '../../../../../components/common/util';
 
 class WzReportingTable extends Component {
   _isMounted = false;
@@ -92,7 +93,7 @@ class WzReportingTable extends Component {
     const { isLoading, error } = this.props.state;
     const { items } = this.state;
     const columns = this.reportingColumns.columns;
-    const message = isLoading ? null : 'No results...';
+    const message = isLoading ? null : translate('common.table.noResults');
 
     const deleteReport = (itemList) => {
       try {

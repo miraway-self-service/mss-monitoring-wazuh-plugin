@@ -43,6 +43,7 @@ import {
 } from '../../../../../redux/actions/groupsActions';
 
 import GroupsColums from './utils/columns-main';
+import { translate } from '../../../../../components/common/util';
 
 class WzGroupsTable extends Component {
   _isMounted = false;
@@ -165,7 +166,7 @@ class WzGroupsTable extends Component {
     const { isLoading, pageIndex, error, sortField, sortDirection } = this.props.state;
     const { items, pageSize, totalItems } = this.state;
     const columns = this.groupsColumns.columns;
-    const message = isLoading ? null : 'No results...';
+    const message = isLoading ? null : translate('common.table.noResults');
     const pagination = {
       pageIndex: pageIndex,
       pageSize: pageSize,
@@ -202,7 +203,7 @@ class WzGroupsTable extends Component {
           filters={filters}
           suggestions={this.suggestions}
           onFiltersChange={(filters) => this._isMounted && this.setState({ filters })}
-          placeholder="Search group"
+          placeholder={translate('groupsOverview.placeholder.searchGroup')}
         />
         <EuiSpacer size="s" />
         <EuiBasicTable
@@ -220,14 +221,14 @@ class WzGroupsTable extends Component {
         {this.props.state.showModal ? (
           <EuiOverlayMask>
             <EuiConfirmModal
-              title={`Delete ${itemList[0].file ? itemList[0].file : itemList[0].name} group?`}
+              title={translate('groups.deleteGroup')}
               onCancel={() => this.props.updateShowModal(false)}
               onConfirm={() => {
                 this.removeItems(itemList);
                 this.props.updateShowModal(false);
               }}
-              cancelButtonText="Cancel"
-              confirmButtonText="Delete"
+              cancelButtonText={translate('common.cancel')}
+              confirmButtonText={translate('common.delete')}
               defaultFocusedButton="cancel"
               buttonColor="danger"
             ></EuiConfirmModal>

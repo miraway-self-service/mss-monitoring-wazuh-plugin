@@ -27,6 +27,7 @@ import WzGroupAgentsTable from './group-agents-table';
 import WzGroupFilesTable from './group-files-table';
 import { withUserAuthorizationPrompt } from '../../../../../components/common/hocs';
 import { compose } from 'redux';
+import { translate } from '../../../../../components/common/util';
 
 class WzGroupDetail extends Component {
   constructor(props) {
@@ -35,12 +36,12 @@ class WzGroupDetail extends Component {
     this.tabs = [
       {
         id: 'agents',
-        name: 'Agents',
+        name: translate('groupDetail.tab.agents'),
         disabled: false
       },
       {
         id: 'files',
-        name: 'Files',
+        name: translate('groupDetail.tab.files'),
         disabled: false
       }
     ];
@@ -87,7 +88,7 @@ class WzGroupDetail extends Component {
         <EuiFlexGroup>
           <EuiFlexItem>
             <EuiText color="subdued" style={{ paddingBottom: '15px' }}>
-              From here you can list and manage your agents
+              {translate('groupDetail.agentTab.description')}
             </EuiText>
           </EuiFlexItem>
         </EuiFlexGroup>
@@ -106,8 +107,7 @@ class WzGroupDetail extends Component {
         <EuiFlexGroup>
           <EuiFlexItem>
             <EuiText color="subdued" style={{ paddingBottom: '15px' }}>
-              From here you can list and see your group files, also, you can
-              edit the group configuration
+              {translate('groupDetail.fileTab.description')}
             </EuiText>
           </EuiFlexItem>
         </EuiFlexGroup>

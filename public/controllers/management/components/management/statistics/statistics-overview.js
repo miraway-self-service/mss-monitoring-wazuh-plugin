@@ -41,6 +41,7 @@ import { WzRequest } from '../../../../../react-services/wz-request';
 import { UI_ERROR_SEVERITIES } from '../../../../../react-services/error-orchestrator/types';
 import { UI_LOGGER_LEVELS } from '../../../../../../common/constants';
 import { getErrorOrchestrator } from '../../../../../react-services/common-services';
+import { translate } from "../../../../../components/common/util";
 const wzConfig = new WazuhConfig();
 
 export class WzStatisticsOverview extends Component {
@@ -173,7 +174,7 @@ export class WzStatisticsOverview extends Component {
                 iconType="refresh"
                 onClick={this.refreshVisualizations}
               >
-                Refresh
+                {translate("common.refresh")}
               </EuiButtonEmpty>
             </EuiFlexItem>
             {!!(

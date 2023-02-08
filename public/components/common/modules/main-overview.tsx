@@ -34,6 +34,7 @@ import { WAZUH_MODULES } from '../../../../common/wazuh-modules';
 
 import { connect } from 'react-redux';
 import { getDataPlugin } from '../../../kibana-services';
+import { translate } from '../util/common/string';
 
 const mapStateToProps = (state) => ({
   agent: state.appStateReducers.currentAgentData,
@@ -58,7 +59,7 @@ export const MainModuleOverview = connect(mapStateToProps)(class MainModuleOverv
           text: '',
         },
         {
-          text: 'Modules',
+          text: translate("mainOverview.modules"),
           href: '#/overview'
         },
       ];

@@ -26,6 +26,7 @@ import {
 import { updateRefreshTime } from '../../../../../../redux/actions/configurationActions';
 import { getToasts }  from '../../../../../../kibana-services';
 import { connect } from 'react-redux';
+import { translate } from '../../../../../../components/common/util';
 
 class WzWazuhAPINotReachable extends Component {
   constructor(props) {
@@ -61,7 +62,7 @@ class WzWazuhAPINotReachable extends Component {
               <span>Wazuh API not reachable</span>
               <EuiHorizontalRule margin="s" />
               <EuiButton iconType="refresh" onClick={this.onClickRefresh}>
-                Refresh
+                {translate("common.refresh")}
               </EuiButton>
               <EuiSpacer size="s" />
             </div>

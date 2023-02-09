@@ -32,6 +32,7 @@ import { UI_LOGGER_LEVELS, UI_ORDER_AGENT_STATUS } from '../../../../../common/c
 import { UI_ERROR_SEVERITIES } from '../../../../react-services/error-orchestrator/types';
 import { getErrorOrchestrator } from '../../../../react-services/common-services';
 import { AgentStatus } from '../../../../components/agents/agent_status';
+import { translate } from '../../../../components/common/util';
 
 const checkField = field => {
   return field !== undefined ? field : '-';
@@ -68,7 +69,7 @@ export class AgentSelectionTable extends Component {
       },
       {
         id: 'name',
-        label: 'Name',
+        label: translate("agentsTable.col.name"),
         alignment: LEFT_ALIGNMENT,
         mobileOptions: {
           show: true,
@@ -77,7 +78,7 @@ export class AgentSelectionTable extends Component {
       },
       {
         id: 'group',
-        label: 'Group',
+        label: translate("groupsOverview.title"),
         alignment: LEFT_ALIGNMENT,
         mobileOptions: {
           show: false,
@@ -87,7 +88,7 @@ export class AgentSelectionTable extends Component {
       },
       {
         id: 'version',
-        label: 'Version',
+        label: translate('agentsTable.col.version'),
         width: '80px',
         alignment: LEFT_ALIGNMENT,
         mobileOptions: {
@@ -97,7 +98,7 @@ export class AgentSelectionTable extends Component {
       },
       {
         id: 'os',
-        label: 'OS',
+        label: translate("registerAgent.selectOs.operateSys"),
         alignment: LEFT_ALIGNMENT,
         mobileOptions: {
           show: false,
@@ -107,7 +108,7 @@ export class AgentSelectionTable extends Component {
       },
       {
         id: 'status',
-        label: 'Status',
+        label: translate("agentsTable.col.status"),
         alignment: LEFT_ALIGNMENT,
         mobileOptions: {
           show: true,
@@ -118,19 +119,19 @@ export class AgentSelectionTable extends Component {
       },
     ];
     this.suggestions = [
-      { type: 'q', label: 'status', description: 'Filter by agent connection status', operators: ['=', '!=',], values: UI_ORDER_AGENT_STATUS },
-      { type: 'q', label: 'os.platform', description: 'Filter by OS platform', operators: ['=', '!=',], values: async (value) => getAgentFilterValues('os.platform', value, { q: 'id!=000'})},
-      { type: 'q', label: 'ip', description: 'Filter by agent IP', operators: ['=', '!=',], values: async (value) => getAgentFilterValues('ip', value, { q: 'id!=000'})},
-      { type: 'q', label: 'name', description: 'Filter by agent name', operators: ['=', '!=',], values: async (value) => getAgentFilterValues('name', value, { q: 'id!=000'})},
-      { type: 'q', label: 'id', description: 'Filter by agent id', operators: ['=', '!=',], values: async (value) => getAgentFilterValues('id', value, { q: 'id!=000'})},
-      { type: 'q', label: 'group', description: 'Filter by agent group', operators: ['=', '!=',], values: async (value) => getAgentFilterValues('group', value, { q: 'id!=000'})},
-      { type: 'q', label: 'node_name', description: 'Filter by node name', operators: ['=', '!=',], values: async (value) => getAgentFilterValues('node_name', value, { q: 'id!=000'})},
-      { type: 'q', label: 'manager', description: 'Filter by manager', operators: ['=', '!=',], values: async (value) => getAgentFilterValues('manager', value, { q: 'id!=000'})},
-      { type: 'q', label: 'version', description: 'Filter by agent version', operators: ['=', '!=',], values: async (value) => getAgentFilterValues('version', value, { q: 'id!=000'})},
-      { type: 'q', label: 'configSum', description: 'Filter by agent config sum', operators: ['=', '!=',], values: async (value) => getAgentFilterValues('configSum', value, { q: 'id!=000'})},
-      { type: 'q', label: 'mergedSum', description: 'Filter by agent merged sum', operators: ['=', '!=',], values: async (value) => getAgentFilterValues('mergedSum', value, { q: 'id!=000'})},
-      { type: 'q', label: 'dateAdd', description: 'Filter by add date', operators: ['=', '!=',], values: async (value) => getAgentFilterValues('dateAdd', value, { q: 'id!=000'})},
-      { type: 'q', label: 'lastKeepAlive', description: 'Filter by last keep alive', operators: ['=', '!=',], values: async (value) => getAgentFilterValues('lastKeepAlive', value, { q: 'id!=000'})},
+      { type: 'q', label: 'status', description: translate("agentsSectionTable.suggest.status"), operators: ['=', '!=',], values: UI_ORDER_AGENT_STATUS },
+      { type: 'q', label: 'os.platform', description: translate("agentsSectionTable.suggest.os"), operators: ['=', '!=',], values: async (value) => getAgentFilterValues('os.platform', value, { q: 'id!=000'})},
+      { type: 'q', label: 'ip', description: translate("agentsSectionTable.suggest.ip"), operators: ['=', '!=',], values: async (value) => getAgentFilterValues('ip', value, { q: 'id!=000'})},
+      { type: 'q', label: 'name', description: translate("agentsSectionTable.suggest.name"), operators: ['=', '!=',], values: async (value) => getAgentFilterValues('name', value, { q: 'id!=000'})},
+      { type: 'q', label: 'id', description: translate("agentsSectionTable.suggest.id"), operators: ['=', '!=',], values: async (value) => getAgentFilterValues('id', value, { q: 'id!=000'})},
+      { type: 'q', label: 'group', description: translate("agentsSectionTable.suggest.group"), operators: ['=', '!=',], values: async (value) => getAgentFilterValues('group', value, { q: 'id!=000'})},
+      { type: 'q', label: 'node_name', description: translate("agentsSectionTable.suggest.nodeName"), operators: ['=', '!=',], values: async (value) => getAgentFilterValues('node_name', value, { q: 'id!=000'})},
+      { type: 'q', label: 'manager', description: translate("agentsSectionTable.suggest.manager"), operators: ['=', '!=',], values: async (value) => getAgentFilterValues('manager', value, { q: 'id!=000'})},
+      { type: 'q', label: 'version', description: translate("agentsSectionTable.suggest.version"), operators: ['=', '!=',], values: async (value) => getAgentFilterValues('version', value, { q: 'id!=000'})},
+      { type: 'q', label: 'configSum', description: translate("agentsSectionTable.suggest.configSum"), operators: ['=', '!=',], values: async (value) => getAgentFilterValues('configSum', value, { q: 'id!=000'})},
+      { type: 'q', label: 'mergedSum', description: translate("agentsSectionTable.suggest.mergedSum"), operators: ['=', '!=',], values: async (value) => getAgentFilterValues('mergedSum', value, { q: 'id!=000'})},
+      { type: 'q', label: 'dateAdd', description: translate("agentsSectionTable.suggest.dateAdd"), operators: ['=', '!=',], values: async (value) => getAgentFilterValues('dateAdd', value, { q: 'id!=000'})},
+      { type: 'q', label: 'lastKeepAlive', description: translate("agentsSectionTable.suggest.lastKeepAlive"), operators: ['=', '!=',], values: async (value) => getAgentFilterValues('lastKeepAlive', value, { q: 'id!=000'})},
     ];
   }
 
@@ -614,6 +615,7 @@ export class AgentSelectionTable extends Component {
           : parseInt(this.state.totalItems / this.state.itemsPerPage) + 1,
     };
     const selectedAgent = store.getState().appStateReducers.currentAgentData;
+    const unpinAgentLabel = translate("agentsSectionTable.agent.unpin");
 
     return (
       <div>
@@ -623,7 +625,7 @@ export class AgentSelectionTable extends Component {
               filters={this.state.filters}
               suggestions={this.suggestions}
               onFiltersChange={filters => this.setState({filters, pageIndex: 0})}
-              placeholder="Filter or search agent"
+              placeholder={translate("agentsSectionTable.placeholder.inputSearch")}
             />
           </EuiFlexItem>
         </EuiFlexGroup>
@@ -638,12 +640,12 @@ export class AgentSelectionTable extends Component {
                 </AgentStatus>
               </EuiFlexItem>
               <EuiFlexItem grow={false} style={{marginTop: 10, marginLeft: 4}}>
-                <EuiToolTip position='top' content='Unpin agent'>
+                <EuiToolTip position='top' content={unpinAgentLabel}>
                   <EuiButtonIcon
                     color='danger'
                     onClick={() => this.unselectAgents()}
                     iconType="pinFilled"
-                    aria-label="unpin agent"
+                    aria-label={unpinAgentLabel}
                   />
                 </EuiToolTip>
               </EuiFlexItem>
@@ -671,7 +673,7 @@ export class AgentSelectionTable extends Component {
             <EuiTableBody className={this.state.isLoading ? 'agent-selection-table-loading' : ''}>
               <EuiTableRow key={0}>
                 <EuiTableRowCell colSpan="10" isMobileFullWidth={true} align="center">
-                  {this.state.isLoading ? 'Loading agents' : 'No results found'}
+                  {translate(`agentsSectionTable.agent.${this.state.isLoading ? 'loading': 'noRes'}`)}
                 </EuiTableRowCell>
               </EuiTableRow>
             </EuiTableBody>

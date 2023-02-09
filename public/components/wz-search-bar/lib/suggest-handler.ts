@@ -16,6 +16,7 @@ import { queryObject } from './q-interpreter';
 import { UI_LOGGER_LEVELS } from '../../../../common/constants';
 import { UI_ERROR_SEVERITIES } from '../../../react-services/error-orchestrator/types';
 import { getErrorOrchestrator } from '../../../react-services/common-services';
+import { translate } from '../../common/util/common/string';
 
 interface ISuggestHandlerProps extends IWzSearchBarProps {
   setStatus: Function;
@@ -33,12 +34,12 @@ export class SuggestHandler extends BaseHandler {
   lastCall: number;
   status: 'unchanged' | 'loading' = 'unchanged';
   operators = {
-    '=': 'Equal',
-    '!=': 'Not equal',
-    '>': 'Bigger',
-    '<': 'Smaller',
-    '~': 'Like',
-    ':': 'Equals',
+    '=': translate("suggestHanlde.operator.equal"),
+    '!=': translate("suggestHanlde.operator.notEqual"),
+    '>': translate("suggestHanlde.operator.bigger"),
+    '<': translate("suggestHanlde.operator.smaller"),
+    '~': translate("suggestHanlde.operator.like"),
+    ':': translate("suggestHanlde.operator.equals"),
   };
 
   constructor(props, setInputValue, inputRef) {
@@ -106,7 +107,10 @@ export class SuggestHandler extends BaseHandler {
         operator &&
         ((searchType === 'params' && operator !== ':') || (searchType === 'q' && operator === ':'))
       )
-        throw { error: 'Invalid operator', message: `The operator '${operator}' is not valid` };
+        throw { 
+          error: translate("suggestHanlde.error.invalidOperator"), 
+          message: translate("suggestHanlde.error.invalidOperatorMessage", { operator })
+        };
       const suggestions = [
         ...this.buildSuggestSearch(field),
         ...(value && inputStage === 'value' ? this.buildSuggestApply() : []),
@@ -136,7 +140,7 @@ export class SuggestHandler extends BaseHandler {
       getErrorOrchestrator().handleError(options);
       return { error };
     }
-    throw 'New request in progress';
+    throw translate("suggestHanlde.error.newRequestInProgress");
   };
 
   checkErrors = async (promise) => {
@@ -165,7 +169,7 @@ export class SuggestHandler extends BaseHandler {
         {
           label: inputValue,
           type: { iconType: 'search', color: 'tint8' },
-          description: 'Search',
+          description: translate("data.query.queryBar.searchInputPlaceholder"),
         },
       ];
     }
@@ -175,9 +179,9 @@ export class SuggestHandler extends BaseHandler {
   buildSuggestApply(): suggestItem[] {
     return [
       {
-        label: 'Apply filter',
+        label: translate('uiActions.triggers.applyFilterTitle'),
         type: { iconType: 'kqlFunction', color: 'tint5' },
-        description: 'Click here or press "Enter" to apply the filter',
+        description: translate("suggestHanlde.apply.click"),
       },
     ];
   }
@@ -217,8 +221,8 @@ export class SuggestHandler extends BaseHandler {
   buildSuggestConjuntions(inputValue: string): suggestItem[] {
     if (this.searchType !== 'q') return [];
     const suggestions = [
-      { label: ' AND ', description: 'Requires `both arguments` to be true' },
-      { label: ' OR ', description: 'Requires `one or more arguments` to be true' },
+      { label: ' AND ', description: translate("suggestHanlde.operator.and") },
+      { label: ' OR ', description: translate("suggestHanlde.operator.or") },
     ].map((item) => {
       return {
         type: { iconType: 'kqlSelector', color: 'tint3' },

@@ -31,6 +31,7 @@ import {
 } from '../../common/actions-buttons'
 
 import apiSuggestsItems from './decoders-suggestions';
+import { translate } from '../../../../../../components/common/util';
 
 /***************************************
  * Render tables 
@@ -42,13 +43,14 @@ const FilesTable = ({
   searchBarSuggestions,
   filters,
   updateFilters,
-  reload
-}) => <TableWzAPI
+  reload,
+}) => (
+  <TableWzAPI
     reload={reload}
     actionButtons={actionButtons}
-    title={'Decoders files'}
+    title={translate('decodersTable.filesTable.title')}
     searchBarProps={{ buttonOptions: buttonOptions }}
-    description={`From here you can manage your decoders files.`}
+    description={translate('decodersTable.filesTable.description')}
     tableColumns={columns}
     tableInitialSortingField={'filename'}
     searchTable={true}
@@ -61,6 +63,7 @@ const FilesTable = ({
     onFiltersChange={updateFilters}
     tablePageSizeOptions={[10, 25, 50, 100]}
   />
+);
 
 const DecodersFlyoutTable = ({
   actionButtons,
@@ -78,9 +81,9 @@ const DecodersFlyoutTable = ({
 }) => <>
     <TableWzAPI
       actionButtons={actionButtons}
-      title={'Decoders'}
+      title={translate('decodersTable.decodersFlyoutTable.title')}
       searchBarProps={{ buttonOptions: buttonOptions }}
-      description={`From here you can manage your decoders.`}
+      description={translate('decodersTable.decodersFlyoutTable.description')}
       tableColumns={columns}
       tableInitialSortingField={'filename'}
       searchTable={true}
@@ -122,7 +125,7 @@ export default compose(
   const resourcesHandler = new ResourcesHandler(ResourcesConstants.DECODERS);
 
   // Table custom filter options
-  const buttonOptions = [{ label: "Custom decoders", field: "relative_dirname", value: "etc/decoders" },];
+  const buttonOptions = [{ label: translate('decodersTable.button.customDecoders'), field: "relative_dirname", value: "etc/decoders" },];
 
   const updateFilters = (filters) => {
     setFilters(filters);

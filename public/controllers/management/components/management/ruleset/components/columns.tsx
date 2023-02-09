@@ -7,6 +7,7 @@ import { getErrorOrchestrator } from '../../../../../../react-services/common-se
 import { UIErrorLog } from '../../../../../../react-services/error-orchestrator/types';
 import { getErrorOptions } from '../../common/error-helper';
 import { Columns } from '../../common/interfaces';
+import { translate } from '../../../../../../components/common/util';
 
 
 export default class RulesetColumns {
@@ -30,7 +31,7 @@ export default class RulesetColumns {
         },
         {
           field: 'description',
-          name: 'Description',
+          name: translate('rulesetTable.columnName.description'),
           align: 'left',
           sortable: true,
           width: '30%',
@@ -63,25 +64,25 @@ export default class RulesetColumns {
         },
         {
           field: 'groups',
-          name: 'Groups',
+          name: translate('rulesetTable.columnName.group'),
           align: 'left',
           sortable: false,
           width: '10%'
         },
         {
-          name: 'Regulatory compliance',
+          name: translate('rulesetTable.columnName.regulatoryComliance'),
           render: this.buildComplianceBadges
         },
         {
           field: 'level',
-          name: 'Level',
+          name: translate('rulesetTable.columnName.level'),
           align: 'left',
           sortable: true,
           width: '5%'
         },
         {
           field: 'filename',
-          name: 'File',
+          name: translate('rulesetTable.columnName.file'),
           align: 'left',
           sortable: true,
           width: '15%',
@@ -113,7 +114,7 @@ export default class RulesetColumns {
         },
         {
           field: 'relative_dirname',
-          name: 'Path',
+          name: translate('rulesetTable.columnName.path'),
           align: 'left',
           sortable: true,
           width: '10%'
@@ -122,12 +123,12 @@ export default class RulesetColumns {
       files: [
         {
           field: 'filename',
-          name: 'File',
+          name: translate('rulesetTable.columnName.file'),
           align: 'left',
           sortable: true
         },
         {
-          name: 'Actions',
+          name: translate('rulesetTable.columnName.actions'),
           align: 'left',
           render: item => {
             if (item.relative_dirname.startsWith('ruleset/')) {
@@ -200,7 +201,7 @@ export default class RulesetColumns {
                       }
                     }}
                     color="danger"
-                    modalTitle={'Are you sure?'}
+                    modalTitle={translate('common.modalTitle.confirm')}
                     modalProps={{
                       buttonColor: 'danger',
                     }}

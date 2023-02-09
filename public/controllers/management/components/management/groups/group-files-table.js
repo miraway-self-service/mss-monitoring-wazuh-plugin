@@ -29,6 +29,7 @@ import { WzSearchBar, filtersToObject } from '../../../../../components/wz-searc
 import { UI_LOGGER_LEVELS } from '../../../../../../common/constants';
 import { UI_ERROR_SEVERITIES } from '../../../../../react-services/error-orchestrator/types';
 import { getErrorOrchestrator } from '../../../../../react-services/common-services';
+import { translate } from '../../../../../components/common/util';
 
 
 class WzGroupFilesTable extends Component {
@@ -146,7 +147,7 @@ class WzGroupFilesTable extends Component {
     } = this.props.state;
     const { items, pageSize, totalItems, filters } = this.state;
     const columns = this.groupsAgentsColumns.columns;
-    const message = isLoading ? null : 'No results...';
+    const message = isLoading ? null : translate('common.table.noResults');
     const pagination = {
       pageIndex: pageIndexFile,
       pageSize: pageSize,
@@ -167,7 +168,7 @@ class WzGroupFilesTable extends Component {
             filters={filters}
             suggestions={this.suggestions}
             onFiltersChange={filters => this.setState({filters})}
-            placeholder='Search file'
+            placeholder={translate('groupFilesTable.placeholder.searchFile')}
           />
           <EuiSpacer size='s' />
           <EuiBasicTable

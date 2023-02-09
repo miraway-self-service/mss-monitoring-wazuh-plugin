@@ -9,135 +9,115 @@
  *
  * Find more information about this on the LICENSE file.
  */
+import { translate } from './../public/components/common/util/common/string';
+
 export const WAZUH_MODULES = {
   general: {
-    title: 'Security events',
-    description:
-      'Browse through your security alerts, identifying issues and threats in your environment.'
+    title: translate("wazuhModules.general.title"),
+    description: translate("wazuhModules.general.description"),
   },
   fim: {
-    title: 'Integrity monitoring',
-    description:
-      'Alerts related to file changes, including permissions, content, ownership and attributes.'
+    title: translate("wazuhModules.fim.title"),
+    description: translate("wazuhModules.fim.description"),
   },
   pm: {
-    title: 'Policy monitoring',
-    description:
-      'Verify that your systems are configured according to your security policies baseline.'
+    title: translate("wazuhModules.general.title"),
+    description: translate("wazuhModules.general.description"),
   },
   vuls: {
-    title: 'Vulnerabilities',
-    description:
-      'Discover what applications in your environment are affected by well-known vulnerabilities.'
+    title: translate("wazuhModules.vuls.title"),
+    description: translate("wazuhModules.vuls.description"),
   },
   oscap: {
-    title: 'OpenSCAP',
-    description:
-      'Configuration assessment and automation of compliance monitoring using SCAP checks.'
+    title: translate("wazuhModules.oscap.title"),
+    description: translate("wazuhModules.oscap.description"),
   },
   audit: {
-    title: 'System auditing',
-    description:
-      'Audit users behavior, monitoring command execution and alerting on access to critical files.'
+    title: translate("wazuhModules.audit.title"),
+    description: translate("wazuhModules.audit.description"),
   },
   pci: {
-    title: 'PCI DSS',
-    description:
-      'Global security standard for entities that process, store or transmit payment cardholder data.'
+    title: translate("wazuhModules.pci.title"),
+    description: translate("wazuhModules.pci.description"),
   },
   gdpr: {
-    title: 'GDPR',
-    description:
-      'General Data Protection Regulation (GDPR) sets guidelines for processing of personal data.'
+    title: translate("wazuhModules.gdpr.title"),
+    description: translate("wazuhModules.gdpr.description"),
   },
   hipaa: {
-    title: 'HIPAA',
-    description:
-      'Health Insurance Portability and Accountability Act of 1996 (HIPAA) provides data privacy and security provisions for safeguarding medical information.'
+    title: translate("wazuhModules.hipaa.title"),
+    description: translate("wazuhModules.hipaa.description"),
   },
   nist: {
-    title: 'NIST 800-53',
-    description:
-      'National Institute of Standards and Technology Special Publication 800-53 (NIST 800-53) sets guidelines for federal information systems.'
+    title: translate("wazuhModules.nist.title"),
+    description: translate("wazuhModules.nist.description"),
   },
   tsc: {
-    title: 'TSC',
-    description:
-      'Trust Services Criteria for Security, Availability, Processing Integrity, Confidentiality, and Privacy'
+    title: translate("wazuhModules.tsc.title"),
+    description: translate("wazuhModules.tsc.description"),
   },
   ciscat: {
-    title: 'CIS-CAT',
-    description:
-      'Configuration assessment using Center of Internet Security scanner and SCAP checks.'
+    title: translate("wazuhModules.ciscat.title"),
+    description: translate("wazuhModules.ciscat.description"),
   },
   aws: {
-    title: 'Amazon AWS',
-    description:
-      'Security events related to your Amazon AWS services, collected directly via AWS API.'
+    title: translate("wazuhModules.aws.title"),
+    description: translate("wazuhModules.aws.description"),
   },
   office: {
-    title: 'Office 365',
-    description:
-      'Security events related to your Office 365 services.'
+    title: translate("wazuhModules.office.title"),
+    description: translate("wazuhModules.office.description"),
   },
   gcp: {
-    title: 'Google Cloud Platform',
-    description:
-      'Security events related to your Google Cloud Platform services, collected directly via GCP API.' // TODO GCP
+    title: translate("wazuhModules.gcp.title"),
+    description: translate("wazuhModules.gcp.description"),
   },
   virustotal: {
-    title: 'VirusTotal',
-    description:
-      'Alerts resulting from VirusTotal analysis of suspicious files via an integration with their API.'
+    title: translate("wazuhModules.virustotal.title"),
+    description: translate("wazuhModules.virustotal.description"),
   },
   mitre: {
-    title: 'MITRE ATT&CK',
-    description:
-      'Security events from the knowledge base of adversary tactics and techniques based on real-world observations'
+    title: translate("wazuhModules.mitre.title"),
+    description: translate("wazuhModules.mitre.description"),
   },
   syscollector: {
-    title: 'Inventory data',
-    description:
-      'Applications, network configuration, open ports and processes running on your monitored systems.'
+    title: translate("wazuhModules.syscollector.title"),
+    description: translate("wazuhModules.syscollector.description"),
   },
   stats: {
-    title: 'Stats',
-    description: 'Stats for agent and logcollector'
+    title: translate("wazuhModules.stats.title"),
+    description: translate("wazuhModules.stats.description"),
   },
   configuration: {
-    title: 'Configuration',
-    description:
-      'Check the current agent configuration remotely applied by its group.'
+    title: translate("wazuhModules.configuration.title"),
+    description: translate("wazuhModules.configuration.description"),
   },
   osquery: {
-    title: 'Osquery',
-    description:
-      'Osquery can be used to expose an operating system as a high-performance relational database.'
+    title: translate("wazuhModules.osquery.title"),
+    description: translate("wazuhModules.osquery.description"),
   },
   sca: {
-    title: 'Security configuration assessment',
-    description: 'Scan your assets as part of a configuration assessment audit.'
+    title: translate("wazuhModules.sca.title"),
+    description: translate("wazuhModules.sca.description"),
   },
   docker: {
-    title: 'Docker listener',
-    description:
-      'Monitor and collect the activity from Docker containers such as creation, running, starting, stopping or pausing events.'
+    title: translate("wazuhModules.docker.title"),
+    description: translate("wazuhModules.docker.description"),
   },
   github: {
-    title: 'GitHub',
-    description:
-      'Monitoring events from audit logs of your GitHub organizations.'
+    title: translate("wazuhModules.github.title"),
+    description: translate("wazuhModules.github.description"),
   },
   devTools: {
-    title: 'API console',
-    description: 'Test the Wazuh API endpoints.'
+    title: translate("wazuhModules.devTools.title"),
+    description: translate("wazuhModules.devTools.description"),
   },
   logtest: {
-    title: 'Test your logs',
-    description: 'Check your ruleset testing logs.'
+    title: translate("wazuhModules.logtest.title"),
+    description: translate("wazuhModules.logtest.description"),
   },
   testConfiguration: {
-    title: 'Test your configurations',
-    description: 'Check configurations before applying them'
-  }
+    title: translate("wazuhModules.testConfiguration.title"),
+    description: translate("wazuhModules.testConfiguration.description"),
+  },
 };

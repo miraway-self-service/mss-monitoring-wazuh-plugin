@@ -13,6 +13,7 @@
 import React, { Fragment } from 'react';
 import { EuiEmptyPrompt, EuiButton } from '@elastic/eui';
 import { webDocumentationLink } from '../../../../../../common/services/web_documentation';
+import { translate } from '../../../../../components/common/util';
 
 const documentationLink = webDocumentationLink('user-manual/agents/agent-connection.html');
 
@@ -20,14 +21,14 @@ export const WzAgentNeverConnectedPrompt = () => (
   <EuiEmptyPrompt
     iconType="securitySignalDetected"
     style={{ marginTop: 20 }}
-    title={<h2>Agent has never connected.</h2>}
+    title={<h2>{translate("mainAgents.message.neverConnected")}</h2>}
     body={
       <Fragment>
         <p>
-          The agent has been registered but has not yet connected to the manager.
+          {translate("configurationNoAgent.message.registerButNotConnected")}
         </p>
         <a href={documentationLink} target="_blank">
-          Checking connection with the Wazuh server
+          {translate("configurationNoAgent.message.checkConnect")}
         </a>
       </Fragment>
     }

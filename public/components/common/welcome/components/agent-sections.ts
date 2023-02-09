@@ -11,124 +11,131 @@
  */
 
 import { WAZUH_MODULES_ID } from '../../../../../common/constants';
+import { translate } from '../../util/common/string';
 
-export const getAgentSections = (menuAgent) => {
+const getMenuTrans = (label: string): string => translate(`agentsSection.menuAgent.${label}`);
+
+export const getAgentSections = (menuAgent: any) => {
   return {
     securityInformation: {
       id: 'securityInformation',
-      text: 'Security information management',
+      text: getMenuTrans("securityInformation"),
       isTitle: true,
     },
     auditing: {
       id: 'auditing',
-      text: 'Auditing and Policy Monitoring',
+      text: getMenuTrans("auditing"),
       isTitle: true,
     },
     threatDetection: {
       id: 'threatDetection',
-      text: 'Threat detection and response',
+      text: getMenuTrans("threatDetection"),
       isTitle: true,
     },
     regulatoryCompliance: {
       id: 'regulatoryCompliance',
-      text: 'Regulatory Compliance',
+      text: getMenuTrans("regulatoryCompliance"),
       isTitle: true,
     },
     general: {
       id: WAZUH_MODULES_ID.SECURITY_EVENTS,
-      text: 'Security events',
+      text: getMenuTrans("general"),
       isPin: menuAgent.general ? menuAgent.general : false,
     },
     fim: {
       id: WAZUH_MODULES_ID.INTEGRITY_MONITORING,
-      text: 'Integrity monitoring',
+      text: getMenuTrans("fim"),
       isPin: menuAgent.fim ? menuAgent.fim : false,
     },
     aws: {
       id: WAZUH_MODULES_ID.AMAZON_WEB_SERVICES,
-      text: 'Amazon AWS',
+      text: getMenuTrans("aws"),
       isPin: menuAgent.aws ? menuAgent.aws : false,
     },
     gcp: {
       id: WAZUH_MODULES_ID.GOOGLE_CLOUD_PLATFORM,
-      text: 'Google Cloud Platform',
+      text: getMenuTrans("gcp"),
       isPin: menuAgent.gcp ? menuAgent.gcp : false,
     },
     github: {
       id: WAZUH_MODULES_ID.GITHUB,
-      text: 'GitHub',
+      text: getMenuTrans("github"),
       isPin: menuAgent.github ? menuAgent.github : false
     },
     pm: {
       id: WAZUH_MODULES_ID.POLICY_MONITORING,
-      text: 'Policy Monitoring',
+      text: getMenuTrans("pm"),
       isPin: menuAgent.pm ? menuAgent.pm : false,
     },
     sca: {
       id: WAZUH_MODULES_ID.SECURITY_CONFIGURATION_ASSESSMENT,
-      text: 'Security configuration assessment',
+      text: getMenuTrans("sca"),
       isPin: menuAgent.sca ? menuAgent.sca : false,
     },
     audit: {
       id: WAZUH_MODULES_ID.AUDITING,
-      text: 'System Auditing',
+      text: getMenuTrans("audit"),
       isPin: menuAgent.audit ? menuAgent.audit : false,
     },
     oscap: {
       id: WAZUH_MODULES_ID.OPEN_SCAP,
-      text: 'OpenSCAP',
+      text: getMenuTrans("oscap"),
       isPin: menuAgent.oscap ? menuAgent.oscap : false,
     },
     ciscat: {
       id: WAZUH_MODULES_ID.CIS_CAT,
-      text: 'CIS-CAT',
+      text: getMenuTrans("ciscat"),
       isPin: menuAgent.oscap ? menuAgent.oscap : false,
     },
     vuls: {
       id: WAZUH_MODULES_ID.VULNERABILITIES,
-      text: 'Vulnerabilities',
+      text: getMenuTrans("vuls"),
       isPin: menuAgent.vuls ? menuAgent.vuls : false,
     },
     virustotal: {
       id: WAZUH_MODULES_ID.VIRUSTOTAL,
-      text: 'VirusTotal',
+      text: getMenuTrans("virustotal"),
       isPin: menuAgent.virustotal ? menuAgent.virustotal : false,
     },
     osquery: {
       id: WAZUH_MODULES_ID.OSQUERY,
-      text: 'Osquery',
+      text: getMenuTrans("osquery"),
       isPin: menuAgent.osquery ? menuAgent.osquery : false,
     },
     docker: {
       id: WAZUH_MODULES_ID.DOCKER,
-      text: 'Docker Listener',
+      text: getMenuTrans("docker"),
       isPin: menuAgent.docker ? menuAgent.docker : false,
     },
     mitre: {
       id: WAZUH_MODULES_ID.MITRE_ATTACK,
-      text: 'MITRE ATT&CK',
+      text: getMenuTrans("mitre"),
       isPin: menuAgent.mitre ? menuAgent.mitre : false,
     },
     pci: {
       id: WAZUH_MODULES_ID.PCI_DSS,
-      text: 'PCI DSS',
+      text: getMenuTrans("pci"),
       isPin: menuAgent.pci ? menuAgent.pci : false,
     },
     gdpr: {
       id: WAZUH_MODULES_ID.GDPR,
-      text: 'GDPR',
+      text: getMenuTrans("gdpr"),
       isPin: menuAgent.gdpr ? menuAgent.gdpr : false,
     },
     hipaa: {
       id: WAZUH_MODULES_ID.HIPAA,
-      text: 'HIPAA',
+      text: getMenuTrans("hipaa"),
       isPin: menuAgent.hipaa ? menuAgent.hipaa : false,
     },
     nist: {
       id: WAZUH_MODULES_ID.NIST_800_53,
-      text: 'NIST 800-53',
+      text: getMenuTrans("nist"),
       isPin: menuAgent.nist ? menuAgent.nist : false,
     },
-    tsc: { id: WAZUH_MODULES_ID.TSC, text: 'TSC', isPin: menuAgent.tsc ? menuAgent.tsc : false },
+    tsc: { 
+      id: WAZUH_MODULES_ID.TSC, 
+      text: getMenuTrans("tsc"), 
+      isPin: menuAgent.tsc ? menuAgent.tsc : false 
+    },
   };
 };

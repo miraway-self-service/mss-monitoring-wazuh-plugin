@@ -33,8 +33,11 @@ import { formatUIDate } from '../../../../../react-services/time-service';
 import { FlyoutDetail } from '../../../../agents/fim/inventory/flyout';
 import { EuiLink } from '@elastic/eui';
 import { getDataPlugin } from '../../../../../kibana-services';
+import { translate } from '../../../util';
 
 export function FimEventsTable({ agent, router }) {
+  const openFimLabel = translate("fimEventsTable.tooltip.openFim")
+
   return (
     <EuiFlexItem>
       <EuiPanel paddingSize="m">
@@ -42,16 +45,16 @@ export function FimEventsTable({ agent, router }) {
           <EuiFlexGroup>
             <EuiFlexItem>
               <EuiText size="xs">
-                <h2>FIM: Recent events</h2>
+                <h2>{translate("fimEventsTable.title")}</h2>
               </EuiText>
             </EuiFlexItem>
             <EuiFlexItem grow={false}>
-              <EuiToolTip position="top" content="Open FIM">
+              <EuiToolTip position="top" content={openFimLabel}>
                 <EuiButtonIcon
                   iconType="popout"
                   color="primary"
                   onClick={() => navigateToFim(agent, router)}
-                  aria-label="Open FIM"
+                  aria-label={openFimLabel}
                 />
               </EuiToolTip>
             </EuiFlexItem>
@@ -96,7 +99,7 @@ function FimTable({ agent }) {
         sorting={{ sort }}
         onChange={(e) => setSort(e.sort)}
         itemId="fim-alerts"
-        noItemsMessage="No recent events"
+        noItemsMessage={translate("fimEventsTable.message.noRecentEvents")}
       />
       {isOpen && (
         <FlyoutDetail
@@ -120,27 +123,27 @@ function navigateToFim(agent, router) {
 const columns = (setFile, setIsOpen) => [
   {
     field: '_source.timestamp',
-    name: 'Time',
+    name: translate("fimEventsTable.col.time"),
     sortable: true,
     render: (field) => formatUIDate(field),
     width: '150px',
   },
   {
     field: '_source.syscheck.path',
-    name: 'Path',
+    name: translate("fimEventsTable.col.path"),
     sortable: true,
     truncateText: true,
     render: (path) => renderPath(path, setFile, setIsOpen),
   },
-  { field: '_source.syscheck.event', name: 'Action', sortable: true, width: '100px' },
+  { field: '_source.syscheck.event', name: translate("fimEventsTable.col.action"), sortable: true, width: '100px' },
   {
     field: '_source.rule.description',
-    name: 'Rule description',
+    name: translate("fimEventsTable.col.ruleDescription"),
     sortable: true,
     truncateText: true,
   },
-  { field: '_source.rule.level', name: 'Rule Level', sortable: true, width: '75px' },
-  { field: '_source.rule.id', name: 'Rule Id', sortable: true, width: '75px' },
+  { field: '_source.rule.level', name: translate("fimEventsTable.col.ruleLevel"), sortable: true, width: '75px' },
+  { field: '_source.rule.id', name: translate("fimEventsTable.col.ruleId"), sortable: true, width: '75px' },
 ];
 
 const renderPath = (path, setFile, setIsOpen) => (

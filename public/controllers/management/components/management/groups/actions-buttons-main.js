@@ -36,6 +36,7 @@ import { getToasts } from '../../../../../kibana-services';
 import { UI_LOGGER_LEVELS } from '../../../../../../common/constants';
 import { UI_ERROR_SEVERITIES } from '../../../../../react-services/error-orchestrator/types';
 import { getErrorOrchestrator } from '../../../../../react-services/common-services';
+import { translate } from '../../../../../components/common/util';
 
 
 class WzGroupsActionButtons extends Component {
@@ -171,7 +172,7 @@ class WzGroupsActionButtons extends Component {
       if (this.isOkNameGroup(this.state.newGroupName)) {
         this.props.updateLoadingStatus(true);
         await this.groupsHandler.saveGroup(this.state.newGroupName);
-        this.showToast('success', 'Success', 'The group has been created successfully', 2000);
+        this.showToast('success', translate('common.success'), translate('groups.addNewGroup.successMessage'), 2000);
         this.clearGroupName();
 
         this.props.updateIsProcessing(true);
@@ -188,7 +189,7 @@ class WzGroupsActionButtons extends Component {
         error: {
           error: error,
           message: error.message || error,
-          title: `Error creating a new group`,
+          title: translate('groups.addNewGroup.errorMessage'),
         },
       };
       getErrorOrchestrator().handleError(options);
@@ -207,8 +208,8 @@ class WzGroupsActionButtons extends Component {
       await this.exportCsv('/groups', filters, 'Groups');
       this.showToast(
         'success',
-        'Success',
-        'CSV. Your download should begin automatically...',
+        translate('common.success'),
+        translate('group.downloadCSV.successMessage'),
         2000
       );
     } catch (error) {
@@ -220,7 +221,7 @@ class WzGroupsActionButtons extends Component {
         error: {
           error: error,
           message: error.message || error,
-          title: `Error when exporting the CSV file: ${error.message || error}`,
+          title: `${translate('group.downloadCSV.errorMessage')} ${error.message || error}`,
         },
       };
       getErrorOrchestrator().handleError(options);
@@ -251,7 +252,7 @@ class WzGroupsActionButtons extends Component {
         permissions={[{ action: 'group:create', resource: '*:*:*' }]}
         onClick={() => this.togglePopover()}
       >
-        Add new group
+        {translate('groups.addNewGroup.buttonText')}
       </WzButtonPermissions>
     );
 
@@ -262,14 +263,14 @@ class WzGroupsActionButtons extends Component {
         onClick={async () => await this.generateCsv()}
         isLoading={this.state.generatingCsv}
       >
-        Export formatted
+        {translate('common.export.formated')}
       </EuiButtonEmpty>
     );
 
     // Refresh
     const refreshButton = (
       <EuiButtonEmpty iconType="refresh" onClick={async () => await this.refresh()}>
-        Refresh
+        {translate('common.refresh')}
       </EuiButtonEmpty>
     );
 
@@ -284,7 +285,7 @@ class WzGroupsActionButtons extends Component {
           >
             <EuiFlexGroup direction={'column'}>
               <EuiFlexItem>
-                <EuiFormRow label="Introduce the group name" id="">
+                <EuiFormRow label={translate('groups.addNewGroup.label')} id="">
                   <EuiFieldText
                     className="groupNameInput"
                     value={this.state.newGroupName}
@@ -303,7 +304,7 @@ class WzGroupsActionButtons extends Component {
                     await this.createGroup();
                   }}
                 >
-                  Save new group
+                  {translate('groups.addNewGroup.save')}
                 </WzButtonPermissions>
               </EuiFlexItem>
             </EuiFlexGroup>

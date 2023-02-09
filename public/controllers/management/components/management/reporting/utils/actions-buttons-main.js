@@ -20,6 +20,7 @@ import { updateIsProcessing } from '../../../../../../redux/actions/reportingAct
 import { UI_ERROR_SEVERITIES } from '../../../../../../react-services/error-orchestrator/types';
 import { UI_LOGGER_LEVELS } from '../../../../../../../common/constants';
 import { getErrorOrchestrator } from '../../../../../../react-services/common-services';
+import { translate } from '../../../../../../components/common/util';
 
 class WzReportingActionButtons extends Component {
   _isMounted = false;
@@ -66,7 +67,7 @@ class WzReportingActionButtons extends Component {
         iconType="refresh"
         onClick={async () => await this.refresh()}
       >
-        Refresh
+        {translate("common.refresh")}
       </EuiButtonEmpty>
     );
 

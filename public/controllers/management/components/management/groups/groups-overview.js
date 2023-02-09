@@ -27,6 +27,7 @@ import WzGroupsActionButtons from './actions-buttons-main';
 import { connect } from 'react-redux';
 import { withUserAuthorizationPrompt } from '../../../../../components/common/hocs'
 import { compose } from 'redux';
+import { translate } from '../../../../../components/common/util';
 
 export class WzGroupsOverview extends Component {
   _isMounted = false;
@@ -43,7 +44,7 @@ export class WzGroupsOverview extends Component {
               <EuiFlexGroup>
                 <EuiFlexItem>
                   <EuiTitle>
-                    <h2>Groups</h2>
+                    <h2>{translate('groupsOverview.title')}</h2>
                   </EuiTitle>
                 </EuiFlexItem>
               </EuiFlexGroup>
@@ -53,8 +54,7 @@ export class WzGroupsOverview extends Component {
           <EuiFlexGroup>
             <EuiFlexItem>
               <EuiText color="subdued" style={{ paddingBottom: '15px' }}>
-                From here you can list and check your groups, its agents and
-                files.
+                {translate('groupsOverview.description')}
               </EuiText>
             </EuiFlexItem>
           </EuiFlexGroup>

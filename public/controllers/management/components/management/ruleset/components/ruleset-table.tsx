@@ -31,6 +31,7 @@ import {
 } from '../../common/actions-buttons'
 
 import apiSuggestsItems from './ruleset-suggestions';
+import { translate } from '../../../../../../components/common/util';
 
 /***************************************
  * Render tables 
@@ -46,9 +47,9 @@ const FilesTable = ({
 }) => <TableWzAPI
     reload={reload}
     actionButtons={actionButtons}
-    title={'Rules files'}
+    title={translate('rulesetTable.filesTable.title')}
     searchBarProps={{ buttonOptions: buttonOptions }}
-    description={`From here you can manage your rules files.`}
+    description={translate('rulesetTable.filesTable.description')}
     tableColumns={columns}
     tableInitialSortingField={'filename'}
     searchTable={true}
@@ -78,9 +79,9 @@ const RulesFlyoutTable = ({
 }) => <>
     <TableWzAPI
       actionButtons={actionButtons}
-      title={'Rules'}
+      title={translate('rulesetTable.rulesFlyoutTable.title')}
       searchBarProps={{ buttonOptions: buttonOptions }}
-      description={`From here you can manage your rules.`}
+      description={translate('rulesetTable.rulesFlyoutTable.description')}
       tableColumns={columns}
       tableInitialSortingField={'id'}
       searchTable={true}
@@ -130,7 +131,7 @@ function RulesetTable({ setShowingFiles, showingFiles, ...props }) {
   }, [])
 
   // Table custom filter options
-  const buttonOptions = [{ label: "Custom rules", field: "relative_dirname", value: "etc/rules" },];
+  const buttonOptions = [{ label: translate('rulesetTable.button.customRules'), field: "relative_dirname", value: "etc/rules" },];
 
   const updateFilters = (filters) => {
     setFilters(filters);

@@ -973,7 +973,7 @@ export const WzMenu = withWindowSize(class WzMenu extends Component {
             </EuiFlexItem>
 
             <EuiFlexItem grow={false} style={{ marginLeft: 0 }}>
-              <WzGlobalBreadcrumbWrapper></WzGlobalBreadcrumbWrapper>
+              <WzGlobalBreadcrumbWrapper/>
             </EuiFlexItem>
 
             <EuiFlexItem>

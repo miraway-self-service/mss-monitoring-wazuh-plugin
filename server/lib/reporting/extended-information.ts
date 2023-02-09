@@ -1,3 +1,4 @@
+import { translate } from './../../../public/components/common/util/common/string';
 import { log } from '../logger';
 import SummaryTable from './summary-table';
 import summaryTablesDefinitions from './summary-tables-definitions';
@@ -15,9 +16,6 @@ import TSC from '../../integration-files/tsc-requirements-pdfmake';
 import { ReportPrinter } from './printer';
 import moment from 'moment';
 import { getSettingDefaultValue } from '../../../common/services/settings';
-
-
-
 
 /**
    * This build the agents table
@@ -77,13 +75,13 @@ import { getSettingDefaultValue } from '../../../common/services/settings';
       printer.addSimpleTable({
         columns: [
           { id: 'id', label: 'ID' },
-          { id: 'name', label: 'Name' },
+          { id: 'name', label: translate("agentsTable.col.name") },
           { id: 'ip', label: 'IP' },
-          { id: 'version', label: 'Version' },
+          { id: 'version', label: translate("agentsTable.col.version") },
           { id: 'manager', label: 'Manager' },
           { id: 'os', label: 'OS' },
-          { id: 'dateAdd', label: 'Registration date' },
-          { id: 'lastKeepAlive', label: 'Last keep alive' },
+          { id: 'dateAdd', label: translate('agentsTable.col.dateAdd') },
+          { id: 'lastKeepAlive', label: translate("agentsTable.col.lastKeepAlive") },
         ],
         items: agentsData
           .filter(agent => agent) // Remove undefined agents when Wazuh API no longer finds and agentID

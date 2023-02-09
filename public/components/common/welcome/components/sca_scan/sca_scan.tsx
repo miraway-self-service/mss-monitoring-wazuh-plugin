@@ -36,6 +36,7 @@ import { withReduxProvider, withUserAuthorizationPrompt } from "../../../hocs";
 import { compose } from 'redux';
 import SCAPoliciesTable from '../../../../agents/sca/inventory/agent-policies-table';
 import { MODULE_SCA_CHECK_RESULT_LABEL } from '../../../../../../common/constants';
+import { translate } from '../../../util/common/string';
 
 type Props = {
   agent: { [key in string]: any };
@@ -213,11 +214,11 @@ export const ScaScan = compose(
       <Fragment>
         <EuiEmptyPrompt
           iconType="visVega"
-          title={<h4>You don't have SCA scans in this agent.</h4>}
+          title={<h4>{translate("scaScan.message.noActScan")}</h4>}
           body={
             <Fragment>
               <p>
-                Check your agent settings to generate scans.
+                {translate("scaScan.message.agentSetting")}
               </p>
             </Fragment>
           }
@@ -231,6 +232,7 @@ export const ScaScan = compose(
     const loading = this.renderLoadingStatus();
     const scaScan = this.renderScanDetails();
     const emptyPrompt = this.renderEmptyPrompt();
+    const openScaScansLabel = translate("scaScan.open");
     return (
       <EuiFlexItem>
         <EuiPanel paddingSize="m">
@@ -244,12 +246,12 @@ export const ScaScan = compose(
                   this.router.reload();
                 }
               }>
-               <h2>SCA: Lastest scans</h2>
+               <h2>{translate("scaScan.lastestScan")}</h2>
               </EuiLink>
             </EuiTitle>
           </EuiFlexItem>
               <EuiFlexItem grow={false}>
-                <EuiToolTip position="top" content="Open SCA Scans">
+                <EuiToolTip position="top" content={openScaScansLabel}>
                   <EuiButtonIcon
                     iconType="popout"
                     color="primary"
@@ -260,7 +262,7 @@ export const ScaScan = compose(
                         this.router.reload();
                       }
                     }
-                    aria-label="Open SCA Scans" />
+                    aria-label={openScaScansLabel} />
                 </EuiToolTip>
               </EuiFlexItem>
             </EuiFlexGroup>

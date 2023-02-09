@@ -16,6 +16,7 @@ import { WzRequest } from '../../../react-services/wz-request';
 import { UI_LOGGER_LEVELS } from '../../../../common/constants';
 import { UI_ERROR_SEVERITIES } from '../../../react-services/error-orchestrator/types';
 import { getErrorOrchestrator } from '../../../react-services/common-services';
+import { translate } from '../../../components/common/util/common/string';
 
 export class CheckUpgrade extends Component {
   props!: {
@@ -76,7 +77,7 @@ export class CheckUpgrade extends Component {
     } else if (upgrading === true) {
       /* this.interval = setInterval(() => this.checkUpgrade(id), 30000); */
       return (
-        <EuiToolTip content="This agent is being updated." position="right">
+        <EuiToolTip content={translate("checkUpgrade.message.agentUpdated")} position="right">
           <EuiLoadingSpinner size="s" />
         </EuiToolTip>
       );

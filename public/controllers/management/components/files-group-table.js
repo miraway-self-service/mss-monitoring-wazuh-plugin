@@ -26,6 +26,7 @@ import {
 
 import { ExportConfiguration } from '../../agent/components/export-configuration';
 import { ReportingService } from '../../../react-services/reporting';
+import { translate } from '../../../components/common/util';
 
 export class FilesInGroupTable extends Component {
   constructor(props) {
@@ -175,7 +176,7 @@ export class FilesInGroupTable extends Component {
           </EuiFlexItem>
           <EuiFlexItem grow={false}>
             <EuiButtonEmpty iconType="refresh" onClick={() => this.refresh()}>
-              Refresh
+              {translate("common.refresh")}
             </EuiButtonEmpty>
           </EuiFlexItem>
         </EuiFlexGroup>

@@ -15,7 +15,10 @@ import { EuiStat, EuiFlexItem, EuiFlexGroup } from '@elastic/eui';
 
 import { connect } from 'react-redux';
 import { UI_ORDER_AGENT_STATUS } from '../../../../../../common/constants';
-import { agentStatusColorByAgentStatus, agentStatusLabelByAgentStatus } from '../../../../../../common/services/wz_agent_status';
+import {
+  agentStatusColorByAgentStatus,
+  agentStatusLabelByAgentStatus,
+} from '../../../../../../common/services/wz_agent_status';
 
 export class WzStatusStats extends Component {
   _isMounted = false;
@@ -23,20 +26,25 @@ export class WzStatusStats extends Component {
     super(props);
     this.state = {};
     this.agentStatus = ['total', ...UI_ORDER_AGENT_STATUS].map(status => ({
-      color: status !== 'total' ? agentStatusColorByAgentStatus(status) : 'primary',
-      description: `${status === 'total' ? 'Total agents' : agentStatusLabelByAgentStatus(status)}`,
-      status
+      color:
+        status !== 'total' ? agentStatusColorByAgentStatus(status) : 'primary',
+      description: `${
+        status === 'total'
+          ? 'Total agents'
+          : agentStatusLabelByAgentStatus(status)
+      }`,
+      status,
     }));
     this.agentStatus.push({
       color: undefined,
       description: 'Agents coverage',
-      status: 'coverage'
-    })
+      status: 'coverage',
+    });
     this.agentStatus.push({
       color: undefined,
       description: 'Synced agents',
-      status: 'synced'
-    })
+      status: 'synced',
+    });
   }
 
   componentDidMount() {
@@ -54,24 +62,23 @@ export class WzStatusStats extends Component {
     const metric = {
       [status]: stats?.agentsCount?.[status],
       coverage: `${stats?.agentsCoverage}%`,
-      synced: `${stats?.agentsSynced}%`
+      synced: `${stats?.agentsSynced}%`,
     };
     return metric[status];
   }
 
   render() {
-    
     return (
       <div>
         <EuiFlexGroup>
           <EuiFlexItem />
-          {this.agentStatus.map(({color, description, status}) => (
+          {this.agentStatus.map(({ color, description, status }) => (
             <EuiFlexItem key={`agent-status-${status}`}>
               <EuiStat
                 title={this.getTitle(status)}
                 description={description}
                 titleColor={color}
-                textAlign="center"
+                textAlign='center'
               />
             </EuiFlexItem>
           ))}
@@ -84,7 +91,7 @@ export class WzStatusStats extends Component {
 
 const mapStateToProps = state => {
   return {
-    state: state.statusReducers
+    state: state.statusReducers,
   };
 };
 

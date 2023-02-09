@@ -35,6 +35,7 @@ import { WzButtonPermissionsModalConfirm } from '../../../../../components/commo
 import { UI_LOGGER_LEVELS, UI_ORDER_AGENT_STATUS } from '../../../../../../common/constants';
 import { UI_ERROR_SEVERITIES } from '../../../../../react-services/error-orchestrator/types';
 import { getErrorOrchestrator } from '../../../../../react-services/common-services';
+import { translate } from '../../../../../components/common/util';
 
 
 class WzGroupAgentsTable extends Component {
@@ -147,7 +148,7 @@ class WzGroupAgentsTable extends Component {
       },
       {
         field: 'name',
-        name: 'Name',
+        name: translate('groupAgentsTable.columnName.name'),
         align: 'left',
         sortable: true,
       },
@@ -159,30 +160,30 @@ class WzGroupAgentsTable extends Component {
       },
       {
         field: 'status',
-        name: 'Status',
+        name: translate('groupAgentsTable.columnName.status'),
         align: 'left',
         sortable: true,
       },
       {
         field: 'os.name',
-        name: 'Os name',
+        name: translate('groupAgentsTable.columnName.osName'),
         align: 'left',
         sortable: true,
       },
       {
         field: 'os.version',
-        name: 'Os version',
+        name: translate('groupAgentsTable.columnName.osVersion'),
         align: 'left',
         sortable: true,
       },
       {
         field: 'version',
-        name: 'Version',
+        name: translate('groupAgentsTable.columnName.version'),
         align: 'left',
         sortable: true,
       },
       {
-        name: 'Actions',
+        name: translate('groupAgentsTable.columnName.actions'),
         align: 'left',
         render: (item) => {
           return (
@@ -198,7 +199,7 @@ class WzGroupAgentsTable extends Component {
                     })),
                   ],
                 ]}
-                tooltip={{ position: 'top', content: 'Go to the agent' }}
+                tooltip={{ position: 'top', content: translate('groupAgentsTable.tooltip.viewAgent') }}
                 aria-label="Go to the agent"
                 iconType="eye"
                 onClick={async () => {
@@ -218,7 +219,7 @@ class WzGroupAgentsTable extends Component {
                       })),
                     ],
                   ]}
-                  tooltip={{ position: 'top', content: 'Remove agent from this group' }}
+                  tooltip={{ position: 'top', content: translate('groupAgentsTable.tooltip.removeAgent') }}
                   aria-label="Remove agent from this group"
                   iconType="trash"
                   onConfirm={async () => {
@@ -226,7 +227,7 @@ class WzGroupAgentsTable extends Component {
                   }}
                   color="danger"
                   isDisabled={item.name === 'default'}
-                  modalTitle={`Remove ${item.file || item.name} agent from this group?`}
+                  modalTitle={translate('groupAgentsTable.tooltip.removeAgent')}
                   modalProps={{
                     buttonColor: 'danger',
                   }}

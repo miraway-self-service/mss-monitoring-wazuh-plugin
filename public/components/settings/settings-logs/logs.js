@@ -29,6 +29,7 @@ import store from '../../../redux/store';
 import { updateSelectedSettingsSection } from '../../../redux/actions/appStateActions';
 import { withErrorBoundary } from '../../common/hocs';
 import { getPluginDataPath } from '../../../../common/plugin';
+import { translate } from '../../common/util';
 
 class SettingsLogs extends Component {
   constructor(props) {
@@ -93,7 +94,7 @@ class SettingsLogs extends Component {
             </EuiFlexItem>
             <EuiFlexItem grow={false}>
               <EuiButtonEmpty iconType="refresh" onClick={async () => await this.refresh()}>
-                Refresh
+                {translate("common.refresh")}
               </EuiButtonEmpty>
             </EuiFlexItem>
           </EuiFlexGroup>

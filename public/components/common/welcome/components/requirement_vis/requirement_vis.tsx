@@ -27,6 +27,7 @@ import { getAngularModule } from '../../../../../kibana-services';
 import { getIndexPattern } from '../../../../overview/mitre/lib';
 import { buildPhraseFilter } from '../../../../../../../../src/plugins/data/common';
 import rison from 'rison-node';
+import { translate } from '../../../util';
 
 const selectionOptionsCompliance = [
   { value: 'pci_dss', text: 'PCI DSS' },
@@ -91,7 +92,7 @@ export function RequirementVis(props) {
           type='donut'
           size={{width: '100%', height: '200px'}}
           showLegend
-          title='Compliance'
+          title={translate("agentsWelcome.events.compliance")}
           selectorOptions={selectionOptionsCompliance}
           onFetch={fetchData}
           onFetchExtraDependencies={[timeFilter,props.agent]}

@@ -27,6 +27,7 @@ import { withErrorBoundary } from '../../../components/common/hocs';
 import { UI_LOGGER_LEVELS } from '../../../../common/constants';
 import { UI_ERROR_SEVERITIES } from '../../../react-services/error-orchestrator/types';
 import { getErrorOrchestrator } from '../../../react-services/common-services';
+import { translate } from '../../../components/common/util';
 
 export const SelectAgent = withErrorBoundary (class SelectAgent extends Component {
   constructor(props) {
@@ -164,7 +165,7 @@ export const SelectAgent = withErrorBoundary (class SelectAgent extends Componen
     return [
       {
         field: 'name',
-        name: 'Name',
+        name: translate("agentsTable.col.name"),
         sortable: true,
         truncateText: true
       },
@@ -176,32 +177,32 @@ export const SelectAgent = withErrorBoundary (class SelectAgent extends Componen
       },
       {
         field: 'group',
-        name: 'Group(s)',
+        name: translate("agentsTable.col.group"),
         truncateText: true,
         sortable: true
       },
       {
         field: 'version',
-        name: 'Version',
+        name: translate("agentsTable.col.version"),
         width: '100px',
         truncateText: true,
         sortable: true
       },
       {
         field: 'dateAdd',
-        name: 'Registration date',
+        name: translate("agentsTable.col.dateAdd"),
         truncateText: true,
         sortable: true
       },
       {
         field: 'lastKeepAlive',
-        name: 'Last keep alive',
+        name: translate("agentsTable.col.lastKeepAlive"),
         truncateText: true,
         sortable: true
       },
       {
         field: 'status',
-        name: 'Status',
+        name: translate("agentsTable.col.status"),
         truncateText: true,
         sortable: true,
         render: this.addHealthStatusRender
@@ -255,7 +256,7 @@ export const SelectAgent = withErrorBoundary (class SelectAgent extends Componen
             onChange={this.onTableChange}
             sorting={sorting}
             loading={isLoading}
-            noItemsMessage="No agents found"
+            noItemsMessage={translate("selectgAgent.message.noAgent")}
           />
         </EuiFlexItem>
       </EuiFlexGroup>
@@ -266,13 +267,14 @@ export const SelectAgent = withErrorBoundary (class SelectAgent extends Componen
     let flyout;
 
     const table = this.tableRender();
+    const selectAgentLabel = translate("selectgAgent.select.agent");
 
     if (this.state.isFlyoutVisible) {
       flyout = (
         <EuiFlyout className="wzApp" onClose={this.closeFlyout} aria-labelledby="flyoutTitle">
           <EuiFlyoutHeader hasBorder>
             <EuiTitle size="m">
-              <h2 id="flyoutTitle">Select agent</h2>
+              <h2 id="flyoutTitle">{selectAgentLabel}</h2>
             </EuiTitle>
           </EuiFlyoutHeader>
           <EuiFlyoutBody>{table}</EuiFlyoutBody>
@@ -282,7 +284,7 @@ export const SelectAgent = withErrorBoundary (class SelectAgent extends Componen
 
     return (
       <div>
-        <EuiButton onClick={this.showFlyout}>Select agent</EuiButton>
+        <EuiButton onClick={this.showFlyout}>{selectAgentLabel}</EuiButton>
 
         {flyout}
       </div>

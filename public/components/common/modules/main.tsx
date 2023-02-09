@@ -30,6 +30,7 @@ import { withReduxProvider,withErrorBoundary } from '../hocs';
 import { UI_LOGGER_LEVELS } from '../../../../common/constants';
 import { UI_ERROR_SEVERITIES } from '../../../react-services/error-orchestrator/types';
 import { getErrorOrchestrator } from '../../../react-services/common-services';
+import { translate, convertCamelCase } from '../util/common/string';
 
 export const MainModule = compose(
   withErrorBoundary,
@@ -78,7 +79,7 @@ export const MainModule = compose(
                     isSelected={selectView === tab.id}
                     key={index}
                   >
-                    {tab.name}
+                   {translate(`common.${convertCamelCase(tab.name)}`)}
                   </EuiTab>
                 );
               }
@@ -124,9 +125,9 @@ export const MainModule = compose(
       };
       return (
         <>
-          {(agent && <MainModuleAgent {...{ ...this.props, ...mainProps }}></MainModuleAgent>) ||
+          {(agent && <MainModuleAgent {...{ ...this.props, ...mainProps }}/>) ||
             (this.props.section && this.props.section !== 'welcome' && (
-              <MainModuleOverview {...{ ...this.props, ...mainProps }}></MainModuleOverview>
+              <MainModuleOverview {...{ ...this.props, ...mainProps }}/>
             ))}
         </>
       );

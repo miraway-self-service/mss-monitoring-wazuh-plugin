@@ -30,6 +30,7 @@ import {
   AddNewCdbListButton,
   UploadFilesButton,
 } from '../../common/actions-buttons'
+import { translate } from '../../../../../../components/common/util';
 
 function CDBListsTable(props) {
   const [filters, setFilters] = useState([]);
@@ -165,8 +166,8 @@ function CDBListsTable(props) {
       <TableWzAPI
         reload={tableFootprint}
         actionButtons={actionButtons}
-        title={'CDB Lists'}
-        description={`From here you can manage your lists.`}
+        title={translate('cdbListsTable.title')}
+        description={translate('cdbListsTable.description')}
         tableColumns={columns}
         tableInitialSortingField={'filename'}
         searchTable={true}

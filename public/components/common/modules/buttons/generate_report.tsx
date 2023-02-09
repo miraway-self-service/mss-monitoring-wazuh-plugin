@@ -16,6 +16,7 @@ import { getUiSettings } from '../../../../kibana-services';
 import { ReportingService } from '../../../../react-services';
 import $ from 'jquery';
 import { WzButton } from '../../../common/buttons';
+import { translate } from '../../util/common/string';
 
 
 export const ButtonModuleGenerateReport = ({agent, moduleID, disabledReport}) => {
@@ -56,7 +57,7 @@ export const ButtonModuleGenerateReport = ({agent, moduleID, disabledReport}) =>
       isDisabled={disabledReport}
       tooltip={disabledReport ? {position: 'top', content: 'No results match for this search criteria.'} : undefined}
     >
-      Generate report
+      {translate("generateReports.title")}
     </WzButton>
   )
 }

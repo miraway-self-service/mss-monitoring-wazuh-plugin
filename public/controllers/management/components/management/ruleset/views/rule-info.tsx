@@ -24,6 +24,7 @@ import { UI_ERROR_SEVERITIES } from '../../../../../../react-services/error-orch
 import { UI_LOGGER_LEVELS } from '../../../../../../../common/constants';
 import { TableWzAPI } from '../../../../../../components/common/tables';
 import { getErrorOrchestrator } from '../../../../../../react-services/common-services';
+import { translate } from '../../../../../../components/common/util';
 
 export default class WzRuleInfo extends Component {
   constructor(props) {
@@ -85,7 +86,7 @@ export default class WzRuleInfo extends Component {
       },
       {
         field: 'description',
-        name: 'Description',
+        name: translate('rulesetTable.columnName.description'),
         align: 'left',
         sortable: true,
         width: '30%',
@@ -95,7 +96,10 @@ export default class WzRuleInfo extends Component {
           let result = value.match(regex);
           if (result !== null) {
             for (const oldValue of result) {
-              let newValue = oldValue.replace('$(', `<strong style="color:#006BB4">`);
+              let newValue = oldValue.replace(
+                '$(',
+                `<strong style="color:#006BB4">`,
+              );
               newValue = newValue.replace(')', ' </strong>');
               value = value.replace(oldValue, newValue);
             }
@@ -109,32 +113,34 @@ export default class WzRuleInfo extends Component {
       },
       {
         field: 'groups',
-        name: 'Groups',
+        name: translate('rulesetTable.columnName.group'),
         align: 'left',
         sortable: true,
         width: '10%',
       },
       {
-        name: 'Compliance',
+        name: translate('ruleInfo.compliance'),
         render: this.buildComplianceBadges,
       },
       {
         field: 'level',
-        name: 'Level',
+        name: translate('rulesetTable.columnName.level'),
         align: 'left',
         sortable: true,
         width: '5%',
       },
       {
         field: 'filename',
-        name: 'File',
+        name: translate('rulesetTable.columnName.file'),
         align: 'left',
         sortable: true,
         width: '15%',
         render: (value, item) => {
           return (
-            <EuiToolTip position="top" content={`Show ${value} content`}>
-              <EuiLink onClick={async (event) => handleFileClick(event, item)}>{value}</EuiLink>
+            <EuiToolTip position='top' content={`Show ${value} content`}>
+              <EuiLink onClick={async event => handleFileClick(event, item)}>
+                {value}
+              </EuiLink>
             </EuiToolTip>
           );
         },
@@ -281,37 +287,53 @@ export default class WzRuleInfo extends Component {
   renderInfo(id = '', level = '', file = '', path = '', groups = []) {
     return (
       <EuiFlexGrid columns={4}>
-        <EuiFlexItem key="rule_ids" grow={1}>
+        <EuiFlexItem key='rule_ids' grow={1}>
           <b style={{ paddingBottom: 6 }}>ID</b>
           <span>
-            <EuiToolTip position="top" content={`Filter by this rule ID: ${id}`}>
+            <EuiToolTip
+              position='top'
+              content={`Filter by this rule ID: ${id}`}
+            >
               <EuiLink
-                onClick={async () => this.setNewFiltersAndBack([{ field: 'rule_ids', value: id }])}
+                onClick={async () =>
+                  this.setNewFiltersAndBack([{ field: 'rule_ids', value: id }])
+                }
               >
                 {id}
               </EuiLink>
             </EuiToolTip>
           </span>
         </EuiFlexItem>
-        <EuiFlexItem key="level" grow={1}>
-          <b style={{ paddingBottom: 6 }}>Level</b>
+        <EuiFlexItem key='level' grow={1}>
+          <b style={{ paddingBottom: 6 }}>
+            {translate('rulesetTable.columnName.level')}
+          </b>
           <span>
-            <EuiToolTip position="top" content={`Filter by this level: ${level}`}>
+            <EuiToolTip
+              position='top'
+              content={`Filter by this level: ${level}`}
+            >
               <EuiLink
-                onClick={async () => this.setNewFiltersAndBack([{ field: 'level', value: level }])}
+                onClick={async () =>
+                  this.setNewFiltersAndBack([{ field: 'level', value: level }])
+                }
               >
                 {level}
               </EuiLink>
             </EuiToolTip>
           </span>
         </EuiFlexItem>
-        <EuiFlexItem key="file" grow={1}>
-          <b style={{ paddingBottom: 6 }}>File</b>
+        <EuiFlexItem key='file' grow={1}>
+          <b style={{ paddingBottom: 6 }}>
+            {translate('rulesetTable.columnName.file')}
+          </b>
           <span>
-            <EuiToolTip position="top" content={`Filter by this file: ${file}`}>
+            <EuiToolTip position='top' content={`Filter by this file: ${file}`}>
               <EuiLink
                 onClick={async () =>
-                  this.setNewFiltersAndBack([{ field: 'filename', value: file }])
+                  this.setNewFiltersAndBack([
+                    { field: 'filename', value: file },
+                  ])
                 }
               >
                 {file}
@@ -319,13 +341,17 @@ export default class WzRuleInfo extends Component {
             </EuiToolTip>
           </span>
         </EuiFlexItem>
-        <EuiFlexItem key="path" grow={1}>
-          <b style={{ paddingBottom: 6 }}>Path</b>
+        <EuiFlexItem key='path' grow={1}>
+          <b style={{ paddingBottom: 6 }}>
+            {translate('rulesetTable.columnName.path')}
+          </b>
           <span>
-            <EuiToolTip position="top" content={`Filter by this path: ${path}`}>
+            <EuiToolTip position='top' content={`Filter by this path: ${path}`}>
               <EuiLink
                 onClick={async () =>
-                  this.setNewFiltersAndBack([{ field: 'relative_dirname', value: path }])
+                  this.setNewFiltersAndBack([
+                    { field: 'relative_dirname', value: path },
+                  ])
                 }
               >
                 {path}
@@ -333,11 +359,13 @@ export default class WzRuleInfo extends Component {
             </EuiToolTip>
           </span>
         </EuiFlexItem>
-        <EuiFlexItem key="Groups" grow={1}>
-          <b style={{ paddingBottom: 6 }}>Groups</b>
+        <EuiFlexItem key='Groups' grow={1}>
+          <b style={{ paddingBottom: 6 }}>
+            {translate('rulesetTable.columnName.group')}
+          </b>
           {this.renderGroups(groups)}
         </EuiFlexItem>
-        <EuiSpacer size="s" />
+        <EuiSpacer size='s' />
       </EuiFlexGrid>
     );
   }
@@ -627,33 +655,34 @@ export default class WzRuleInfo extends Component {
 
     return (
       <>
-        <EuiFlyoutHeader hasBorder className="flyout-header">
+        <EuiFlyoutHeader hasBorder className='flyout-header'>
           <EuiFlexGroup>
             <EuiFlexItem>
               <EuiTitle>
                 <span style={{ fontSize: '22px' }}>
-                  {
-                    description && (
-                      <span
-                        dangerouslySetInnerHTML={{ __html: this.updateStyleTitle(description) }}
-                      />)
-                  }
+                  {description && (
+                    <span
+                      dangerouslySetInnerHTML={{
+                        __html: this.updateStyleTitle(description),
+                      }}
+                    />
+                  )}
                 </span>
               </EuiTitle>
             </EuiFlexItem>
             <EuiFlexItem grow={false}>
               <EuiButtonEmpty
-                iconType="popout"
-                aria-label="popout"
+                iconType='popout'
+                aria-label='popout'
                 href={`#/overview?tab=general&tabView=panels&addRuleFilter=${id}`}
-                target="blank"
+                target='blank'
               >
-                View alerts of this Rule
-                </EuiButtonEmpty>
+                {translate('ruleInfo.button.viewAlert')}
+              </EuiButtonEmpty>
             </EuiFlexItem>
           </EuiFlexGroup>
         </EuiFlyoutHeader>
-        <EuiFlyoutBody className="flyout-body">
+        <EuiFlyoutBody className='flyout-body'>
           <EuiFlexGroup>
             <EuiFlexItem>
               {/* Cards */}
@@ -661,19 +690,25 @@ export default class WzRuleInfo extends Component {
                 {/* General info */}
                 <EuiFlexItem style={{ marginBottom: 16, marginTop: 8 }}>
                   <EuiAccordion
-                    id="Info"
+                    id='Info'
                     buttonContent={
-                      <EuiTitle size="s">
-                        <h3>Information</h3>
+                      <EuiTitle size='s'>
+                        <h3>{translate('ruleInfo.information')}</h3>
                       </EuiTitle>
                     }
-                    paddingSize="none"
+                    paddingSize='none'
                     initialIsOpen={true}
                     isLoading={this.state.isLoading}
                     isLoadingMessage={''}
                   >
-                    <EuiFlexItem className="flyout-row details-row">
-                      {this.renderInfo(id, level, filename, relative_dirname, groups)}
+                    <EuiFlexItem className='flyout-row details-row'>
+                      {this.renderInfo(
+                        id,
+                        level,
+                        filename,
+                        relative_dirname,
+                        groups,
+                      )}
                     </EuiFlexItem>
                   </EuiAccordion>
                 </EuiFlexItem>
@@ -682,18 +717,20 @@ export default class WzRuleInfo extends Component {
               <EuiFlexGroup>
                 <EuiFlexItem style={{ marginTop: 8 }}>
                   <EuiAccordion
-                    id="Details"
+                    id='Details'
                     buttonContent={
-                      <EuiTitle size="s">
-                        <h3>Details</h3>
+                      <EuiTitle size='s'>
+                        <h3>{translate('ruleInfo.details')}</h3>
                       </EuiTitle>
                     }
-                    paddingSize="none"
+                    paddingSize='none'
                     initialIsOpen={true}
                     isLoading={this.state.isLoading}
                     isLoadingMessage={''}
                   >
-                    <EuiFlexItem className="flyout-row details-row">{this.renderDetails(details)}</EuiFlexItem>
+                    <EuiFlexItem className='flyout-row details-row'>
+                      {this.renderDetails(details)}
+                    </EuiFlexItem>
                   </EuiAccordion>
                 </EuiFlexItem>
               </EuiFlexGroup>
@@ -702,18 +739,18 @@ export default class WzRuleInfo extends Component {
                 <EuiFlexGroup>
                   <EuiFlexItem style={{ marginTop: 8 }}>
                     <EuiAccordion
-                      id="Compliance"
+                      id='Compliance'
                       buttonContent={
-                        <EuiTitle size="s">
-                          <h3>Compliance</h3>
+                        <EuiTitle size='s'>
+                          <h3>{translate('ruleInfo.compliance')}</h3>
                         </EuiTitle>
                       }
-                      paddingSize="none"
+                      paddingSize='none'
                       initialIsOpen={true}
                       isLoading={this.state.isLoading}
                       isLoadingMessage={''}
                     >
-                      <EuiFlexItem className="flyout-row details-row">
+                      <EuiFlexItem className='flyout-row details-row'>
                         {this.renderCompliance(compliance)}
                       </EuiFlexItem>
                     </EuiAccordion>
@@ -724,29 +761,32 @@ export default class WzRuleInfo extends Component {
               <EuiFlexGroup>
                 <EuiFlexItem style={{ marginTop: 8 }}>
                   <EuiAccordion
-                    id="Related"
+                    id='Related'
                     buttonContent={
-                      <EuiTitle size="s">
-                        <h3>Related rules</h3>
+                      <EuiTitle size='s'>
+                        <h3>{translate('ruleInfo.relatedRules')}</h3>
                       </EuiTitle>
                     }
                     isLoading={this.state.isLoading}
                     isLoadingMessage={''}
-                    paddingSize="none"
+                    paddingSize='none'
                     initialIsOpen={true}
                   >
-                    <EuiFlexItem className="flyout-row related-rules-row">
+                    <EuiFlexItem className='flyout-row related-rules-row'>
                       <EuiFlexGroup>
                         <EuiFlexItem>
-                          {this.state.currentRuleInfo?.filename &&
+                          {this.state.currentRuleInfo?.filename && (
                             <TableWzAPI
                               tableColumns={this.columns}
                               tableInitialSortingField={'id'}
                               endpoint={`/rules?filename=${this.state.currentRuleInfo.filename}`}
-                              tableProps={{ rowProps: this.onClickRow, loading: this.state.isLoading }}
+                              tableProps={{
+                                rowProps: this.onClickRow,
+                                loading: this.state.isLoading,
+                              }}
                               tablePageSizeOptions={[10, 25]}
                             />
-                          }
+                          )}
                         </EuiFlexItem>
                       </EuiFlexGroup>
                     </EuiFlexItem>

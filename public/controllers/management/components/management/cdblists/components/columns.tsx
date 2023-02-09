@@ -8,6 +8,7 @@ import { getErrorOrchestrator } from '../../../../../../react-services/common-se
 import { UIErrorLog } from '../../../../../../react-services/error-orchestrator/types';
 import { getErrorOptions } from '../../common/error-helper';
 import { Columns } from '../../common/interfaces';
+import { translate } from '../../../../../../components/common/util';
 
 export default class CDBListsColumns {
 
@@ -23,45 +24,52 @@ export default class CDBListsColumns {
       lists: [
         {
           field: 'filename',
-          name: 'Name',
+          name: translate('cdbListsTable.columnName.name'),
           align: 'left',
-          sortable: true
+          sortable: true,
         },
         {
           field: 'relative_dirname',
-          name: 'Path',
+          name: translate('cdbListsTable.columnName.path'),
           align: 'left',
-          sortable: true
+          sortable: true,
         },
         {
-          name: 'Actions',
+          name: translate('cdbListsTable.columnName.actions'),
           align: 'left',
-          render: (item) => (
-            <EuiToolTip position="top" content={`Export ${item.filename}`}>
+          render: item => (
+            <EuiToolTip position='top' content={`Export ${item.filename}`}>
               <EuiButtonIcon
-                aria-label="Export list"
-                iconType="exportAction"
+                aria-label='Export list'
+                iconType='exportAction'
                 onClick={async ev => {
                   try {
                     ev.stopPropagation();
-                    await exportCsv(`/lists?path=${item.relative_dirname}/${item.filename}`,
-                      [{ _isCDBList: true, name: 'path', value: `${item.relative_dirname}/${item.filename}` }],
-                      item.filename
-                    )
+                    await exportCsv(
+                      `/lists?path=${item.relative_dirname}/${item.filename}`,
+                      [
+                        {
+                          _isCDBList: true,
+                          name: 'path',
+                          value: `${item.relative_dirname}/${item.filename}`,
+                        },
+                      ],
+                      item.filename,
+                    );
                   } catch (error) {
                     const options: UIErrorLog = getErrorOptions(
                       error,
-                      'Lists.exportFile'
+                      'Lists.exportFile',
                     );
                     getErrorOrchestrator().handleError(options);
                   }
                 }}
-                color="primary"
+                color='primary'
               />
             </EuiToolTip>
-          )
-        }
-      ]
+          ),
+        },
+      ],
     };
 
     const getReadButtonPermissions = (item) => {
@@ -98,7 +106,7 @@ export default class CDBListsColumns {
     // @ts-ignore
     this.columns.lists[2] =
     {
-      name: 'Actions',
+      name: translate('cdbListsTable.columnName.name'),
       align: 'left',
       render: item => {
         const defaultItems = this.props.state.defaultItems;
@@ -109,7 +117,7 @@ export default class CDBListsColumns {
               permissions={getEditButtonPermissions(item)}
               aria-label="Edit content"
               iconType="pencil"
-              tooltip={{ position: 'top', content: `Edit ${item.filename} content` }}
+              tooltip={{ position: 'top', content: translate('common.tooltip.edit') }}
               onClick={async (ev) => {
                 try {
                   ev.stopPropagation();
@@ -130,7 +138,7 @@ export default class CDBListsColumns {
             <WzButtonPermissionsModalConfirm
               buttonType="icon"
               permissions={getDeleteButtonPermissions(item)}
-              tooltip={{ position: 'top', content: (defaultItems.indexOf(`${item.relative_dirname}`) === -1) ? `Delete ${item.filename}` : `The ${item.filename} list cannot be deleted` }}
+              tooltip={{ position: 'top', content: (defaultItems.indexOf(`${item.relative_dirname}`) === -1) ? translate('common.tooltip.delete') : translate('cdbListsTable.tooltip.listCantDeleted') }}
               aria-label="Delete file"
               iconType="trash"
               isDisabled={defaultItems.indexOf(`${item.relative_dirname}`) !== -1}
@@ -148,7 +156,7 @@ export default class CDBListsColumns {
               onClose={async (ev) => ev.stopPropagation()}
               onClick={(ev) => ev.stopPropagation()}
               color="danger"
-              modalTitle={'Are you sure?'}
+              modalTitle={translate('common.modalTitle.confirm')}
               modalProps={{
                 buttonColor: 'danger',
                 onClick: (ev) => ev.stopPropagation()
@@ -159,7 +167,7 @@ export default class CDBListsColumns {
               permissions={getReadButtonPermissions(item)}
               aria-label="Export list"
               iconType="exportAction"
-              tooltip={{ position: 'top', content: `Export ${item.filename} content` }}
+              tooltip={{ position: 'top', content: translate('common.tooltip.export') }}
               onClick={async (ev) => {
                 try {
                   ev.stopPropagation();

@@ -18,21 +18,24 @@ import {
 //@ts-ignore
 import { CondensedPicker } from './components';
 import { getDataPlugin } from '../../kibana-services';
+import { translate } from '../common/util/common/string';
 
 interface IDiscoverTime { from: string, to: string };
 
 export class WzDatePicker extends Component {
+  getDateTrans = (label: string, values: object = {}): string => translate(`common.date.${label}`, values);
+
   commonDurationRanges = [
-    { "start": "now/d", "end": "now/d", "label": "Today" },
-    { "start": "now/w", "end": "now/w", "label": "This week" },
-    { "start": "now-15m", "end": "now", "label": "Last 15 minutes" },
-    { "start": "now-30m", "end": "now", "label": "Last 30 minutes" },
-    { "start": "now-1h", "end": "now", "label": "Last 1 hour" },
-    { "start": "now-24h", "end": "now", "label": "Last 24 hours" },
-    { "start": "now-7d", "end": "now", "label": "Last 7 days" },
-    { "start": "now-30d", "end": "now", "label": "Last 30 days" },
-    { "start": "now-90d", "end": "now", "label": "Last 90 days" },
-    { "start": "now-1y", "end": "now", "label": "Last 1 year" },
+    { "start": "now/d", "end": "now/d", "label": this.getDateTrans("now") },
+    { "start": "now/w", "end": "now/w", "label": this.getDateTrans("thisWeek") },
+    { "start": "now-15m", "end": "now", "label": this.getDateTrans("lastMinutes", {minutes: 15})},
+    { "start": "now-30m", "end": "now", "label": this.getDateTrans("lastMinutes", {minutes: 30})},
+    { "start": "now-1h", "end": "now", "label": this.getDateTrans("lastHour", {hour: 1})},
+    { "start": "now-24h", "end": "now", "label": this.getDateTrans("lastHours", {hours: 24})},
+    { "start": "now-7d", "end": "now", "label": this.getDateTrans("lastDays", {days: 7})},
+    { "start": "now-30d", "end": "now", "label": this.getDateTrans("lastDays", {days: 30})},
+    { "start": "now-90d", "end": "now", "label": this.getDateTrans("lastDays", {days: 90})},
+    { "start": "now-1y", "end": "now", "label": this.getDateTrans("lastYear", {year: 1}) },
   ];
 
   timefilter: {

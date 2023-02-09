@@ -1,9 +1,7 @@
 {
-    "paths": {
-      "wazuh": "public"
-    },
-    "exclude": [
-    ],
-    "translations": [
-    ]
-  }
+  "paths": {
+    "wazuh": "public"
+  },
+  "exclude": [],
+  "translations": ["translations/en-EN.json", "translations/vi-VI.json"]
+}
